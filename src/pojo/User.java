@@ -1,32 +1,32 @@
 package pojo;
 
-import java.util.Arrays;
-
 /**
  * @author Markus
  */
 public class User {
-    private String[] loginData;
+    private String email, password;
 
-    public String[] getLoginData() {
-        return loginData;
+    public User(String[] loginData) {
+        email = loginData[0];
+        password = loginData[1];
     }
 
-    public String getUsername() {
-        return loginData[0];
+    public void setPassword(String password) {
+        this.password = password;
+    }
+
+    public void setEmail(String email) {
+
+        this.email = email;
+    }
+
+    public String getEmail() {
+
+        return email;
     }
 
     public String getPassword() {
-        return loginData[1];
-    }
-
-    public User(String[] loginData) {
-        this.loginData = loginData;
-    }
-
-    @Override
-    public String toString() {
-        return loginData[0] + ", " + loginData[1];
+        return password;
     }
 
     @Override
@@ -38,13 +38,6 @@ public class User {
             return false;
         }
         final User other = (User) obj;
-        return loginData[0].equals(other.loginData[0]) && loginData[1].equals(other.loginData[1]);
-    }
-
-    @Override
-    public int hashCode() {
-        int hash = 3;
-        hash = 17 * hash + Arrays.deepHashCode(this.loginData);
-        return hash;
+        return email.equals(other.email) && password.equals(other.password);
     }
 }

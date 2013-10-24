@@ -10,6 +10,7 @@ package beans;
  * @author Markus
  */
 
+import constants.Files;
 import pojo.User;
 
 import javax.faces.application.FacesMessage;
@@ -42,7 +43,7 @@ public class LoginChecker {
     }
 
     public void check(ActionEvent event) throws IOException {
-        FileReader reader = new FileReader("C:\\Pock\\admins.txt");
+        FileReader reader = new FileReader(Files.ADMIN.toString());
         BufferedReader br = new BufferedReader(reader);
 
         String tmp;
