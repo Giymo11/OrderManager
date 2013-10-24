@@ -43,7 +43,7 @@ public class LoginChecker {
     }
 
     public void check(ActionEvent event) throws FileNotFoundException, IOException {
-        FileReader reader = new FileReader("admins.txt");
+        FileReader reader = new FileReader("C:\\Users\\Giymo11\\IdeaProjects\\OrderManager\\admins.txt");
         BufferedReader br = new BufferedReader(reader);
 
         String tmp = null;
@@ -51,15 +51,12 @@ public class LoginChecker {
 
         do {
             tmp = br.readLine();
-            System.out.println(tmp);
             if (tmp == null)
                 break;
             admins.add(new User(tmp.split(",")));
         } while (true);
 
-        String[] loginData = new String[2];
-        loginData[0] = this.email;
-        loginData[1] = this.password;
+        String[] loginData = {getEmail(), getPassword()};
         User user = new User(loginData);
         System.out.println(user.toString());
 
