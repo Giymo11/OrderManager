@@ -16,7 +16,6 @@ import javax.faces.application.FacesMessage;
 import javax.faces.event.ActionEvent;
 import javax.faces.validator.ValidatorException;
 import java.io.BufferedReader;
-import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -42,12 +41,12 @@ public class LoginChecker {
         this.password = password;
     }
 
-    public void check(ActionEvent event) throws FileNotFoundException, IOException {
-        FileReader reader = new FileReader("C:\\Users\\Giymo11\\IdeaProjects\\OrderManager\\admins.txt");
+    public void check(ActionEvent event) throws IOException {
+        FileReader reader = new FileReader("C:\\Pock\\admins.txt");
         BufferedReader br = new BufferedReader(reader);
 
-        String tmp = null;
-        List<User> admins = new ArrayList<User>();
+        String tmp;
+        List<User> admins = new ArrayList<>();
 
         do {
             tmp = br.readLine();

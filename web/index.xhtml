@@ -15,8 +15,8 @@
         </h:inputText>
         <br/>
         Passwort:
-        <h:inputText name="password" value="#{LoginChecker.password}">
-        </h:inputText>
+        <h:inputSecret name="password" value="#{LoginChecker.password}">
+        </h:inputSecret>
         <br/>
         <h:commandButton value="Anmelden" actionListener="#{LoginChecker.check}"/>
     </h:form>
