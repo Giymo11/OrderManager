@@ -1,4 +1,4 @@
-package pojo;
+package dto;
 
 /**
  * @author Markus
@@ -9,6 +9,11 @@ public class User {
     public User(String[] loginData) {
         email = loginData[0];
         password = loginData[1];
+    }
+
+    public User(String email, String password) {
+        this.email = email;
+        this.password = password;
     }
 
     public void setPassword(String password) {

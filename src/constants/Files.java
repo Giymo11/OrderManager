@@ -10,7 +10,7 @@ package constants;
 public enum Files {
     ADMIN, INFO;
 
-    public String toString() {
+    public String getPath() {
         String folder = "C:\\pock\\";
         switch (this) {
             case ADMIN:
@@ -22,3 +22,4 @@ public enum Files {
         }
     }
 }
+

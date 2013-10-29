@@ -10,15 +10,14 @@
 <h:body>
     <h:form>
         E-Mail-Adresse:
-        <h:inputText required="true" value="#{LoginChecker.email}">
+        <h:inputText required="true" value="#{LoginBean.email}">
             <f:validator validatorId="emailValidator"/>
         </h:inputText>
         <br/>
         Passwort:
-        <h:inputSecret name="password" value="#{LoginChecker.password}">
-        </h:inputSecret>
+        <h:inputSecret name="password" value="#{LoginBean.password}"/>
         <br/>
-        <h:commandButton value="Anmelden" actionListener="#{LoginChecker.check}"/>
+        <h:commandButton value="Anmelden" actionListener="#{LoginBean.check}"/>
     </h:form>
 </h:body>
 </html>

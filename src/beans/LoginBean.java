@@ -11,7 +11,7 @@ package beans;
  */
 
 import constants.Files;
-import pojo.User;
+import dto.User;
 
 import javax.faces.application.FacesMessage;
 import javax.faces.event.ActionEvent;
@@ -22,7 +22,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-public class LoginChecker {
+public class LoginBean {
     private String email;
     private String password;
 
@@ -43,25 +43,10 @@ public class LoginChecker {
     }
 
     public void check(ActionEvent event) throws IOException {
-        FileReader reader = new FileReader(Files.ADMIN.toString());
-        BufferedReader br = new BufferedReader(reader);
-
-        String tmp;
-        List<User> admins = new ArrayList<>();
-
-        do {
-            tmp = br.readLine();
-            if (tmp == null)
-                break;
-            admins.add(new User(tmp.split(",")));
-        } while (true);
-
         String[] loginData = {getEmail(), getPassword()};
         User user = new User(loginData);
-        System.out.println(user.toString());
 
-        for (User admin : admins) {
-            System.out.println(admin.toString());
+        for (User admin : getAdmins()) {
             if (admin.equals(user)) {
                 System.out.println("ES LEEEEEBT!!!");
                 return;
@@ -70,5 +55,20 @@ public class LoginChecker {
 
         FacesMessage message = new FacesMessage("Username or Password wrong!");
         throw new ValidatorException(message);
+    }
+
+    private List<User> getAdmins() throws IOException {
+        BufferedReader br = new BufferedReader(new FileReader(Files.ADMIN.getPath()));
+
+        List<User> admins = new ArrayList<>();
+
+        String tmp;
+        do {
+            tmp = br.readLine();
+            if (tmp == null)
+                break;
+            admins.add(new User(tmp.split(",")));
+        } while (true);
+        return admins;
     }
 }
