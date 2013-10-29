@@ -1,7 +1,7 @@
 <?xml version='1.0' encoding='UTF-8' ?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
         "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-<html>
+<html xmlns:h="http://java.sun.com/jsf/html">
 <head>
     <title>Bäckerei Pock - Kontaktdetails</title>
     <style type="text/css">
@@ -86,52 +86,43 @@
         <th>
             Montag:
         </th>
-        <td>
-            05:30 - 12:00
-            <br>15:00 - 18:00</br>
-        </td>
+        <td><h:outputText value="#{contactInfoBean.mondayAM}"/>
+        <br/><h:outputText value="#{contactInfoBean.mondayPM}"/></td>
     </tr>
     <tr>
         <th>
             Dienstag:
         </th>
-        <td>
-            05:30 - 12:00
-        </td>
+        <td><h:outputText value="#{contactInfoBean.tuesdayAM}"/>
+        <br/><h:outputText value="#{contactInfoBean.tuesdayPM}"/></td>
     </tr>
     <tr>
         <th>
             Mittwoch:
         </th>
-        <td>
-            05:30 - 12:00
-            <br>15:00 - 18:00</br>
-        </td>
+        <td><h:outputText value="#{contactInfoBean.wednesdayAM}"/>
+        <br/><h:outputText value="#{contactInfoBean.wednesdayPM}"/></td>
     </tr>
     <tr>
         <th>
             Donnerstag:
         </th>
-        <td>
-            05:30 - 12:00
-        </td>
+        <td><h:outputText value="#{contactInfoBean.thursdayAM}"/>
+        <br/><h:outputText value="#{contactInfoBean.thursdayPM}"/></td>
     </tr>
     <tr>
         <th>
             Freitag:
         </th>
-        <td>
-            05:30 - 12:00
-            <br>15:00 - 18:00</br>
-        </td>
+        <td><h:outputText value="#{contactInfoBean.fridayAM}"/> <br/>
+        <h:outputText value="#{contactInfoBean.fridayPM}"/></td>
     </tr>
     <tr>
         <th>
             Samstag:
         </th>
-        <td>
-            05:30 - 12:00
-        </td>
+        <td><h:outputText value="#{contactInfoBean.saturdayAM}"/>
+        <br/><h:outputText value="#{contactInfoBean.saturdayPM}"/></td>
     </tr>
     </tbody>
 </table>
@@ -143,23 +134,23 @@
     <tbody>
     <tr>
         <th>Name:</th>
-        <td>Pock Andreas</td>
+        <td><h:outputText value="#{contactInfoBean.name}"/></td>
     </tr>
     <tr>
         <th>Straße:</th>
-        <td>Burgerstraße 11</td>
+        <td><h:outputText value="#{contactInfoBean.street}"/></td>
     </tr>
     <tr>
         <th>Ort:</th>
-        <td>7503 Großpetersdorf</td>
+        <td><h:outputText value="#{contactInfoBean.location}"/></td>
     </tr>
     <tr>
         <th>Telefon:</th>
-        <td>03362/2330</td>
+        <td><h:outputText value="#{contactInfoBean.telephone}"/></td>
     </tr>
     <tr>
         <th>E-Mail:</th>
-        <td>baeckerei.pock@a1.net</td>
+        <td><h:outputText value="#{contactInfoBean.mail}"/></td>
     </tr>
     </tbody>
 </table>
