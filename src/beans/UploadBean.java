@@ -55,8 +55,8 @@ public class UploadBean {
                 e.printStackTrace();
                 FacesContext.getCurrentInstance().addMessage("Failure!", new FacesMessage("File could not be created."));
             }
-
-        }
+        } else
+            System.out.println("shit went full retard..");
 
     }
 }

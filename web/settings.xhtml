@@ -4,7 +4,8 @@ To change this template, choose Tools | Templates
 and open the template in the editor.
 -->
 <!DOCTYPE html>
-<html xmlns="http://www.w3.org/1999/xhtml">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://java.sun.com/jsf/html">
 <head>
     <title>Settings</title>
     <style>
@@ -16,10 +17,132 @@ and open the template in the editor.
             background-color: #0B610B;
             font-variant: small-caps;
         }
+
+        .openhours {
+            float: left;
+        }
+
+        caption {
+            font-size: 20px;
+            font-weight: bold;
+            color: #ffffff;
+            background-color: #0B610B;
+            font-variant: small-caps;
+        }
+
+        .info {
+            font: 15px Calibri;
+        }
+
     </style>
 </head>
+<body class="info">
+<h:form>
+    <table class="openhours">
+        <caption>Öffnungszeiten</caption>
+        <tbody>
+        <tr>
+            <th>
+                Montag:
+            </th>
+            <td>
+                <h:inputText value="#{contactInfoBean.mondayAM}"/>
+                <br/>
+                <h:inputText value="#{contactInfoBean.mondayPM}"/>
+            </td>
+        </tr>
+        <tr>
+            <th>
+                Dienstag:
+            </th>
+            <td>
+                <h:inputText value="#{contactInfoBean.tuesdayAM}"/>
+                <br/>
+                <h:inputText value="#{contactInfoBean.tuesdayPM}"/>
+            </td>
+        </tr>
+        <tr>
+            <th>
+                Mittwoch:
+            </th>
+            <td>
+                <h:inputText value="#{contactInfoBean.wednesdayAM}"/>
+                <br/>
+                <h:inputText value="#{contactInfoBean.wednesdayPM}"/>
+            </td>
+        </tr>
+        <tr>
+            <th>
+                Donnerstag:
+            </th>
+            <td>
+                <h:inputText value="#{contactInfoBean.thursdayAM}"/>
+                <br/>
+                <h:inputText value="#{contactInfoBean.thursdayPM}"/>
+            </td>
+        </tr>
+        <tr>
+            <th>
+                Freitag:
+            </th>
+            <td>
+                <h:inputText value="#{contactInfoBean.fridayAM}"/>
+                <br/>
+                <h:inputText value="#{contactInfoBean.fridayPM}"/>
+            </td>
+        </tr>
+        <tr>
+            <th>
+                Samstag:
+            </th>
+            <td>
+                <h:inputText value="#{contactInfoBean.saturdayAM}"/>
+                <br/>
+                <h:inputText value="#{contactInfoBean.saturdayPM}"/>
+            </td>
+        </tr>
+        </tbody>
+    </table>
+    <table class="contact">
 
-<body>
-<h1>Bäckerei Pock</h1>
+        <caption>Kontakt</caption>
+        <tbody>
+        <tr>
+            <th>Name:</th>
+
+            <td>
+                <h:inputText value="#{contactInfoBean.name}"/>
+            </td>
+
+        </tr>
+        <tr>
+            <th>Straße:</th>
+            <td>
+                <h:inputText value="#{contactInfoBean.street}"/>
+            </td>
+        </tr>
+        <tr>
+            <th>Ort:</th>
+            <td>
+                <h:inputText value="#{contactInfoBean.location}"/>
+            </td>
+        </tr>
+        <tr>
+            <th>Telefon:</th>
+            <td>
+                <h:inputText value="#{contactInfoBean.telephone}"/>
+            </td>
+        </tr>
+        <tr>
+            <th>E-Mail:</th>
+            <td>
+                <h:inputText value="#{contactInfoBean.mail}"/>
+            </td>
+        </tr>
+        </tbody>
+    </table>
+    <h:commandButton type="submit" value="Speichern" action="#{contactInfoBean.writeToFile}"/>
+</h:form>
+
 </body>
 </html>

@@ -9,15 +9,15 @@ import constants.Files;
 import javax.faces.bean.ManagedBean;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.util.Properties;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
 /**
+ *
  * @author Sarah
- *         <p/>
- *         This class is intentionally not serialized as it should be readable for humans.
  */
 
 @ManagedBean
@@ -41,9 +41,11 @@ public class ContactInfoBean {
     private String saturdayAM;
     private String saturdayPM;
 
+    private Properties properties = null;
+
     public ContactInfoBean() {
         try {
-            Properties properties = readProperties();
+            properties = readProperties();
             assignProperties(properties);
         } catch (FileNotFoundException ex) {
             System.out.println("Property file not found!");
@@ -87,12 +89,20 @@ public class ContactInfoBean {
         return properties;
     }
 
+    public void writeToFile() throws IOException {
+        FileWriter out = new FileWriter("C:\\Pock\\contactinfo.properties");
+
+        properties.store(out,"Changed Contact-Info");
+        out.close();
+    }
+
     public String getName() {
         return name;
     }
 
     public void setName(String name) {
         this.name = name;
+        properties.setProperty("name", name);
     }
 
     public String getStreet() {
@@ -101,6 +111,7 @@ public class ContactInfoBean {
 
     public void setStreet(String street) {
         this.street = street;
+        properties.setProperty("street", street);
     }
 
     public String getLocation() {
@@ -109,6 +120,7 @@ public class ContactInfoBean {
 
     public void setLocation(String location) {
         this.location = location;
+        properties.setProperty("location", location);
     }
 
     public String getTelephone() {
@@ -117,6 +129,7 @@ public class ContactInfoBean {
 
     public void setTelephone(String telephone) {
         this.telephone = telephone;
+        properties.setProperty("telephone", telephone);
     }
 
     public String getMail() {
@@ -125,6 +138,7 @@ public class ContactInfoBean {
 
     public void setMail(String mail) {
         this.mail = mail;
+        properties.setProperty("mail", mail);
     }
 
     public String getMondayAM() {
@@ -133,6 +147,7 @@ public class ContactInfoBean {
 
     public void setMondayAM(String mondayAM) {
         this.mondayAM = mondayAM;
+        properties.setProperty("mondayAM", mondayAM);
     }
 
     public String getMondayPM() {
@@ -141,6 +156,7 @@ public class ContactInfoBean {
 
     public void setMondayPM(String mondayPM) {
         this.mondayPM = mondayPM;
+        properties.setProperty("mondayPM", mondayPM);
     }
 
     public String getTuesdayAM() {
@@ -149,6 +165,7 @@ public class ContactInfoBean {
 
     public void setTuesdayAM(String tuesdayAM) {
         this.tuesdayAM = tuesdayAM;
+        properties.setProperty("tuesdayAM", tuesdayAM);
     }
 
     public String getTuesdayPM() {
@@ -157,6 +174,7 @@ public class ContactInfoBean {
 
     public void setTuesdayPM(String tuesdayPM) {
         this.tuesdayPM = tuesdayPM;
+        properties.setProperty("tuesdayPM", tuesdayPM);
     }
 
     public String getWednesdayAM() {
@@ -165,6 +183,7 @@ public class ContactInfoBean {
 
     public void setWednesdayAM(String wednesdayAM) {
         this.wednesdayAM = wednesdayAM;
+        properties.setProperty("wednesdayAM", wednesdayAM);
     }
 
     public String getWednesdayPM() {
@@ -173,6 +192,7 @@ public class ContactInfoBean {
 
     public void setWednesdayPM(String wednesdayPM) {
         this.wednesdayPM = wednesdayPM;
+        properties.setProperty("wednesdayPM", wednesdayPM);
     }
 
     public String getThursdayAM() {
@@ -181,6 +201,7 @@ public class ContactInfoBean {
 
     public void setThursdayAM(String thursdayAM) {
         this.thursdayAM = thursdayAM;
+        properties.setProperty("thursdayAM", thursdayAM);
     }
 
     public String getThursdayPM() {
@@ -189,6 +210,7 @@ public class ContactInfoBean {
 
     public void setThursdayPM(String thursdayPM) {
         this.thursdayPM = thursdayPM;
+        properties.setProperty("thursdayPM", thursdayPM);
     }
 
     public String getFridayAM() {
@@ -197,6 +219,7 @@ public class ContactInfoBean {
 
     public void setFridayAM(String fridayAM) {
         this.fridayAM = fridayAM;
+        properties.setProperty("fridayAM", fridayAM);
     }
 
     public String getFridayPM() {
@@ -205,6 +228,7 @@ public class ContactInfoBean {
 
     public void setFridayPM(String fridayPM) {
         this.fridayPM = fridayPM;
+        properties.setProperty("fridayPM", fridayPM);
     }
 
     public String getSaturdayAM() {
@@ -213,6 +237,7 @@ public class ContactInfoBean {
 
     public void setSaturdayAM(String saturdayAM) {
         this.saturdayAM = saturdayAM;
+        properties.setProperty("saturdayAM", saturdayAM);
     }
 
     public String getSaturdayPM() {
@@ -221,5 +246,6 @@ public class ContactInfoBean {
 
     public void setSaturdayPM(String saturdayPM) {
         this.saturdayPM = saturdayPM;
+        properties.setProperty("saturdayPM", saturdayPM);
     }
 }
