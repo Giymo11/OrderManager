@@ -10,13 +10,16 @@ package constants;
 public enum Files {
     ADMIN, INFO;
 
+    public static String getFolder() {
+        return "C:\\pock\\";
+    }
+
     public String getPath() {
-        String folder = "C:\\pock\\";
         switch (this) {
             case ADMIN:
-                return folder + "admins.txt";
+                return getFolder() + "admins.txt";
             case INFO:
-                return folder + "contactinfo.properties";
+                return getFolder() + "contactinfo.properties";
             default:
                 return super.toString();
         }

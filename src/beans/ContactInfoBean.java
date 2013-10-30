@@ -4,19 +4,20 @@
  */
 package beans;
 
+import constants.Files;
+
 import javax.faces.bean.ManagedBean;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Properties;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
 /**
- *
  * @author Sarah
+ *         <p/>
+ *         This class is intentionally not serialized as it should be readable for humans.
  */
 
 @ManagedBean
@@ -39,45 +40,51 @@ public class ContactInfoBean {
     private String fridayPM;
     private String saturdayAM;
     private String saturdayPM;
-    
-    private Properties properties = null;
 
-    public ContactInfoBean(){
+    public ContactInfoBean() {
         try {
-            FileReader in = new FileReader("C:\\Pock\\contactinfo.properties");
-            properties = new Properties();
-            properties.load(in);
-            
-            name = properties.getProperty("name");
-            street = properties.getProperty("street");
-            location = properties.getProperty("location");
-            telephone = properties.getProperty("telephone");
-            mail = properties.getProperty("mail");
-            
-            mondayAM = properties.getProperty("mondayAM");
-            mondayPM = properties.getProperty("mondayPM");
-
-            tuesdayAM = properties.getProperty("tuesdayAM");
-            tuesdayPM = properties.getProperty("tuesdayPM");
-
-            wednesdayAM = properties.getProperty("wednesdayAM");
-            wednesdayPM = properties.getProperty("wednesdayPM");
-
-            thursdayAM = properties.getProperty("thursdayAM");
-            thursdayPM = properties.getProperty("thursdayPM");
-
-            fridayAM = properties.getProperty("fridayAM");
-            fridayPM = properties.getProperty("fridayPM");
-
-            saturdayAM = properties.getProperty("saturdayAM");
-            saturdayPM = properties.getProperty("saturdayPM");
-
-         } catch (FileNotFoundException ex) {
+            Properties properties = readProperties();
+            assignProperties(properties);
+        } catch (FileNotFoundException ex) {
             System.out.println("Property file not found!");
-         } catch (IOException ex) {
+        } catch (IOException ex) {
             Logger.getLogger(ContactInfoBean.class.getName()).log(Level.SEVERE, null, ex);
-         }
-        
+        }
+
+    }
+
+    private void assignProperties(Properties properties) {
+        name = properties.getProperty("name");
+        street = properties.getProperty("street");
+        location = properties.getProperty("location");
+        telephone = properties.getProperty("telephone");
+        mail = properties.getProperty("mail");
+
+        mondayAM = properties.getProperty("mondayAM");
+        mondayPM = properties.getProperty("mondayPM");
+
+        tuesdayAM = properties.getProperty("tuesdayAM");
+        tuesdayPM = properties.getProperty("tuesdayPM");
+
+        wednesdayAM = properties.getProperty("wednesdayAM");
+        wednesdayPM = properties.getProperty("wednesdayPM");
+
+        thursdayAM = properties.getProperty("thursdayAM");
+        thursdayPM = properties.getProperty("thursdayPM");
+
+        fridayAM = properties.getProperty("fridayAM");
+        fridayPM = properties.getProperty("fridayPM");
+
+        saturdayAM = properties.getProperty("saturdayAM");
+        saturdayPM = properties.getProperty("saturdayPM");
+    }
+
+    private Properties readProperties() throws IOException {
+        FileReader in = new FileReader(Files.INFO.getPath());
+        Properties properties = new Properties();
+        properties.load(in);
+        in.close();
+        return properties;
     }
 
     public String getName() {

@@ -3,22 +3,18 @@
         "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml"
       xmlns:h="http://java.sun.com/jsf/html"
-      xmlns:f="http://java.sun.com/jsf/core">
+        >
 <h:head>
-    <title>Login</title>
+    <title>Index</title>
 </h:head>
 <h:body>
-    <h:form>
-        E-Mail-Adresse:
-        <h:inputText required="true" value="#{LoginBean.email}">
-            <f:validator validatorId="emailValidator"/>
-        </h:inputText>
-        <br/>
-        Passwort:
-        <h:inputSecret name="password" value="#{LoginBean.password}"/>
-        <br/>
-        <h:commandButton value="Anmelden" actionListener="#{LoginBean.check}"/>
-    </h:form>
+    <h:link outcome="info.xhtml">Info</h:link>
+    <br/>
+    <h:link outcome="settings.xhtml">Settings</h:link>
+    <br/>
+    <h:link outcome="login.xhtml">Login</h:link>
+    <br/>
+    <h:link outcome="upload.xhtml">Upload</h:link>
 </h:body>
 </html>
 

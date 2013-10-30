@@ -14,6 +14,7 @@ import constants.Files;
 import dto.User;
 
 import javax.faces.application.FacesMessage;
+import javax.faces.bean.ManagedBean;
 import javax.faces.event.ActionEvent;
 import javax.faces.validator.ValidatorException;
 import java.io.BufferedReader;
@@ -22,6 +23,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
+@ManagedBean
 public class LoginBean {
     private String email;
     private String password;
@@ -46,12 +48,11 @@ public class LoginBean {
         String[] loginData = {getEmail(), getPassword()};
         User user = new User(loginData);
 
-        for (User admin : getAdmins()) {
+        for (User admin : getAdmins())
             if (admin.equals(user)) {
                 System.out.println("ES LEEEEEBT!!!");
                 return;
             }
-        }
 
         FacesMessage message = new FacesMessage("Username or Password wrong!");
         throw new ValidatorException(message);
