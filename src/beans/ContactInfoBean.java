@@ -6,17 +6,15 @@ package beans;
 
 import constants.Files;
 
+import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
-import java.io.FileNotFoundException;
-import java.io.FileReader;
-import java.io.FileWriter;
-import java.io.IOException;
+import javax.faces.context.FacesContext;
+import java.io.*;
 import java.util.Properties;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
 /**
- *
  * @author Sarah
  */
 
@@ -52,7 +50,6 @@ public class ContactInfoBean {
         } catch (IOException ex) {
             Logger.getLogger(ContactInfoBean.class.getName()).log(Level.SEVERE, null, ex);
         }
-
     }
 
     private void assignProperties(Properties properties) {
@@ -82,18 +79,31 @@ public class ContactInfoBean {
     }
 
     private Properties readProperties() throws IOException {
-        FileReader in = new FileReader(Files.INFO.getPath());
+        InputStreamReader in = new InputStreamReader(new FileInputStream(Files.INFO.getPath()), "UTF-8");
         Properties properties = new Properties();
         properties.load(in);
         in.close();
         return properties;
     }
 
-    public void writeToFile() throws IOException {
-        FileWriter out = new FileWriter("C:\\Pock\\contactinfo.properties");
-
-        properties.store(out,"Changed Contact-Info");
-        out.close();
+    public void writeToFile() {
+        FacesMessage message = new FacesMessage("New information is stored.");
+        try {
+            OutputStreamWriter out = new OutputStreamWriter(new FileOutputStream(Files.INFO.getPath()), "UTF-8");
+            properties.store(out, "Changed Contact-Info");
+            out.close();
+        } catch (UnsupportedEncodingException e) {
+            message = new FacesMessage("Unsupported encoding.");
+            e.printStackTrace();
+        } catch (FileNotFoundException e) {
+            message = new FacesMessage("File not found!");
+            e.printStackTrace();
+        } catch (IOException e) {
+            message = new FacesMessage("New information could not be stored.");
+            e.printStackTrace();
+        } finally {
+            FacesContext.getCurrentInstance().addMessage(null, message);
+        }
     }
 
     public String getName() {

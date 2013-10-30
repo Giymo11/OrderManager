@@ -5,7 +5,7 @@ and open the template in the editor.
 -->
 <!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/xhtml"
-      xmlns:h="http://java.sun.com/jsf/html">
+      xmlns:h="http://java.sun.com/jsf/html" xmlns:p="http://java.sun.com/jsf/html">
 <head>
     <title>Settings</title>
     <style>
@@ -38,6 +38,7 @@ and open the template in the editor.
 </head>
 <body class="info">
 <h:form>
+    <p:messages showDetail="false"/>
     <table class="openhours">
         <caption>Öffnungszeiten</caption>
         <tbody>
@@ -104,7 +105,6 @@ and open the template in the editor.
         </tbody>
     </table>
     <table class="contact">
-
         <caption>Kontakt</caption>
         <tbody>
         <tr>

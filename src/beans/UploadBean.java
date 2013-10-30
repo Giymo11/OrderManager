@@ -37,7 +37,7 @@ public class UploadBean {
             try {
                 File newFile = new File(Files.getFolder() + file.getFileName());
                 if (!newFile.createNewFile())
-                    FacesContext.getCurrentInstance().addMessage("Failure!", new FacesMessage("File already exists!"));
+                    FacesContext.getCurrentInstance().addMessage("Failure!", new FacesMessage("File already exists and will be overwritten!"));
 
                 FileOutputStream out = new FileOutputStream(newFile);
                 InputStream in = file.getInputstream();
@@ -57,6 +57,5 @@ public class UploadBean {
             }
         } else
             System.out.println("shit went full retard..");
-
     }
 }
