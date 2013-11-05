@@ -22,6 +22,7 @@ import java.io.InputStream;
 public class UploadBean {
 
     private UploadedFile file;
+    private String fileList;
 
     public UploadedFile getFile() {
         return file;
@@ -57,5 +58,13 @@ public class UploadBean {
             }
         } else
             System.out.println("shit went full retard..");
+    }
+
+    public void setFileList(String fileList) {
+        this.fileList = fileList;
+    }
+
+    public String getFileList() {
+        return new File(Files.getFolder()).list()[0];
     }
 }

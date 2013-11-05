@@ -8,7 +8,7 @@ package constants;
  * Files.
  */
 public enum Files {
-    ADMIN, INFO;
+    ADMIN, INFO, OFFERSMETA, OFFERSDIR;
 
     public static String getFolder() {
         return "C:\\pock\\";
@@ -20,6 +20,10 @@ public enum Files {
                 return getFolder() + "admins.txt";
             case INFO:
                 return getFolder() + "contactinfo.properties";
+            case OFFERSMETA:
+                return getFolder() + "/offers/offers.dat";
+            case OFFERSDIR:
+                return getFolder() + "/offers/";
             default:
                 return super.toString();
         }

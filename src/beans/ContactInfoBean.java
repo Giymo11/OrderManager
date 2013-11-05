@@ -135,6 +135,7 @@ public class ContactInfoBean {
 
     public String getTelephone() {
         return telephone;
+
     }
 
     public void setTelephone(String telephone) {

@@ -1,10 +1,5 @@
 package beans;
 
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
-
 /**
  *
  * @author Markus
@@ -70,6 +65,9 @@ public class LoginBean {
                 break;
             admins.add(new User(tmp.split(",")));
         } while (true);
+
+        br.close();
+
         return admins;
     }
 }
