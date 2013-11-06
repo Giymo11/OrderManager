@@ -11,19 +11,19 @@ public enum Files {
     ADMIN, INFO, OFFERSMETA, OFFERSDIR;
 
     public static String getFolder() {
-        return "C:\\pock\\";
+        return "C:\\pock";
     }
 
     public String getPath() {
         switch (this) {
             case ADMIN:
-                return getFolder() + "admins.txt";
+                return getFolder() + "\\admins.txt";
             case INFO:
-                return getFolder() + "contactinfo.properties";
+                return getFolder() + "\\contactinfo.properties";
             case OFFERSMETA:
-                return getFolder() + "/offers/offers.dat";
+                return getFolder() + "\\offers\\offers.dat";
             case OFFERSDIR:
-                return getFolder() + "/offers/";
+                return getFolder() + "\\offers\\";
             default:
                 return super.toString();
         }

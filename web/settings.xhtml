@@ -18,7 +18,7 @@ and open the template in the editor.
             font-variant: small-caps;
         }
 
-        .openhours {
+        .floatLeft {
             float: left;
         }
 
@@ -39,7 +39,7 @@ and open the template in the editor.
 <body class="info">
 <h:form>
     <p:messages showDetail="false"/>
-    <table class="openhours">
+    <table class="floatLeft">
         <caption>Öffnungszeiten</caption>
         <tbody>
         <tr>
@@ -104,6 +104,8 @@ and open the template in the editor.
         </tr>
         </tbody>
     </table>
+
+
     <table class="contact">
         <caption>Kontakt</caption>
         <tbody>
@@ -141,7 +143,9 @@ and open the template in the editor.
         </tr>
         </tbody>
     </table>
+
     <h:commandButton type="submit" value="Speichern" action="#{contactInfoBean.writeToFile}"/>
+
 </h:form>
 
 </body>

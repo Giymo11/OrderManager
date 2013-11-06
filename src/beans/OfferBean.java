@@ -92,9 +92,9 @@ public class OfferBean {
         for (String picture : picturelist) {
             picturename = picture.split("\\.")[0];
             for (String text : textlist) {
-                if (text.startsWith(picturename)) {
+                if (text.split("\\.")[0].equals(picturename)) {
                     try {
-                        addOffer(new Offer(picture, text));
+                        addOffer(new Offer(file.getPath() + "\\" + picture, file.getPath() + "\\" + text));
                     } catch (IOException e) {
                         e.printStackTrace();
                     }
@@ -109,25 +109,21 @@ public class OfferBean {
         if (inFile.exists()) {
             try {
                 ObjectInputStream inputStream = new ObjectInputStream(new FileInputStream(metapath));
-                if (inputStream != null) {
-                    Object readOffers = null;
-                    try {
-                        readOffers = inputStream.readObject();
-                    } catch (ClassNotFoundException e) {
-                        e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
-                    } finally {
-                        inputStream.close();
-                    }
-                    offers = (LinkedList<Offer>) readOffers;
-                } else
-                    offers = new LinkedList<>();
+                Object readOffers = null;
+                try {
+                    readOffers = inputStream.readObject();
+                } catch (ClassNotFoundException e) {
+                    e.printStackTrace();
+                } finally {
+                    inputStream.close();
+                }
+                offers = (LinkedList<Offer>) readOffers;
             } catch (EOFException ex) {
                 init();
             }
         } else {
             init();
         }
-        System.out.println(offers.toString());
     }
 
     public void write() throws IOException {

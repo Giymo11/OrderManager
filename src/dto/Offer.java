@@ -3,6 +3,7 @@ package dto;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.Serializable;
+import java.util.NoSuchElementException;
 import java.util.Scanner;
 
 /**
@@ -18,8 +19,8 @@ public class Offer implements Serializable {
     private String text;
 
     public Offer(String picturePath, String textPath) {
-        this.picturePath = picturePath;
-        this.textPath = textPath;
+        setPicturePath(picturePath);
+        setTextPath(textPath);
     }
 
     public String getPicturePath() {
@@ -39,12 +40,14 @@ public class Offer implements Serializable {
     }
 
     public String getText() {
-        if (text != null)
+        if (getTextPath() != null)
             try {
                 text = new Scanner(new File(getTextPath())).nextLine();
                 return text;
             } catch (FileNotFoundException e) {
-                e.printStackTrace();
+                System.out.println("File not found - " + getTextPath());
+            } catch (NoSuchElementException ex) {
+                text = "";
             }
         return null;
     }

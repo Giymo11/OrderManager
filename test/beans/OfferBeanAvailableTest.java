@@ -18,42 +18,26 @@ import static org.junit.Assert.fail;
  * User: Giymo11
  * Date: 04.11.13
  * Time: 14:49
+ * Tests if files for sample special offers are in place.
  */
-public class OfferBeanTest {
+public class OfferBeanAvailableTest {
 
     private OfferBean bean;
-    private List<File> filelist;
-    private File testFile, testDirectory;
+    private File testFile;
 
     @Before
     public void setUp() throws Exception {
-        testFile = new File(Files.getFolder() + "\\test\\offers.dat");
-        testDirectory = testFile.getParentFile();
+
+        testFile = new File(Files.OFFERSMETA.getPath());
+        File testDirectory = testFile.getParentFile();
         testDirectory.mkdir();
-
-        filelist = new LinkedList<>();
-
-        filelist.add(new File(testDirectory, "1.jpg"));
-        filelist.add(new File(testDirectory, "2.jpg"));
-        filelist.add(new File(testDirectory, "3.jpg"));
-        filelist.add(new File(testDirectory, "1.txt"));
-        filelist.add(new File(testDirectory, "2.txt"));
-        filelist.add(new File(testDirectory, "3.txt"));
-
-        for (File file : filelist)
-            file.createNewFile();
 
         bean = new OfferBean(testFile.getPath());
     }
 
     @After
     public void tearDown() throws Exception {
-        for (File file : filelist)
-            file.delete();
-
         testFile.delete();
-
-        testDirectory.delete();
     }
 
     @Test
@@ -82,9 +66,9 @@ public class OfferBeanTest {
     public void testInit() throws Exception {
         bean.init();
         List<Offer> expectedList = new LinkedList<>();
-        expectedList.add(new Offer(testDirectory.getPath() + "\\1.jpg", testDirectory.getPath() + "\\1.txt"));
-        expectedList.add(new Offer(testDirectory.getPath() + "\\2.jpg", testDirectory.getPath() + "\\2.txt"));
-        expectedList.add(new Offer(testDirectory.getPath() + "\\3.jpg", testDirectory.getPath() + "\\3.txt"));
+        expectedList.add(new Offer(Files.OFFERSDIR.getPath() + "1.jpg", Files.OFFERSDIR.getPath() + "1.txt"));
+        expectedList.add(new Offer(Files.OFFERSDIR.getPath() + "2.jpg", Files.OFFERSDIR.getPath() + "2.txt"));
+        expectedList.add(new Offer(Files.OFFERSDIR.getPath() + "3.jpg", Files.OFFERSDIR.getPath() + "3.txt"));
         assertEquals(expectedList, bean.getOffers());
     }
 }
