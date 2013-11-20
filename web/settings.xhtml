@@ -5,8 +5,9 @@ and open the template in the editor.
 -->
 <!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/xhtml"
-      xmlns:h="http://java.sun.com/jsf/html" xmlns:p="http://java.sun.com/jsf/html">
-<head>
+      xmlns:h="http://java.sun.com/jsf/html" xmlns:p="http://primefaces.org/ui"
+      xmlns:ui="http://java.sun.com/jsf/facelets">
+<h:head>
     <title>Settings</title>
     <style>
         h1 {
@@ -18,12 +19,8 @@ and open the template in the editor.
             font-variant: small-caps;
         }
 
-        .floatLeft {
-            float: left;
-        }
-
         caption {
-            font-size: 20px;
+            font-size: 14pt;
             font-weight: bold;
             color: #ffffff;
             background-color: #0B610B;
@@ -31,122 +28,26 @@ and open the template in the editor.
         }
 
         .info {
-            font: 15px Calibri;
+            font: 11pt Calibri;
         }
 
     </style>
-</head>
+</h:head>
+
 <body class="info">
-<h:form>
-    <p:messages showDetail="false"/>
-    <table class="floatLeft">
-        <caption>Öffnungszeiten</caption>
-        <tbody>
-        <tr>
-            <th>
-                Montag:
-            </th>
-            <td>
-                <h:inputText value="#{contactInfoBean.mondayAM}"/>
-                <br/>
-                <h:inputText value="#{contactInfoBean.mondayPM}"/>
-            </td>
-        </tr>
-        <tr>
-            <th>
-                Dienstag:
-            </th>
-            <td>
-                <h:inputText value="#{contactInfoBean.tuesdayAM}"/>
-                <br/>
-                <h:inputText value="#{contactInfoBean.tuesdayPM}"/>
-            </td>
-        </tr>
-        <tr>
-            <th>
-                Mittwoch:
-            </th>
-            <td>
-                <h:inputText value="#{contactInfoBean.wednesdayAM}"/>
-                <br/>
-                <h:inputText value="#{contactInfoBean.wednesdayPM}"/>
-            </td>
-        </tr>
-        <tr>
-            <th>
-                Donnerstag:
-            </th>
-            <td>
-                <h:inputText value="#{contactInfoBean.thursdayAM}"/>
-                <br/>
-                <h:inputText value="#{contactInfoBean.thursdayPM}"/>
-            </td>
-        </tr>
-        <tr>
-            <th>
-                Freitag:
-            </th>
-            <td>
-                <h:inputText value="#{contactInfoBean.fridayAM}"/>
-                <br/>
-                <h:inputText value="#{contactInfoBean.fridayPM}"/>
-            </td>
-        </tr>
-        <tr>
-            <th>
-                Samstag:
-            </th>
-            <td>
-                <h:inputText value="#{contactInfoBean.saturdayAM}"/>
-                <br/>
-                <h:inputText value="#{contactInfoBean.saturdayPM}"/>
-            </td>
-        </tr>
-        </tbody>
-    </table>
 
-
-    <table class="contact">
-        <caption>Kontakt</caption>
-        <tbody>
-        <tr>
-            <th>Name:</th>
-
-            <td>
-                <h:inputText value="#{contactInfoBean.name}"/>
-            </td>
-
-        </tr>
-        <tr>
-            <th>Straße:</th>
-            <td>
-                <h:inputText value="#{contactInfoBean.street}"/>
-            </td>
-        </tr>
-        <tr>
-            <th>Ort:</th>
-            <td>
-                <h:inputText value="#{contactInfoBean.location}"/>
-            </td>
-        </tr>
-        <tr>
-            <th>Telefon:</th>
-            <td>
-                <h:inputText value="#{contactInfoBean.telephone}"/>
-            </td>
-        </tr>
-        <tr>
-            <th>E-Mail:</th>
-            <td>
-                <h:inputText value="#{contactInfoBean.mail}"/>
-            </td>
-        </tr>
-        </tbody>
-    </table>
-
-    <h:commandButton type="submit" value="Speichern" action="#{contactInfoBean.writeToFile}"/>
-
-</h:form>
+<p:messages showDetail="false"/>
+<p:tabView>
+    <p:tab title="Kontakt">
+        <ui:include src="editcontactinfopanel.xhtml"/>
+    </p:tab>
+    <p:tab title="Spezial-Angebote">
+        <ui:include src="editspecialoffers.xhtml"/>
+    </p:tab>
+    <p:tab title="Produkte">
+        <p>Not available yet</p>
+    </p:tab>
+</p:tabView>
 
 </body>
 </html>

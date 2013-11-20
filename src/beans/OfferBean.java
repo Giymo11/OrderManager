@@ -9,6 +9,7 @@ import javax.faces.context.FacesContext;
 import java.io.*;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Created with IntelliJ IDEA.
@@ -81,7 +82,7 @@ public class OfferBean {
         String[] textlist = file.list(new FilenameFilter() {
             @Override
             public boolean accept(File dir, String name) {
-                return name.toLowerCase().endsWith(".dat") || name.toLowerCase().endsWith(".txt");
+                return name.toLowerCase().endsWith(".txt");
             }
         });
         for (String picture : picturelist)
@@ -126,9 +127,45 @@ public class OfferBean {
         }
     }
 
-    public void write() throws IOException {
-        ObjectOutputStream stream = new ObjectOutputStream(new FileOutputStream(metapath));
-        stream.writeObject(offers);
-        stream.close();
+    public void write() {
+        FacesMessage message = new FacesMessage("New information is stored.");
+        try {
+            ObjectOutputStream stream = new ObjectOutputStream(new FileOutputStream(metapath));
+            stream.writeObject(offers);
+            stream.close();
+        } catch (FileNotFoundException e) {
+            message = new FacesMessage("File not found!");
+            e.printStackTrace();
+        } catch (IOException e) {
+            message = new FacesMessage("New information could not be stored.");
+            e.printStackTrace();
+        } finally {
+            FacesContext.getCurrentInstance().addMessage(null, message);
+        }
+    }
+
+    public void delete() {
+        try {
+            System.out.println("OfferBean:delete called");
+            //System.out.println(fetchParameter("picPath"));
+        } catch (IllegalArgumentException illArgEx) {
+            illArgEx.printStackTrace();
+        }
+    }
+
+    public String fetchParameter(String param) {
+        Map parameters = FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap();
+
+        String value = (String) parameters.get(param);
+
+        if (value == null || value.length() == 0)
+            throw new IllegalArgumentException("Could not find parameter '" + param + "' in request parameters");
+
+        return value;
+    }
+
+    public void addNewOffer() {
+        System.out.println("OfferBean:delete called");
+        //System.out.println(fetchParameter("newOfferText"));
     }
 }

@@ -1,0 +1,38 @@
+<ui:composition
+        xmlns="http://www.w3.org/1999/xhtml"
+        xmlns:h="http://java.sun.com/jsf/html"
+        xmlns:ui="http://java.sun.com/jsf/facelets" xmlns:f="http://java.sun.com/jsf/core">
+
+    <h:form>
+        <h:dataTable var="item" value="#{offerBean.offers}">
+            <h:column>
+                <p>PicturePath:</p>
+            </h:column>
+            <h:column>
+                <h:outputText value="#{item.picturePath}"/>
+            </h:column>
+            <h:column>
+                <h:inputTextarea value="#{item.text}"/>
+                <h:commandButton type="submit" value="Löschen" action="#{offerBean.delete}">
+                    <f:param value="#{item.picturePath}" name="picPath"/>
+                </h:commandButton>
+            </h:column>
+        </h:dataTable>
+        <table>
+            <h:column>
+                Placeholder for pic upload:
+            </h:column>
+            <h:column>
+                <h:inputTextarea value="Text for new offer" id="newText">
+                    <f:param value="" name="newOfferText"/>
+                </h:inputTextarea>
+            </h:column>
+            <h:column>
+                <h:commandButton type="submit" value="Hinzufügen" action="#{offerBean.addNewOffer}"/>
+            </h:column>
+        </table>
+        <br/>
+        <h:commandButton type="submit" value="Speichern" action="#{offerBean.write}"/>
+
+    </h:form>
+</ui:composition>

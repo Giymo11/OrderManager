@@ -1,8 +1,6 @@
 package dto;
 
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.Serializable;
+import java.io.*;
 import java.util.NoSuchElementException;
 import java.util.Scanner;
 
@@ -50,6 +48,17 @@ public class Offer implements Serializable {
                 text = "";
             }
         return null;
+    }
+
+    public void setText(String newText) {
+        if (textPath != null)
+            try {
+                BufferedWriter out = new BufferedWriter(new FileWriter(textPath));
+                out.write(newText);
+                out.close();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
     }
 
     @Override

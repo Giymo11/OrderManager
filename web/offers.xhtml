@@ -11,9 +11,11 @@
 <h:body>
     <p:messages showDetail="false"/>
     <h:dataTable var="item" value="#{offerBean.offers}">
-        <h:graphicImage value="#{item.picturePath}"/>
-        <br/>
-        <h:outputText value="#{item.text}"/>
+        <h:column>
+            <h:graphicImage value="#{item.picturePath}"/>
+            <br/>
+            <h:outputText value="#{item.text}"/>
+        </h:column>
     </h:dataTable>
 </h:body>
 </html>
