@@ -7,6 +7,8 @@ import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
 import javax.faces.context.FacesContext;
 import java.io.*;
+import java.nio.file.FileSystems;
+import java.nio.file.Path;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
@@ -22,6 +24,8 @@ import java.util.Map;
 public class OfferBean {
     private final String metapath;
     private List<Offer> offers;
+    private String newText;
+    private String newName;
 
     public OfferBean(String metapath) {
         this.metapath = metapath;
@@ -144,12 +148,28 @@ public class OfferBean {
         }
     }
 
+    /*
+        How to add priority in offers.dat?
+        fetchparameter returns "C:pockoffer .txt" - how to find out which offer to delete?
+     */
     public void delete() {
         try {
-            System.out.println("OfferBean:delete called");
-            //System.out.println(fetchParameter("picPath"));
+            for (Offer offer : offers) {
+                if (offer.getTextPath() == fetchParameter("textPath")) {
+                    //offers.remove(offer);
+                    Path textPath = FileSystems.getDefault().getPath(offer.getTextPath());
+                    Path picPath = FileSystems.getDefault().getPath(offer.getPicturePath());
+
+                    java.nio.file.Files.delete(textPath);
+                    java.nio.file.Files.delete(picPath);
+
+                    //write();
+                }
+            }
         } catch (IllegalArgumentException illArgEx) {
             illArgEx.printStackTrace();
+        } catch (IOException ioe) {
+            ioe.printStackTrace();
         }
     }
 
@@ -164,8 +184,34 @@ public class OfferBean {
         return value;
     }
 
-    public void addNewOffer() {
-        System.out.println("OfferBean:delete called");
-        //System.out.println(fetchParameter("newOfferText"));
+    /*
+        to finish we ned fixed picture upload
+     */
+    public void addNewOffer() throws IOException {
+        FileWriter out = new FileWriter(Files.OFFERSDIR.getPath() + newName + ".txt");
+        out.write(newText);
+        out.close();
+
+        //offers.add(new Offer(Files.OFFERSDIR.getPath() + newName + ".png", Files.OFFERSDIR.getPath() + newName + ".txt"));
+        newText = null;
+        newName = null;
+
+        //write();
+    }
+
+    public String getNewText() {
+        return newText;
+    }
+
+    public void setNewText(String newText) {
+        this.newText = newText;
+    }
+
+    public String getNewName() {
+        return newName;
+    }
+
+    public void setNewName(String newName) {
+        this.newName = newName;
     }
 }
