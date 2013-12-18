@@ -25,5 +25,6 @@ public class UploadBeanTest {
 
         assertFalse(UploadBean.hasPictureExtension("omgNoJpg"));
         assertFalse(UploadBean.hasPictureExtension("fsdo123jfd.txt"));
+
     }
 }

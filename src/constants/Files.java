@@ -1,5 +1,7 @@
 package constants;
 
+import javax.faces.context.FacesContext;
+
 /**
  * Created with IntelliJ IDEA.
  * User: Giymo11
@@ -11,7 +13,13 @@ public enum Files {
     ADMIN, INFO, OFFERSMETA, OFFERSDIR;
 
     public static String getFolder() {
-        return "C:\\pock";
+        String folder = "C:\\pock";
+        try {
+            folder = FacesContext.getCurrentInstance().getExternalContext().getRealPath("");
+        } catch (NullPointerException e) {
+            //do nothing
+        }
+        return folder;
     }
 
     public String getPath() {

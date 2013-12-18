@@ -19,9 +19,19 @@ import java.io.*;
 public class UploadBean {
 
     private UploadedFile file;
+    private File fileToDelete;
+
+    public File getFileToDelete() {
+        return fileToDelete;
+    }
+
+    public void setFileToDelete(File fileToDelete) {
+        this.fileToDelete = fileToDelete;
+    }
 
     public UploadedFile getFile() {
         return file;
+
     }
 
     public void setFile(UploadedFile file) {
@@ -39,6 +49,7 @@ public class UploadBean {
             System.out.println("File uploaded: " + file.getFileName());
             try {
                 File newFile = new File(Files.getFolder() + "\\" + file.getFileName());
+                System.out.println(newFile + " is the path to new File.");
                 if (!newFile.createNewFile())
                     FacesContext.getCurrentInstance().addMessage("Failure!", new FacesMessage("File already exists and will be overwritten!"));
 
@@ -68,13 +79,18 @@ public class UploadBean {
         return filename.toLowerCase().endsWith(".png") || filename.toLowerCase().endsWith(".jpg") || filename.toLowerCase().endsWith(".jpeg");
     }
 
-    public String[] getUploadedPictureNames() {
+    public File[] getUploadedPictures() {
         File folder = new File(Files.getFolder());
-        return folder.list(new FilenameFilter() {
+        return folder.listFiles(new FilenameFilter() {
             @Override
             public boolean accept(File dir, String name) {
                 return hasPictureExtension(name);
             }
         });
+    }
+
+    public void delete() {
+        //noinspection ResultOfMethodCallIgnored
+        fileToDelete.delete();
     }
 }

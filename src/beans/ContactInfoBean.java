@@ -50,6 +50,8 @@ public class ContactInfoBean {
         } catch (IOException ex) {
             Logger.getLogger(ContactInfoBean.class.getName()).log(Level.SEVERE, null, ex);
         }
+
+
     }
 
     private void assignProperties(Properties properties) {
