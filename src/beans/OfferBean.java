@@ -113,14 +113,11 @@ public class OfferBean {
         File inFile = new File(metapath);
         if (inFile.exists()) {
             try {
-                ObjectInputStream inputStream = new ObjectInputStream(new FileInputStream(metapath));
                 Object readOffers = null;
-                try {
+                try (ObjectInputStream inputStream = new ObjectInputStream(new FileInputStream(metapath))) {
                     readOffers = inputStream.readObject();
                 } catch (ClassNotFoundException e) {
                     e.printStackTrace();
-                } finally {
-                    inputStream.close();
                 }
                 offers = (LinkedList<Offer>) readOffers;
             } catch (EOFException ex) {
@@ -144,7 +141,8 @@ public class OfferBean {
             message = new FacesMessage("New information could not be stored.");
             e.printStackTrace();
         } finally {
-            FacesContext.getCurrentInstance().addMessage(null, message);
+            if (FacesContext.getCurrentInstance() != null)
+                FacesContext.getCurrentInstance().addMessage(null, message);
         }
     }
 
@@ -155,7 +153,7 @@ public class OfferBean {
     public void delete() {
         try {
             for (Offer offer : offers) {
-                if (offer.getTextPath() == fetchParameter("textPath")) {
+                if (offer.getTextPath().equals(fetchParameter("textPath"))) {
                     //offers.remove(offer);
                     Path textPath = FileSystems.getDefault().getPath(offer.getTextPath());
                     Path picPath = FileSystems.getDefault().getPath(offer.getPicturePath());
@@ -166,10 +164,8 @@ public class OfferBean {
                     //write();
                 }
             }
-        } catch (IllegalArgumentException illArgEx) {
+        } catch (IllegalArgumentException | IOException illArgEx) {
             illArgEx.printStackTrace();
-        } catch (IOException ioe) {
-            ioe.printStackTrace();
         }
     }
 

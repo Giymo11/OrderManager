@@ -6,10 +6,7 @@ import org.primefaces.model.UploadedFile;
 import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
 import javax.faces.context.FacesContext;
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
+import java.io.*;
 
 
 /**
@@ -32,7 +29,13 @@ public class UploadBean {
     }
 
     public void upload() {
-        if (file != null && !file.getFileName().equals("")) {
+        if (file == null) {
+            FacesContext.getCurrentInstance().addMessage("Failure!", new FacesMessage("No file uploaded!"));
+            return;
+        }
+        if (!(hasPictureExtension(file.getFileName()))) {
+            FacesContext.getCurrentInstance().addMessage("Failure!", new FacesMessage("File is no picture!"));
+        } else if (!file.getFileName().equals("")) {
             System.out.println("File uploaded: " + file.getFileName());
             try {
                 File newFile = new File(Files.getFolder() + "\\" + file.getFileName());
@@ -57,5 +60,21 @@ public class UploadBean {
             }
         } else
             System.out.println("shit went full retard..");
+
+        setFile(null);
+    }
+
+    public static boolean hasPictureExtension(String filename) {
+        return filename.toLowerCase().endsWith(".png") || filename.toLowerCase().endsWith(".jpg") || filename.toLowerCase().endsWith(".jpeg");
+    }
+
+    public String[] getUploadedPictureNames() {
+        File folder = new File(Files.getFolder());
+        return folder.list(new FilenameFilter() {
+            @Override
+            public boolean accept(File dir, String name) {
+                return hasPictureExtension(name);
+            }
+        });
     }
 }
