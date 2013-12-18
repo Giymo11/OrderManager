@@ -22,7 +22,6 @@ import java.io.InputStream;
 public class UploadBean {
 
     private UploadedFile file;
-    private String fileList;
 
     public UploadedFile getFile() {
         return file;
@@ -36,7 +35,7 @@ public class UploadBean {
         if (file != null && !file.getFileName().equals("")) {
             System.out.println("File uploaded: " + file.getFileName());
             try {
-                File newFile = new File(Files.getFolder() + file.getFileName());
+                File newFile = new File(Files.getFolder() + "\\" + file.getFileName());
                 if (!newFile.createNewFile())
                     FacesContext.getCurrentInstance().addMessage("Failure!", new FacesMessage("File already exists and will be overwritten!"));
 
@@ -58,13 +57,5 @@ public class UploadBean {
             }
         } else
             System.out.println("shit went full retard..");
-    }
-
-    public void setFileList(String fileList) {
-        this.fileList = fileList;
-    }
-
-    public String getFileList() {
-        return new File(Files.getFolder()).list()[0];
     }
 }
