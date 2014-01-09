@@ -4,8 +4,6 @@
  */
 package beans;
 
-import constants.Files;
-
 import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
 import javax.faces.context.FacesContext;
@@ -79,7 +77,7 @@ public class ContactInfoBean {
     }
 
     private Properties readProperties() throws IOException {
-        InputStreamReader in = new InputStreamReader(new FileInputStream(Files.INFO.getPath()), "UTF-8");
+        InputStreamReader in = new InputStreamReader(new FileInputStream(""), "UTF-8"); //"" = Files.INFO.getPath()
         Properties properties = new Properties();
         properties.load(in);
         in.close();
@@ -89,7 +87,7 @@ public class ContactInfoBean {
     public void writeToFile() {
         FacesMessage message = new FacesMessage("New information is stored.");
         try {
-            OutputStreamWriter out = new OutputStreamWriter(new FileOutputStream(Files.INFO.getPath()), "UTF-8");
+            OutputStreamWriter out = new OutputStreamWriter(new FileOutputStream(""), "UTF-8"); //"" = Files.INFO.getPath()
             properties.store(out, "Changed Contact-Info");
             out.close();
         } catch (UnsupportedEncodingException e) {

@@ -14,8 +14,7 @@
             <h:column>
                 <h:inputTextarea value="#{item.text}"/>
                 <h:commandButton type="submit" value="Löschen" action="#{offerBean.delete}">
-                    <f:param value="#{item.textPath}" name="textPath"/>
-                    <f:param value="#{item.picturePath}" name="picPath"/>
+                    <f:param value="#{item.id}" name="id"/>
                 </h:commandButton>
             </h:column>
         </h:dataTable>

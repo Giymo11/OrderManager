@@ -1,8 +1,7 @@
 package dto;
 
-import java.io.*;
-import java.util.NoSuchElementException;
-import java.util.Scanner;
+import java.io.Serializable;
+import java.util.Objects;
 
 /**
  * Created with IntelliJ IDEA.
@@ -12,79 +11,102 @@ import java.util.Scanner;
  * The DTO representing an offer.
  */
 public class Offer implements Serializable {
-    private String picturePath;
-    private String textPath;
-    private String text;
+    private String title;
+    private String description;
+    private double price;
+    private String picture;
+    private int priority;
 
-    public Offer(String picturePath, String textPath) {
-        setPicturePath(picturePath);
-        setTextPath(textPath);
+
+    public Offer(String title, String description, double price, String picture, int priority) {
+        setTitle(title);
+        setDescription(description);
+        setPrice(price);
+        setPicture(picture);
+        setPriority(priority);
     }
 
-    public String getPicturePath() {
-        return picturePath;
+    public String getTitle() {
+        return title;
     }
 
-    public void setPicturePath(String picturePath) {
-        this.picturePath = picturePath;
+    public void setTitle(String title) {
+        this.title = title;
     }
 
-    public String getTextPath() {
-        return textPath;
+    public String getDescription() {
+        return description;
     }
 
-    public void setTextPath(String textPath) {
-        this.textPath = textPath;
+    public void setDescription(String description) {
+        this.description = description;
     }
 
-    public String getText() {
-        if (getTextPath() != null)
-            try {
-                text = new Scanner(new File(getTextPath())).nextLine();
-                return text;
-            } catch (FileNotFoundException e) {
-                System.out.println("File not found - " + getTextPath());
-            } catch (NoSuchElementException ex) {
-                text = "";
-            }
-        return null;
+    public double getPrice() {
+        return price;
     }
 
-    public void setText(String newText) {
-        if (textPath != null)
-            try {
-                BufferedWriter out = new BufferedWriter(new FileWriter(textPath));
-                out.write(newText);
-                out.close();
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
+    public void setPrice(double price) {
+        this.price = price;
     }
 
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
+    public String getPicture() {
+        return picture;
+    }
 
-        Offer offer = (Offer) o;
+    public void setPicture(String picture) {
+        this.picture = picture;
+    }
 
-        return !(picturePath != null ? !picturePath.toLowerCase().equals(offer.picturePath.toLowerCase()) : offer.picturePath != null) && !(textPath != null ? !textPath.toLowerCase().equals(offer.textPath.toLowerCase()) : offer.textPath != null);
+    public int getPriority() {
+        return priority;
+    }
 
+    public void setPriority(int priority) {
+        this.priority = priority;
     }
 
     @Override
     public int hashCode() {
-        int result = picturePath != null ? picturePath.hashCode() : 0;
-        result = 31 * result + (textPath != null ? textPath.hashCode() : 0);
-        return result;
+        int hash = 5;
+        hash = 41 * hash + Objects.hashCode(this.title);
+        hash = 41 * hash + Objects.hashCode(this.description);
+        hash = 41 * hash + (int) (Double.doubleToLongBits(this.price) ^ (Double.doubleToLongBits(this.price) >>> 32));
+        hash = 41 * hash + Objects.hashCode(this.picture);
+        hash = 41 * hash + this.priority;
+        return hash;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (obj == null) {
+            return false;
+        }
+        if (getClass() != obj.getClass()) {
+            return false;
+        }
+        final Offer other = (Offer) obj;
+        if (!Objects.equals(this.title, other.title)) {
+            return false;
+        }
+        if (!Objects.equals(this.description, other.description)) {
+            return false;
+        }
+        if (Double.doubleToLongBits(this.price) != Double.doubleToLongBits(other.price)) {
+            return false;
+        }
+        if (!Objects.equals(this.picture, other.picture)) {
+            return false;
+        }
+        if (this.priority != other.priority) {
+            return false;
+        }
+        return true;
     }
 
     @Override
     public String toString() {
-        return "Offer{" +
-                "picturePath='" + picturePath + '\'' +
-                ", textPath='" + textPath + '\'' +
-                ", text='" + getText() + '\'' +
-                '}';
+        return "Offer{" + "title=" + title + ", description=" + description + ", price=" + price + ", picture=" + picture + ", priority=" + priority + '}';
     }
+
 }

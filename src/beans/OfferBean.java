@@ -1,14 +1,11 @@
 package beans;
 
-import constants.Files;
 import dto.Offer;
 
 import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
 import javax.faces.context.FacesContext;
 import java.io.*;
-import java.nio.file.FileSystems;
-import java.nio.file.Path;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
@@ -22,17 +19,17 @@ import java.util.Map;
  */
 @ManagedBean
 public class OfferBean {
-    private final String metapath;
+    //private final String metapath;
     private List<Offer> offers;
     private String newText;
     private String newName;
 
     public OfferBean(String metapath) {
-        this.metapath = metapath;
+        //this.metapath = metapath;
     }
 
     public OfferBean() {
-        metapath = Files.OFFERSMETA.getPath();
+        //metapath = Files.OFFERSMETA.getPath();
     }
 
     public List<Offer> getOffers() {
@@ -41,7 +38,7 @@ public class OfferBean {
                 read();
             } catch (IOException e) {
                 e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
-                FacesContext.getCurrentInstance().addMessage("Failure!", new FacesMessage("File could not be accessed!"));
+                //FacesContext.getCurrentInstance().addMessage("Failure!", new FacesMessage("File could not be accessed!"));
             }
         return offers;
     }
@@ -65,7 +62,7 @@ public class OfferBean {
         offers.add(offer);
         write();
     }
-
+    /*
     public void init() throws IOException {
         File file = new File(metapath);
         //if(!file.getParentFile().exists())
@@ -91,7 +88,7 @@ public class OfferBean {
         });
         for (String picture : picturelist)
             System.out.println(picture);
-        for (String text : picturelist)
+        for (String text : textlist)
             System.out.println(text);
         String picturename;
         for (String picture : picturelist) {
@@ -99,7 +96,8 @@ public class OfferBean {
             for (String text : textlist) {
                 if (text.split("\\.")[0].equals(picturename)) {
                     try {
-                        addOffer(new Offer(file.getPath() + "\\" + picture, file.getPath() + "\\" + text));
+                        addOffer(new Offer(file.getPath() + "\\" + picture, file.getPath() + "\\" + text, ));
+                        //addOffer(new Offer(file.getPath() + "\\" + picture, file.getPath() + "\\" + text));
                     } catch (IOException e) {
                         e.printStackTrace();
                     }
@@ -107,13 +105,13 @@ public class OfferBean {
                 }
             }
         }
-    }
+    }*/
 
     public void read() throws IOException {
-        File inFile = new File(metapath);
+        File inFile = new File(""); //"" = metapath
         if (inFile.exists()) {
             try {
-                ObjectInputStream inputStream = new ObjectInputStream(new FileInputStream(metapath));
+                ObjectInputStream inputStream = new ObjectInputStream(new FileInputStream("")); //"" = metapath
                 Object readOffers = null;
                 try {
                     readOffers = inputStream.readObject();
@@ -124,17 +122,17 @@ public class OfferBean {
                 }
                 offers = (LinkedList<Offer>) readOffers;
             } catch (EOFException ex) {
-                init();
+                //init();
             }
         } else {
-            init();
+            //init();
         }
     }
 
     public void write() {
         FacesMessage message = new FacesMessage("New information is stored.");
         try {
-            ObjectOutputStream stream = new ObjectOutputStream(new FileOutputStream(metapath));
+            ObjectOutputStream stream = new ObjectOutputStream(new FileOutputStream("")); //"" = metapath
             stream.writeObject(offers);
             stream.close();
         } catch (FileNotFoundException e) {
@@ -148,29 +146,8 @@ public class OfferBean {
         }
     }
 
-    /*
-        How to add priority in offers.dat?
-        fetchparameter returns "C:pockoffer .txt" - how to find out which offer to delete?
-     */
     public void delete() {
-        try {
-            for (Offer offer : offers) {
-                if (offer.getTextPath() == fetchParameter("textPath")) {
-                    //offers.remove(offer);
-                    Path textPath = FileSystems.getDefault().getPath(offer.getTextPath());
-                    Path picPath = FileSystems.getDefault().getPath(offer.getPicturePath());
 
-                    java.nio.file.Files.delete(textPath);
-                    java.nio.file.Files.delete(picPath);
-
-                    //write();
-                }
-            }
-        } catch (IllegalArgumentException illArgEx) {
-            illArgEx.printStackTrace();
-        } catch (IOException ioe) {
-            ioe.printStackTrace();
-        }
     }
 
     public String fetchParameter(String param) {
@@ -184,19 +161,8 @@ public class OfferBean {
         return value;
     }
 
-    /*
-        to finish we ned fixed picture upload
-     */
     public void addNewOffer() throws IOException {
-        FileWriter out = new FileWriter(Files.OFFERSDIR.getPath() + newName + ".txt");
-        out.write(newText);
-        out.close();
 
-        //offers.add(new Offer(Files.OFFERSDIR.getPath() + newName + ".png", Files.OFFERSDIR.getPath() + newName + ".txt"));
-        newText = null;
-        newName = null;
-
-        //write();
     }
 
     public String getNewText() {
