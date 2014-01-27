@@ -1,45 +1,54 @@
 package dbaccess;
 
+
+import javax.naming.Context;
+import javax.naming.InitialContext;
+import javax.naming.NamingException;
+import javax.sql.DataSource;
 import java.sql.Connection;
-import java.sql.DriverManager;
 import java.sql.SQLException;
-import java.util.logging.Level;
-import java.util.logging.Logger;
+
+
+/**
+ * The ConnectionManager fetches a connection via JNDI e.g. from Tomcat,
+ * which support connection pooling and prepared statement pooling.
+ *
+ * @author posch
+ */
 
 public class ConnectionManager {
-    private final static Logger log = Logger.getLogger(ConnectionManager.class.getName());
-    private static ConnectionManager connectionManager = null;
-    private Connection connection = null;
+    /**
+     * @param dataSource the name of the datasource defined in context.xml or web.xml
+     * @param autoCommit determines if autocommit is set
+     * @return a connection from tomcat connectionmanager, which support connection pooling.
+     *         JDBC 2 does not support Statement pooling, but JDBC 3 does.
+     *         Prepared Statements are pooled entirely under the covers, that means that there is no diference between jdbc 2 and 3 code.
+     *         This means that under JDBC 3.0, your existing code will automatically leverage statement pooling.
+     *         Unfortunately, this also means that you do not have control over which prepared statements are pooled,
+     *         only the number of statements that are cached.
+     */
 
-    private String username = "root";
-    private String password = "passwort";
-    private String url = "jdbc:mysql://localhost:3306/mysql";
+    public static Connection getConnection(String dataSource, boolean autoCommit) {
+        Context ctx;
+        Connection connection = null;
 
-    private ConnectionManager() throws SQLException {
         try {
-            Class.forName("com.mysql.jdbc.Driver");
-        } catch (ClassNotFoundException ex) {
-            log.log(Level.SEVERE, ex.getMessage(), ex);
-        }
-        connection = DriverManager.getConnection(url, username, password);
-    }
+            ctx = new InitialContext();
 
-    public static ConnectionManager getInstance() throws SQLException {
-        if (connectionManager == null) {
-            connectionManager = new ConnectionManager();
-        }
-        return connectionManager;
-    }
+            Context envcontext = (Context) ctx.lookup("java:comp/env/");
+            DataSource ds = (DataSource) envcontext.lookup(dataSource);
 
-    public Connection getConnection() {
-        return connection;
-    }
+            connection = ds.getConnection();
+            // setup the connection
+            connection.setAutoCommit(autoCommit);
 
-    public void closeConnection() {
-        try {
-            connection.close();
+        } catch (NamingException ex) {
+            System.out.println("Naming exception:     " + ex);
         } catch (SQLException ex) {
-            log.log(Level.SEVERE, ex.getMessage(), ex);
+            System.out.println(ex);
         }
+        if (connection == null)
+            System.out.println("Connection is null in getConnection");
+        return connection;
     }
 }
