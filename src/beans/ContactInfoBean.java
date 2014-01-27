@@ -4,13 +4,13 @@
  */
 package beans;
 
-import javax.faces.application.FacesMessage;
+import dbaccess.ConnectionManager;
+
 import javax.faces.bean.ManagedBean;
-import javax.faces.context.FacesContext;
-import java.io.*;
-import java.util.Properties;
-import java.util.logging.Level;
-import java.util.logging.Logger;
+import java.sql.Connection;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
 
 /**
  * @author Sarah
@@ -37,71 +37,100 @@ public class ContactInfoBean {
     private String saturdayAM;
     private String saturdayPM;
 
-    private Properties properties = null;
+    private ConnectionManager connectionManager;
+    private Connection connection;
 
     public ContactInfoBean() {
+        connectionManager = new ConnectionManager();
+        connection = connectionManager.getConnection("jdbc/dataSource", false);
+        read();
+    }
+
+    private void read() {
         try {
-            properties = readProperties();
-            assignProperties(properties);
-        } catch (FileNotFoundException ex) {
-            System.out.println("Property file not found!");
-        } catch (IOException ex) {
-            Logger.getLogger(ContactInfoBean.class.getName()).log(Level.SEVERE, null, ex);
+            Statement statement = connection.createStatement();
+            Statement statementInfo = connection.createStatement();
+
+            ResultSet resHours = statement.executeQuery("SELECT * FROM ordermanager.openinghours");
+            ResultSet resInfo = statementInfo.executeQuery("SELECT * FROM ordermanager.contactinfo");
+
+            if (!resHours.isClosed()) {
+                while (resHours.next()) {
+                    setDays(resHours);
+                    if (resHours.isLast())
+                        break;
+                }
+            } else
+                System.out.println("resHours is closed");
+
+            resInfo.next();
+            setInfo(resInfo);
+
+            resHours.close();
+            resInfo.close();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+    }
+
+    private void setDays(ResultSet res) throws SQLException {
+        String str = res.getString(2);      //returns start of working hours. getString(3) returns end of working hours
+        int firstOpenHour = 0;
+
+        //init firstOpenHour with the first two digits of the first working hour
+        if (str != null) {
+            str = str.substring(0, 2);
+            firstOpenHour = Integer.valueOf(str);
+        }
+
+        //res.getInt(1) returns day of the week
+        switch (res.getInt(1)) {
+            case 1:
+                if (firstOpenHour < 12)
+                    mondayAM = res.getString(2) + " - " + res.getString(3);
+                else
+                    mondayPM = res.getString(2) + " - " + res.getString(3);
+                break;
+            case 2:
+                if (firstOpenHour < 12)
+                    tuesdayAM = res.getString(2) + " - " + res.getString(3);
+                else
+                    tuesdayPM = res.getString(2) + " - " + res.getString(3);
+                break;
+            case 3:
+                if (firstOpenHour < 12)
+                    wednesdayAM = res.getString(2) + " - " + res.getString(3);
+                else
+                    wednesdayPM = res.getString(2) + " - " + res.getString(3);
+                break;
+            case 4:
+                if (firstOpenHour < 12)
+                    thursdayAM = res.getString(2) + " - " + res.getString(3);
+                else
+                    thursdayPM = res.getString(2) + " - " + res.getString(3);
+                break;
+            case 5:
+                if (firstOpenHour < 12)
+                    fridayAM = res.getString(2) + " - " + res.getString(3);
+                else
+                    fridayPM = res.getString(2) + " - " + res.getString(3);
+                break;
+            case 6:
+                if (firstOpenHour < 12)
+                    saturdayAM = res.getString(2) + " - " + res.getString(3);
+                else
+                    saturdayPM = res.getString(2) + " - " + res.getString(3);
+                break;
         }
     }
 
-    private void assignProperties(Properties properties) {
-        name = properties.getProperty("name");
-        street = properties.getProperty("street");
-        location = properties.getProperty("location");
-        telephone = properties.getProperty("telephone");
-        mail = properties.getProperty("mail");
-
-        mondayAM = properties.getProperty("mondayAM");
-        mondayPM = properties.getProperty("mondayPM");
-
-        tuesdayAM = properties.getProperty("tuesdayAM");
-        tuesdayPM = properties.getProperty("tuesdayPM");
-
-        wednesdayAM = properties.getProperty("wednesdayAM");
-        wednesdayPM = properties.getProperty("wednesdayPM");
-
-        thursdayAM = properties.getProperty("thursdayAM");
-        thursdayPM = properties.getProperty("thursdayPM");
-
-        fridayAM = properties.getProperty("fridayAM");
-        fridayPM = properties.getProperty("fridayPM");
-
-        saturdayAM = properties.getProperty("saturdayAM");
-        saturdayPM = properties.getProperty("saturdayPM");
-    }
-
-    private Properties readProperties() throws IOException {
-        InputStreamReader in = new InputStreamReader(new FileInputStream(""), "UTF-8"); //"" = Files.INFO.getPath()
-        Properties properties = new Properties();
-        properties.load(in);
-        in.close();
-        return properties;
-    }
-
-    public void writeToFile() {
-        FacesMessage message = new FacesMessage("New information is stored.");
-        try {
-            OutputStreamWriter out = new OutputStreamWriter(new FileOutputStream(""), "UTF-8"); //"" = Files.INFO.getPath()
-            properties.store(out, "Changed Contact-Info");
-            out.close();
-        } catch (UnsupportedEncodingException e) {
-            message = new FacesMessage("Unsupported encoding.");
-            e.printStackTrace();
-        } catch (FileNotFoundException e) {
-            message = new FacesMessage("File not found!");
-            e.printStackTrace();
-        } catch (IOException e) {
-            message = new FacesMessage("New information could not be stored.");
-            e.printStackTrace();
-        } finally {
-            FacesContext.getCurrentInstance().addMessage(null, message);
-        }
+    private void setInfo(ResultSet res) throws SQLException {
+        name = res.getString(1);
+        street = res.getString(2);
+        location = res.getString(3);
+        telephone = res.getString(4);
+        mail = res.getString(5);
     }
 
     public String getName() {
@@ -110,7 +139,6 @@ public class ContactInfoBean {
 
     public void setName(String name) {
         this.name = name;
-        properties.setProperty("name", name);
     }
 
     public String getStreet() {
@@ -119,7 +147,6 @@ public class ContactInfoBean {
 
     public void setStreet(String street) {
         this.street = street;
-        properties.setProperty("street", street);
     }
 
     public String getLocation() {
@@ -128,7 +155,6 @@ public class ContactInfoBean {
 
     public void setLocation(String location) {
         this.location = location;
-        properties.setProperty("location", location);
     }
 
     public String getTelephone() {
@@ -138,7 +164,6 @@ public class ContactInfoBean {
 
     public void setTelephone(String telephone) {
         this.telephone = telephone;
-        properties.setProperty("telephone", telephone);
     }
 
     public String getMail() {
@@ -147,7 +172,6 @@ public class ContactInfoBean {
 
     public void setMail(String mail) {
         this.mail = mail;
-        properties.setProperty("mail", mail);
     }
 
     public String getMondayAM() {
@@ -155,8 +179,7 @@ public class ContactInfoBean {
     }
 
     public void setMondayAM(String mondayAM) {
-        this.mondayAM = mondayAM;
-        properties.setProperty("mondayAM", mondayAM);
+        this.mondayAM = mondayAM.replace(" ", "");
     }
 
     public String getMondayPM() {
@@ -164,8 +187,7 @@ public class ContactInfoBean {
     }
 
     public void setMondayPM(String mondayPM) {
-        this.mondayPM = mondayPM;
-        properties.setProperty("mondayPM", mondayPM);
+        this.mondayPM = mondayPM.replace(" ", "");
     }
 
     public String getTuesdayAM() {
@@ -173,8 +195,7 @@ public class ContactInfoBean {
     }
 
     public void setTuesdayAM(String tuesdayAM) {
-        this.tuesdayAM = tuesdayAM;
-        properties.setProperty("tuesdayAM", tuesdayAM);
+        this.tuesdayAM = tuesdayAM.replace(" ", "");
     }
 
     public String getTuesdayPM() {
@@ -182,8 +203,7 @@ public class ContactInfoBean {
     }
 
     public void setTuesdayPM(String tuesdayPM) {
-        this.tuesdayPM = tuesdayPM;
-        properties.setProperty("tuesdayPM", tuesdayPM);
+        this.tuesdayPM = tuesdayPM.replace(" ", "");
     }
 
     public String getWednesdayAM() {
@@ -191,8 +211,7 @@ public class ContactInfoBean {
     }
 
     public void setWednesdayAM(String wednesdayAM) {
-        this.wednesdayAM = wednesdayAM;
-        properties.setProperty("wednesdayAM", wednesdayAM);
+        this.wednesdayAM = wednesdayAM.replace(" ", "");
     }
 
     public String getWednesdayPM() {
@@ -200,8 +219,7 @@ public class ContactInfoBean {
     }
 
     public void setWednesdayPM(String wednesdayPM) {
-        this.wednesdayPM = wednesdayPM;
-        properties.setProperty("wednesdayPM", wednesdayPM);
+        this.wednesdayPM = wednesdayPM.replace(" ", "");
     }
 
     public String getThursdayAM() {
@@ -209,8 +227,7 @@ public class ContactInfoBean {
     }
 
     public void setThursdayAM(String thursdayAM) {
-        this.thursdayAM = thursdayAM;
-        properties.setProperty("thursdayAM", thursdayAM);
+        this.thursdayAM = thursdayAM.replace(" ", "");
     }
 
     public String getThursdayPM() {
@@ -218,8 +235,7 @@ public class ContactInfoBean {
     }
 
     public void setThursdayPM(String thursdayPM) {
-        this.thursdayPM = thursdayPM;
-        properties.setProperty("thursdayPM", thursdayPM);
+        this.thursdayPM = thursdayPM.replace(" ", "");
     }
 
     public String getFridayAM() {
@@ -227,8 +243,7 @@ public class ContactInfoBean {
     }
 
     public void setFridayAM(String fridayAM) {
-        this.fridayAM = fridayAM;
-        properties.setProperty("fridayAM", fridayAM);
+        this.fridayAM = fridayAM.replace(" ", "");
     }
 
     public String getFridayPM() {
@@ -236,8 +251,7 @@ public class ContactInfoBean {
     }
 
     public void setFridayPM(String fridayPM) {
-        this.fridayPM = fridayPM;
-        properties.setProperty("fridayPM", fridayPM);
+        this.fridayPM = fridayPM.replace(" ", "");
     }
 
     public String getSaturdayAM() {
@@ -245,8 +259,7 @@ public class ContactInfoBean {
     }
 
     public void setSaturdayAM(String saturdayAM) {
-        this.saturdayAM = saturdayAM;
-        properties.setProperty("saturdayAM", saturdayAM);
+        this.saturdayAM = saturdayAM.replace(" ", "");
     }
 
     public String getSaturdayPM() {
@@ -254,7 +267,67 @@ public class ContactInfoBean {
     }
 
     public void setSaturdayPM(String saturdayPM) {
-        this.saturdayPM = saturdayPM;
-        properties.setProperty("saturdayPM", saturdayPM);
+        this.saturdayPM = saturdayPM.replace(" ", "");
+    }
+
+    public void writeToDB() {
+        try {
+            connection.createStatement().executeUpdate("UPDATE ordermanager.contactinfo SET name = '" + name + "', street = '" + street +
+                    "', location = '" + location + "', telephone = '" + telephone + "', email = '" + mail + "';");
+
+            connection.createStatement().executeUpdate("DELETE FROM ordermanager.openinghours;");
+
+            if (mondayAM.length() > 1)
+                connection.createStatement().executeUpdate("INSERT INTO ordermanager.openinghours " +
+                        "VALUES(1, '" + mondayAM.substring(0, 5) + "', '" + mondayAM.replace("-", "").substring(5) + "');");
+
+            if (mondayPM.length() > 1)
+                connection.createStatement().executeUpdate("INSERT INTO ordermanager.openinghours " +
+                        "VALUES(1, '" + mondayPM.substring(0, 5) + "', '" + mondayPM.replace("-", "").substring(5) + "');");
+
+            if (thursdayAM.length() > 1)
+                connection.createStatement().executeUpdate("INSERT INTO ordermanager.openinghours " +
+                        "VALUES(4, '" + thursdayAM.substring(0, 5) + "', '" + thursdayAM.replace("-", "").substring(5) + "');");
+
+            if (thursdayPM.length() > 1)
+                connection.createStatement().executeUpdate("INSERT INTO ordermanager.openinghours " +
+                        "VALUES(4, '" + thursdayPM.substring(0, 5) + "', '" + thursdayPM.replace("-", "").substring(5) + "');");
+
+            if (wednesdayAM.length() > 1)
+                connection.createStatement().executeUpdate("INSERT INTO ordermanager.openinghours " +
+                        "VALUES(3, '" + wednesdayAM.substring(0, 5) + "', '" + wednesdayAM.replace("-", "").substring(5) + "');");
+
+            if (wednesdayPM.length() > 1)
+                connection.createStatement().executeUpdate("INSERT INTO ordermanager.openinghours " +
+                        "VALUES(3, '" + wednesdayPM.substring(0, 5) + "', '" + wednesdayPM.replace("-", "").substring(5) + "');");
+
+            if (tuesdayAM.length() > 1)
+                connection.createStatement().executeUpdate("INSERT INTO ordermanager.openinghours " +
+                        "VALUES(2, '" + tuesdayAM.substring(0, 5) + "', '" + tuesdayAM.replace("-", "").substring(5) + "');");
+
+            if (tuesdayPM.length() > 1)
+                connection.createStatement().executeUpdate("INSERT INTO ordermanager.openinghours " +
+                        "VALUES(2, '" + tuesdayPM.substring(0, 5) + "', '" + tuesdayPM.replace("-", "").substring(5) + "');");
+
+            if (fridayAM.length() > 1)
+                connection.createStatement().executeUpdate("INSERT INTO ordermanager.openinghours " +
+                        "VALUES(5, '" + fridayAM.substring(0, 5) + "', '" + fridayAM.replace("-", "").substring(5) + "');");
+
+            if (fridayPM.length() > 1)
+                connection.createStatement().executeUpdate("INSERT INTO ordermanager.openinghours " +
+                        "VALUES(5, '" + fridayPM.substring(0, 5) + "', '" + fridayPM.replace("-", "").substring(5) + "');");
+
+            if (saturdayAM.length() > 1)
+                connection.createStatement().executeUpdate("INSERT INTO ordermanager.openinghours " +
+                        "VALUES(6, '" + saturdayAM.substring(0, 5) + "', '" + saturdayAM.replace("-", "").substring(5) + "');");
+
+            if (saturdayPM.length() > 1)
+                connection.createStatement().executeUpdate("INSERT INTO ordermanager.openinghours " +
+                        "VALUES(6, '" + saturdayPM.substring(0, 5) + "', '" + saturdayPM.replace("-", "").substring(5) + "');");
+
+            connection.createStatement().executeUpdate("COMMIT;");
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
     }
 }
