@@ -1,12 +1,18 @@
 package beans;
 
+import dbaccess.ConnectionManager;
 import dto.Offer;
 
 import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
 import javax.faces.context.FacesContext;
-import java.io.*;
-import java.util.LinkedList;
+import javax.faces.event.ValueChangeEvent;
+import java.io.IOException;
+import java.sql.Connection;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -19,17 +25,18 @@ import java.util.Map;
  */
 @ManagedBean
 public class OfferBean {
-    //private final String metapath;
     private List<Offer> offers;
     private String newText;
     private String newName;
-
-    public OfferBean(String metapath) {
-        //this.metapath = metapath;
-    }
+    private String selectedPicture;
+    private int lastID = 0;
+    private ConnectionManager connectionManager;
+    private Connection connection;
 
     public OfferBean() {
-        //metapath = Files.OFFERSMETA.getPath();
+        connectionManager = new ConnectionManager();
+        connection = connectionManager.getConnection("jdbc/dataSource", false);
+        offers = null;
     }
 
     public List<Offer> getOffers() {
@@ -37,8 +44,8 @@ public class OfferBean {
             try {
                 read();
             } catch (IOException e) {
-                e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
-                //FacesContext.getCurrentInstance().addMessage("Failure!", new FacesMessage("File could not be accessed!"));
+                e.printStackTrace();
+                FacesContext.getCurrentInstance().addMessage("Failure!", new FacesMessage("Failed to get offers from database"));
             }
         return offers;
     }
@@ -47,107 +54,85 @@ public class OfferBean {
         this.offers = offers;
     }
 
-    public void insertOffer(Offer offer, int index) throws IOException {
-        if (offers == null) {
-            read();
+    public void insertOffer(Offer offer) throws IOException {
+        try {
+            Statement statement = connection.createStatement();
+            System.out.println(offer.getSQLString());
+            statement.executeUpdate("INSERT INTO ordermanager.offer VALUES(" + offer.getSQLString() + ");");
+            connection.createStatement().executeUpdate("COMMIT;");
+            offers.add(offer);
+
+        } catch (SQLException e) {
+            e.printStackTrace();
         }
-        offers.add(index, offer);
-        write();
     }
 
-    public void addOffer(Offer offer) throws IOException {
-        if (offers == null) {
-            read();
-        }
-        offers.add(offer);
-        write();
+    public void addNewOffer() throws IOException {
+        insertOffer(new Offer(++lastID, newName, newText, new PictureBean().getIDWithString(selectedPicture), getNewPriority()));
     }
-    /*
-    public void init() throws IOException {
-        File file = new File(metapath);
-        //if(!file.getParentFile().exists())
-        //    file.getParentFile().mkdir();
-        if (!file.exists())
-            file.createNewFile();
 
-        file = file.getParentFile();
+    private int getNewPriority() {
+        int priority = 10;
 
-        offers = new LinkedList<>();
-
-        String[] picturelist = file.list(new FilenameFilter() {
-            @Override
-            public boolean accept(File dir, String name) {
-                return name.toLowerCase().endsWith(".jpg") || name.toLowerCase().endsWith(".png");
-            }
-        });
-        String[] textlist = file.list(new FilenameFilter() {
-            @Override
-            public boolean accept(File dir, String name) {
-                return name.toLowerCase().endsWith(".txt");
-            }
-        });
-        for (String picture : picturelist)
-            System.out.println(picture);
-        for (String text : textlist)
-            System.out.println(text);
-        String picturename;
-        for (String picture : picturelist) {
-            picturename = picture.split("\\.")[0];
-            for (String text : textlist) {
-                if (text.split("\\.")[0].equals(picturename)) {
-                    try {
-                        addOffer(new Offer(file.getPath() + "\\" + picture, file.getPath() + "\\" + text, ));
-                        //addOffer(new Offer(file.getPath() + "\\" + picture, file.getPath() + "\\" + text));
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    }
-                    break;
-                }
-            }
+        for (Offer offer : offers) {
+            if (offer.getPriority() > priority)
+                priority = offer.getPriority() + 10;
+            System.out.println(priority);
         }
-    }*/
+
+        return priority;
+    }
 
     public void read() throws IOException {
-        File inFile = new File(""); //"" = metapath
-        if (inFile.exists()) {
-            try {
-                ObjectInputStream inputStream = new ObjectInputStream(new FileInputStream("")); //"" = metapath
-                Object readOffers = null;
-                try {
-                    readOffers = inputStream.readObject();
-                } catch (ClassNotFoundException e) {
-                    e.printStackTrace();
-                } finally {
-                    inputStream.close();
-                }
-                offers = (LinkedList<Offer>) readOffers;
-            } catch (EOFException ex) {
-                //init();
-            }
-        } else {
-            //init();
-        }
-    }
-
-    public void write() {
-        FacesMessage message = new FacesMessage("New information is stored.");
+        offers = new ArrayList<>();
         try {
-            ObjectOutputStream stream = new ObjectOutputStream(new FileOutputStream("")); //"" = metapath
-            stream.writeObject(offers);
-            stream.close();
-        } catch (FileNotFoundException e) {
-            message = new FacesMessage("File not found!");
+            Statement statement = connection.createStatement();
+            ResultSet res = statement.executeQuery("SELECT * FROM ordermanager.offer");
+
+            while (res.next()) {
+                offers.add(getOfferWithResultSet(res));
+                System.out.println("Last id = " + lastID);
+                if (lastID < res.getInt("id")) {
+                    lastID = res.getInt("id");
+                }
+            }
+            statement.close();
+            res.close();
+        } catch (SQLException e) {
             e.printStackTrace();
-        } catch (IOException e) {
-            message = new FacesMessage("New information could not be stored.");
-            e.printStackTrace();
-        } finally {
-            FacesContext.getCurrentInstance().addMessage(null, message);
         }
     }
 
     public void delete() {
+        ResultSet res;
+        Offer offer = null;
+        int id = Integer.parseInt(fetchParameter("id"));
+        try {
+            Statement statement = connection.createStatement();
+            res = statement.executeQuery("SELECT * FROM ordermanager.offer WHERE ID = " + id + ";");
+            if (res.next())
+                offer = getOfferWithResultSet(res);
+            if (offer != null) {
+                offers.remove(offer);
 
+                connection.createStatement().executeUpdate("DELETE FROM ordermanager.offer WHERE ID = " + id + ";");
+                connection.createStatement().executeUpdate("Commit;");
+            }
+            statement.close();
+            res.close();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
+    private Offer getOfferWithResultSet(ResultSet res) throws SQLException {
+        if (res != null)
+            return new Offer(res.getInt("ID"),
+                    res.getString("Title"),
+                    res.getString("Description"),
+                    res.getInt("PictureID"),
+                    res.getInt("Priority"));
+        return null;
     }
 
     public String fetchParameter(String param) {
@@ -161,7 +146,8 @@ public class OfferBean {
         return value;
     }
 
-    public void addNewOffer() throws IOException {
+    public void selectPicture(ValueChangeEvent event) {
+        selectedPicture = (String) event.getNewValue();
 
     }
 

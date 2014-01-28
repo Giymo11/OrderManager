@@ -1,5 +1,7 @@
 package dto;
 
+import beans.PictureBean;
+
 import java.io.Serializable;
 import java.util.Objects;
 
@@ -11,18 +13,19 @@ import java.util.Objects;
  * The DTO representing an offer.
  */
 public class Offer implements Serializable {
+
+    private int id;
     private String title;
     private String description;
-    private double price;
     private String picture;
     private int priority;
 
 
-    public Offer(String title, String description, double price, String picture, int priority) {
+    public Offer(int id, String title, String description, int pictureid, int priority) {
+        setId(id);
         setTitle(title);
         setDescription(description);
-        setPrice(price);
-        setPicture(picture);
+        setPicture(new PictureBean().getStringWithID(pictureid));
         setPriority(priority);
     }
 
@@ -40,14 +43,6 @@ public class Offer implements Serializable {
 
     public void setDescription(String description) {
         this.description = description;
-    }
-
-    public double getPrice() {
-        return price;
-    }
-
-    public void setPrice(double price) {
-        this.price = price;
     }
 
     public String getPicture() {
@@ -71,7 +66,6 @@ public class Offer implements Serializable {
         int hash = 5;
         hash = 41 * hash + Objects.hashCode(this.title);
         hash = 41 * hash + Objects.hashCode(this.description);
-        hash = 41 * hash + (int) (Double.doubleToLongBits(this.price) ^ (Double.doubleToLongBits(this.price) >>> 32));
         hash = 41 * hash + Objects.hashCode(this.picture);
         hash = 41 * hash + this.priority;
         return hash;
@@ -92,9 +86,6 @@ public class Offer implements Serializable {
         if (!Objects.equals(this.description, other.description)) {
             return false;
         }
-        if (Double.doubleToLongBits(this.price) != Double.doubleToLongBits(other.price)) {
-            return false;
-        }
         if (!Objects.equals(this.picture, other.picture)) {
             return false;
         }
@@ -104,9 +95,16 @@ public class Offer implements Serializable {
         return true;
     }
 
-    @Override
-    public String toString() {
-        return "Offer{" + "title=" + title + ", description=" + description + ", price=" + price + ", picture=" + picture + ", priority=" + priority + '}';
+    public String getSQLString() {
+        return id + ", '" + title + "', '" + description + "', " + new PictureBean().getIDWithString(picture) + ", " + priority;
+    }
+
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
     }
 
 }
