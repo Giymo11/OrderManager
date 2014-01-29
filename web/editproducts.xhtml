@@ -1,0 +1,56 @@
+<ui:composition
+        xmlns="http://www.w3.org/1999/xhtml"
+        xmlns:h="http://java.sun.com/jsf/html"
+        xmlns:ui="http://java.sun.com/jsf/facelets"
+        xmlns:f="http://java.sun.com/jsf/core">
+
+    <h:form>
+        <h:dataTable var="item" value="#{productBean.products}" cellpadding="15px">
+            <h:column>
+                <h:graphicImage value="#{item.picture}"/>
+            </h:column>
+            <h:column>
+                <h:outputText value="#{item.title}"/>
+            </h:column>
+            <h:column>
+                <h:outputText value="#{item.description}"/>
+            </h:column>
+            <h:column>
+                <h:outputText value="#{item.categoryName}"/>
+            </h:column>
+            <h:column>
+                <h:outputText value="#{item.price}"/>
+            </h:column>
+            <h:column>
+                <h:commandButton type="submit" value="Löschen" action="#{productBean.delete}">
+                    <f:param value="#{item.id}" name="id"/>
+                </h:commandButton>
+            </h:column>
+        </h:dataTable>
+        <table>
+            <h:column>
+                <h:selectOneMenu valueChangeListener="#{productBean.selectCategory}">
+                    <f:selectItems value="#{categoryBean.names}"/>
+                </h:selectOneMenu>
+            </h:column>
+            <h:column>
+                <h:selectOneMenu valueChangeListener="#{productBean.selectPicture}">
+                    <f:selectItems value="#{pictureBean.pictureList}"/>
+                </h:selectOneMenu>
+            </h:column>
+            <h:column>
+                Name:
+                <h:inputText value="#{productBean.newName}"/>
+                Beschreibung:
+                <h:inputTextarea value="#{productBean.newText}"/>
+                Preis:
+                Bitte mit . trennen
+                <h:inputText value="#{productBean.newPrice}"/>
+            </h:column>
+            <h:column>
+                <h:commandButton type="submit" value="Hinzufügen" action="#{productBean.addNewProduct}"/>
+            </h:column>
+        </table>
+        <br/>
+    </h:form>
+</ui:composition>

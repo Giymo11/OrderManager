@@ -59,7 +59,9 @@ public class PictureBean {
         try {
             ResultSet res = connection.createStatement().executeQuery("SELECT pictureid FROM ordermanager.picture WHERE name = '" + name + "';");
             res.next();
-            return res.getInt(1);
+            int id = res.getInt(1);
+            res.close();
+            return id;
 
         } catch (SQLException e) {
             e.printStackTrace();
