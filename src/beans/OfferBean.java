@@ -57,7 +57,6 @@ public class OfferBean {
     public void insertOffer(Offer offer) throws IOException {
         try {
             Statement statement = connection.createStatement();
-            System.out.println(offer.getSQLString());
             statement.executeUpdate("INSERT INTO ordermanager.offer VALUES(" + offer.getSQLString() + ");");
             connection.createStatement().executeUpdate("COMMIT;");
             offers.add(offer);
@@ -75,9 +74,8 @@ public class OfferBean {
         int priority = 10;
 
         for (Offer offer : offers) {
-            if (offer.getPriority() > priority)
+            if (offer.getPriority() >= priority)
                 priority = offer.getPriority() + 10;
-            System.out.println(priority);
         }
 
         return priority;
@@ -91,7 +89,6 @@ public class OfferBean {
 
             while (res.next()) {
                 offers.add(getOfferWithResultSet(res));
-                System.out.println("Last id = " + lastID);
                 if (lastID < res.getInt("id")) {
                     lastID = res.getInt("id");
                 }
