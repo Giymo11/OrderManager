@@ -1,21 +1,29 @@
-<ui:composition
-        xmlns:ui="http://java.sun.com/jsf/facelets"
-        xmlns="http://www.w3.org/1999/xhtml"
-        xmlns:h="http://java.sun.com/jsf/html"
-        xmlns:p="http://primefaces.org/ui">
-
-    <h:head>
-        <title>Upload</title>
-    </h:head>
-    <h:body>
-        <h:form id="fileupload" enctype="multipart/form-data">
-            <p:messages showDetail="false"/>
-            <br/>
-            <p:fileUpload value="#{uploadBean.file}" mode="simple"/>
-            <br/>
-            <h:commandButton value="Upload" action="#{uploadBean.upload}"/>
-
-        </h:form>
-    </h:body>
-</ui:composition>
-
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:f="http://java.sun.com/jsf/core">
+<h:head>
+    <title>Upload</title>
+</h:head>
+<h:body>
+    <h:form id="fileupload" enctype="multipart/form-data">
+        <p:messages showDetail="false"/>
+        <br/>
+        <p:fileUpload value="#{uploadBean.file}" mode="simple"/>
+        <br/>
+        <h:commandButton value="Upload" action="#{uploadBean.upload}"/>
+    </h:form>
+    <h:form>
+        <h:outputText value="Pojo: "/>
+        <p:selectOneMenu value="#{uploadBean.fileToDelete}" effect="fade" converter="fileConverter">
+            <f:selectItem itemLabel="Select One" itemValue=""/>
+            <f:selectItems value="#{uploadBean.uploadedPictures}" var="picture" itemLabel="#{picture.name}"
+                           itemValue="#{picture}"/>
+        </p:selectOneMenu>
+        <h:commandButton value="Delete" action="#{uploadBean.delete}"/>
+    </h:form>
+</h:body>
+</html>

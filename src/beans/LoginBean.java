@@ -5,7 +5,6 @@ package beans;
  * @author Markus
  */
 
-import constants.Files;
 import dto.User;
 
 import javax.faces.application.FacesMessage;
@@ -54,7 +53,7 @@ public class LoginBean {
     }
 
     private List<User> getAdmins() throws IOException {
-        BufferedReader br = new BufferedReader(new FileReader(Files.ADMIN.getPath()));
+        BufferedReader br = new BufferedReader(new FileReader(/*Files.ADMIN.getPath()*/""));
 
         List<User> admins = new ArrayList<>();
 
