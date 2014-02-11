@@ -43,6 +43,7 @@ public class ProductBean {
         connectionManager = new ConnectionManager();
         connection = connectionManager.getConnection("jdbc/dataSource", false);
         products = new ArrayList<>();
+        selectedCatProducts = new ArrayList<>();
     }
 
     public void read() throws IOException {
@@ -178,15 +179,27 @@ public class ProductBean {
         return priority;
     }
 
-    public void getProductsByCategory(int categoryID) {
+    public void getProductsByCategory() {
         selectedCatProducts = new ArrayList();
+        try {
+            if (products.isEmpty())
+                read();
 
-        for (Product product : products)
-            if (product.getCategoryID() == categoryID)
-                selectedCatProducts.add(product);
+            ResultSet res = connection.createStatement().executeQuery("SELECT id FROM ordermanager.category WHERE name = '" + selectedCategory + "';");
 
-        if (selectedCatProducts.isEmpty())
-            FacesContext.getCurrentInstance().addMessage("Failure!", new FacesMessage("Keine Produkte in dieser Kategorie"));
+            res.next();
+
+            for (Product product : products)
+                if (product.getCategoryID() == res.getInt(1))
+                    selectedCatProducts.add(product);
+
+            if (selectedCatProducts.isEmpty())
+                FacesContext.getCurrentInstance().addMessage("Failure!", new FacesMessage("Keine Produkte in dieser Kategorie"));
+        } catch (SQLException e) {
+            e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
+        } catch (IOException e) {
+            e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
+        }
     }
 
     public Product getProductByID(int id) {
@@ -232,6 +245,16 @@ public class ProductBean {
     }
 
     public List<Product> getSelectedCatProducts() {
+        if (selectedCatProducts.isEmpty()) {
+            try {
+                ResultSet res = connection.createStatement().executeQuery("SELECT name FROM ordermanager.category");
+                res.next();
+                selectedCategory = res.getString(1);
+                getProductsByCategory();
+            } catch (SQLException e) {
+                e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
+            }
+        }
         return selectedCatProducts;
     }
 
