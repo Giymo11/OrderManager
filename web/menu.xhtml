@@ -1,0 +1,58 @@
+<ui:composition
+        xmlns="http://www.w3.org/1999/xhtml"
+        xmlns:h="http://java.sun.com/jsf/html"
+        xmlns:ui="http://java.sun.com/jsf/facelets">
+    <h:head>
+        <title>Bäckerei Pock - Ihre Bäckerei</title>
+        <h:outputStylesheet name="style.css" library="css"/>
+    </h:head>
+    <h:body>
+        <div class="wrapper">
+            <!--    <div class="content">
+                    <table>
+                        <tbody>
+                        <tr>
+                            <td><a href="#" target="_blank">
+                                <img class="imgstyle" alt="" src="http://abload.de/image.php?img=placeholder_175x150bepq4.png"/>
+                            </a>
+
+                                <h1>Brot 1kg     €3,50</h1>
+
+                                <p>Leckeres Brot aus eigner Herstellung!</p>
+                            </td>
+
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <div class="topbar">
+                    <h1>Unsere Produkte</h1>
+
+                </div>-->
+            <div class="sidebar">
+                <img src="logo.jpg" class="logo"/>
+                <hr/>
+                <div class="menudiv">
+                    <h:link class="menubutton" outcome="offers.xhtml">ANGEBOTE</h:link>
+                </div>
+                <div class="menudiv">
+                    <h:link class="menubutton" outcome="events.xhtml">EVENTS</h:link>
+                </div>
+                <div class="menudiv">
+                    <h:link class="menubutton" outcome="">PRODUKTE</h:link>
+                </div>
+                <div class="menudiv">
+                    <h:link class="menubutton" outcome="info.xhtml">ÜBER UNS</h:link>
+                </div>
+                <div class="menudiv">
+                    <h:link class="menubutton" outcome="login.xhtml">BESTELLUNGEN</h:link>
+                </div>
+                <div class="menudiv">
+                    <h:link class="menubutton" outcome="settings.xhtml">EINSTELLUNGEN</h:link>
+                </div>
+                <hr/>
+                <ui:include src="openinghours.xhtml"/>
+            </div>
+        </div>
+    </h:body>
+</ui:composition>

@@ -5,13 +5,12 @@ import dto.Product;
 
 import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
+import javax.faces.bean.ViewScoped;
 import javax.faces.context.FacesContext;
-import javax.faces.event.ValueChangeEvent;
 import java.io.IOException;
 import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -24,15 +23,17 @@ import java.util.Map;
  */
 
 @ManagedBean
+@ViewScoped
 public class ProductBean {
     private List<Product> products;
 
     private String newText;
     private String newName;
-    private int newCategoryID;
     private float newPrice;
-    private String newPicture;
     private List<Product> selectedCatProducts;
+
+    private String selectedCategory;
+    private String selectedPicture;
 
     private int lastID = 0;
     private ConnectionManager connectionManager;
@@ -42,32 +43,36 @@ public class ProductBean {
         connectionManager = new ConnectionManager();
         connection = connectionManager.getConnection("jdbc/dataSource", false);
         products = new ArrayList<>();
-        try {
-            read();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
     }
 
     public void read() throws IOException {
         try {
             ResultSet res = connection.createStatement().executeQuery("SELECT * FROM ordermanager.product");
             ResultSet resCat;
+            ResultSet resPic;
             Product product;
-            while (res.next()) {
-                resCat = connection.createStatement().executeQuery("SELECT name FROM ordermanager.category WHERE id = " + res.getInt("CategoryID") + ";");
+            if (res.next())
+                while (true) {
+                    resCat = connection.createStatement().executeQuery("SELECT name FROM ordermanager.category WHERE id = " + res.getInt("CategoryID") + ";");
+                    resPic = connection.createStatement().executeQuery("SELECT name FROM ordermanager.picture WHERE pictureid = " + res.getInt(6) + ";");
 
-                product = getProductWithResultSet(res);
-                resCat.next();
-                product.setCategoryName(resCat.getString(1));
+                    product = getProductWithResultSet(res);
+                    resCat.next();
+                    resPic.next();
+                    product.setCategoryName(resCat.getString(1));
+                    product.setPicture(resPic.getString(1));
 
-                if (product != null)
                     products.add(product);
 
-                if (lastID < res.getInt(1)) {
-                    lastID = res.getInt(1);
+                    if (lastID < res.getInt(1)) {
+                        lastID = res.getInt(1);
+                    }
+                    if (res.isLast())
+                        break;
+                    else
+                        res.next();
                 }
-            }
+            res.close();
         } catch (SQLException e) {
             e.printStackTrace();
         }
@@ -75,18 +80,17 @@ public class ProductBean {
 
     public void insertProduct(Product product) {
         try {
-            connection.createStatement().executeUpdate("INSERT INTO ordermanager.product VALUES(" + product.getSQLString() + ");");
+            connection.createStatement().execute("INSERT INTO ordermanager.product VALUES(" + product.getSQLString() + ")");
             connection.createStatement().executeUpdate("COMMIT;");
 
             products.add(product);
-
         } catch (SQLException e) {
             e.printStackTrace();
         }
     }
 
     public List<Product> getProducts() {
-        if (products == null)
+        if (products.isEmpty())
             try {
                 read();
             } catch (IOException e) {
@@ -98,24 +102,19 @@ public class ProductBean {
 
     public void delete() {
         int id = Integer.parseInt(fetchParameter("id"));
-        ResultSet res;
-        Product product = null;
-
         try {
-            Statement statement = connection.createStatement();
-            res = statement.executeQuery("SELECT * FROM ordermanager.product WHERE ID = " + id + ";");
+            int indexDel = -1;
+            for (int i = 0; i < products.size(); i++)
+                if (products.get(i).getId() == id)
+                    indexDel = i;
 
-            if (res.next())
-                product = getProductWithResultSet(res);
+            if (indexDel != -1) {
+                products.remove(indexDel);
 
-            if (product != null) {
-                products.remove(product);
                 connection.createStatement().executeUpdate("DELETE FROM ordermanager.product WHERE ID = " + id + ";");
                 connection.createStatement().executeUpdate("COMMIT;");
             }
 
-            statement.close();
-            res.close();
         } catch (SQLException e) {
             e.printStackTrace();
         }
@@ -142,26 +141,29 @@ public class ProductBean {
                 res.getInt(6));
     }
 
-    public void addNewProduct() throws SQLException {
-        System.out.println("Add new Product");
-        ResultSet res;
-        Statement statement = connection.createStatement();
-        res = statement.executeQuery("SELECT name FROM ordermanager.category WHERE id = " + newCategoryID + ";");
-        res.next();
+    public void addNewProduct() {
+        try {
+            ResultSet res;
 
-        int prio = getNewPriority();
-        System.out.println("New Priority: " + prio);
+            res = connection.createStatement().executeQuery("SELECT id FROM ordermanager.category WHERE name = '" + selectedCategory + "';");
+            res.next();
 
-        int picId = new PictureBean().getIDWithString(newPicture);
-        System.out.println("New PictureId: " + picId);
+            ResultSet resPic = connection.createStatement().executeQuery("SELECT pictureID FROM ordermanager.picture WHERE name = '" + selectedPicture + "';");
+            resPic.next();
 
-        Product product = new Product(++lastID, newCategoryID, prio, newName, newText, newPrice, picId);
-        System.out.println(product.getSQLString());
-        product.setCategoryName(res.getString(1));
+            Product product = new Product(++lastID, res.getInt(1), getNewPriority(), newName, newText, newPrice, resPic.getInt(1));
+            product.setCategoryName(selectedCategory);
 
-        insertProduct(product);
-        res.close();
-        statement.close();
+            res.close();
+
+            newName = "";
+            newText = "";
+            newPrice = 0.0f;
+
+            insertProduct(product);
+        } catch (SQLException e) {
+            e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
+        }
     }
 
     private int getNewPriority() {
@@ -187,21 +189,22 @@ public class ProductBean {
             FacesContext.getCurrentInstance().addMessage("Failure!", new FacesMessage("Keine Produkte in dieser Kategorie"));
     }
 
-    public void selectCategory(ValueChangeEvent event) {
-        String name = (String) event.getNewValue();
+    public Product getProductByID(int id) {
         try {
-            Statement statement = connection.createStatement();
-            ResultSet res;
-            res = statement.executeQuery("SELECT id from ordermanager.category WHERE name = '" + name.toUpperCase() + "';");
-            res.next();
-            setNewCategoryID(res.getInt(1));
+            ResultSet res = connection.createStatement().executeQuery("SELECT * FROM ordermanager.product WHERE ID = " + id + ";");
+            return getProductWithResultSet(res);
         } catch (SQLException e) {
-            e.printStackTrace();
+            FacesContext.getCurrentInstance().addMessage("Failure", new FacesMessage("Failed to get Product with productID: " + id));
         }
+        return null;
     }
 
-    public void selectPicture(ValueChangeEvent event) {
-        newPicture = (String) event.getNewValue();
+    public String getSelectedCategory() {
+        return selectedCategory;
+    }
+
+    public void setSelectedCategory(String selectedCategory) {
+        this.selectedCategory = selectedCategory;
     }
 
     public String getNewText() {
@@ -220,16 +223,11 @@ public class ProductBean {
         this.newName = newName;
     }
 
-    public void setNewCategoryID(int newCategoryID) {
-        this.newCategoryID = newCategoryID;
-    }
-
     public float getNewPrice() {
         return newPrice;
     }
 
     public void setNewPrice(float newPrice) {
-        System.out.println("Price: " + newPrice);
         this.newPrice = newPrice;
     }
 
@@ -239,5 +237,13 @@ public class ProductBean {
 
     public void setSelectedCatProducts(List<Product> selectedCatProducts) {
         this.selectedCatProducts = selectedCatProducts;
+    }
+
+    public String getSelectedPicture() {
+        return selectedPicture;
+    }
+
+    public void setSelectedPicture(String selectedPicture) {
+        this.selectedPicture = selectedPicture;
     }
 }

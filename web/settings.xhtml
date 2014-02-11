@@ -8,46 +8,32 @@ and open the template in the editor.
       xmlns:h="http://java.sun.com/jsf/html" xmlns:p="http://primefaces.org/ui"
       xmlns:ui="http://java.sun.com/jsf/facelets">
 <h:head>
-    <title>Settings</title>
-    <style>
-        h1 {
-            font-family: Mistral, sans-serif;
-            font-size: 30px;
-            font-weight: normal;
-            color: #ffffff;
-            background-color: #0B610B;
-            font-variant: small-caps;
-        }
-
-        caption {
-            font-size: 14pt;
-            font-weight: bold;
-            color: #ffffff;
-            background-color: #0B610B;
-            font-variant: small-caps;
-        }
-
-        .info {
-            font: 11pt Calibri;
-        }
-
-    </style>
+    <h:outputStylesheet name="style.css" library="css"/>
 </h:head>
 
-<body class="info">
+<h:body>
+    <div class="content">
+        <p:messages showDetail="false"/>
+        <p:tabView>
+            <p:tab title="Produkte">
+                <ui:include src="editproducts.xhtml"/>
+            </p:tab>
+            <!--
+             <p:tab title="Angebote">
+                <ui:include src="editspecialoffers.xhtml"/>
+            </p:tab> -->
+            <p:tab title="Kontakt">
+                <ui:include src="editcontactinfopanel.xhtml"/>
+            </p:tab>
+            <p:tab title="Bild-Upload">
+                <ui:include src="upload.xhtml"/>
+            </p:tab>
 
-<p:messages showDetail="false"/>
-<p:tabView>
-    <p:tab title="Kontakt">
-        <ui:include src="editcontactinfopanel.xhtml"/>
-    </p:tab>
-    <p:tab title="Spezial-Angebote">
-        <ui:include src="editspecialoffers.xhtml"/>
-    </p:tab>
-    <p:tab title="Produkte">
-        <ui:include src="editproducts.xhtml"/>
-    </p:tab>
-</p:tabView>
-
-</body>
+        </p:tabView>
+    </div>
+    <div class="topbar">
+        <h1>Einstellungen</h1>
+    </div>
+    <ui:include src="menu.xhtml"/>
+</h:body>
 </html>

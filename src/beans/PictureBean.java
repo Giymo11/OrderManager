@@ -27,6 +27,7 @@ public class PictureBean {
         pictureList = new ArrayList();
         connectionManager = new ConnectionManager();
         connection = connectionManager.getConnection("jdbc/dataSource", false);
+        read();
     }
 
     public List<String> getPictureList() {
@@ -40,14 +41,13 @@ public class PictureBean {
         try {
             Statement statement = connection.createStatement();
             ResultSet res = statement.executeQuery("SELECT * FROM ordermanager.picture");
-
             while (res.next()) {
                 if (lastID <= res.getInt(1))
                     lastID = res.getInt(1);
                 pictureList.add(res.getString("Name"));
             }
         } catch (SQLException e) {
-            e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
+            e.printStackTrace();
         }
     }
 

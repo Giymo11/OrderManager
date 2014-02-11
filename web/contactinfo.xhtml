@@ -1,0 +1,43 @@
+<ui:composition
+        xmlns:ui="http://java.sun.com/jsf/facelets"
+        xmlns:h="http://java.sun.com/jsf/html">
+    <h:head>
+        <h:outputStylesheet name="style.css" library="css"/>
+    </h:head>
+
+    <table class="contact">
+        <caption>Kontakt</caption>
+        <tbody>
+        <tr>
+            <th>Name:</th>
+            <td>
+                <h:outputText value="#{contactInfoBean.name}"/>
+            </td>
+        </tr>
+        <tr>
+            <th>Straße:</th>
+            <td>
+                <h:outputText value="#{contactInfoBean.street}"/>
+            </td>
+        </tr>
+        <tr>
+            <th>Ort:</th>
+            <td>
+                <h:outputText value="#{contactInfoBean.location}"/>
+            </td>
+        </tr>
+        <tr>
+            <th>Telefon:</th>
+            <td>
+                <h:outputText value="#{contactInfoBean.telephone}"/>
+            </td>
+        </tr>
+        <tr>
+            <th>E-Mail:</th>
+            <td>
+                <h:outputText value="#{contactInfoBean.mail}"/>
+            </td>
+        </tr>
+        </tbody>
+    </table>
+</ui:composition>

@@ -1,11 +1,20 @@
 package beans;
 
+import dbaccess.ConnectionManager;
+import org.primefaces.event.FileUploadEvent;
 import org.primefaces.model.UploadedFile;
 
 import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
+import javax.faces.bean.ViewScoped;
 import javax.faces.context.FacesContext;
 import java.io.*;
+import java.sql.Connection;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
 
 
 /**
@@ -15,43 +24,39 @@ import java.io.*;
  * Time: 14:04
  */
 @ManagedBean
+@ViewScoped
 public class UploadBean {
 
     private UploadedFile file;
     private File fileToDelete;
     private String folder = FacesContext.getCurrentInstance().getExternalContext().getRealPath("");
 
-    public File getFileToDelete() {
-        return fileToDelete;
+    private ConnectionManager connectionManager;
+    private Connection connection;
+
+    private List<String> pics;
+
+    public UploadBean() {
+        connectionManager = new ConnectionManager();
+        connection = connectionManager.getConnection("jdbc/dataSource", false);
+        pics = new ArrayList<>();
     }
 
-    public void setFileToDelete(File fileToDelete) {
-        this.fileToDelete = fileToDelete;
-    }
-
-    public UploadedFile getFile() {
-        return file;
-
-    }
-
-    public void setFile(UploadedFile file) {
-        this.file = file;
-    }
-
-    public void upload() {
+    public void upload(FileUploadEvent event) {
+        file = event.getFile();
         if (file == null) {
-            FacesContext.getCurrentInstance().addMessage("Failure!", new FacesMessage("No file uploaded!"));
+            FacesContext.getCurrentInstance().addMessage("Failure!", new FacesMessage("Bild konnte nicht hochgeladen werden!"));
             return;
         }
-        if (!(hasPictureExtension(file.getFileName()))) {
-            FacesContext.getCurrentInstance().addMessage("Failure!", new FacesMessage("File is no picture!"));
-        } else if (!file.getFileName().equals("")) {
-            System.out.println("File uploaded: " + file.getFileName());
+        if (!file.getFileName().equals("")) {
             try {
                 File newFile = new File(folder + "\\" + file.getFileName());
-                System.out.println(newFile + " is the path to new File.");
                 if (!newFile.createNewFile())
                     FacesContext.getCurrentInstance().addMessage("Failure!", new FacesMessage("File already exists and will be overwritten!"));
+                else {
+                    connection.createStatement().executeUpdate("INSERT INTO ordermanager.picture VALUES(" + getNextID() + ", '" + file.getFileName().toString() + "');");
+                    connection.createStatement().executeUpdate("COMMIT;");
+                }
 
                 FileOutputStream out = new FileOutputStream(newFile);
                 InputStream in = file.getInputstream();
@@ -63,16 +68,34 @@ public class UploadBean {
                 out.close();
                 in.close();
 
-                FacesContext.getCurrentInstance().addMessage("Success!", new FacesMessage("File " + file.getFileName() + " was uploaded successfully."));
+                FacesContext.getCurrentInstance().addMessage("Success!", new FacesMessage("Bild " + file.getFileName() + " wurde erfolgreich hochgeladen!"));
 
             } catch (IOException e) {
                 e.printStackTrace();
                 FacesContext.getCurrentInstance().addMessage("Failure!", new FacesMessage("File could not be created."));
+            } catch (SQLException e) {
+                e.printStackTrace();
             }
         } else
             System.out.println("shit went full retard..");
 
         file = null;
+    }
+
+    private int getNextID() {
+        try {
+            ResultSet res = connection.createStatement().executeQuery("SELECT pictureid FROM ordermanager.picture");
+            int id = 1;
+            while (res.next()) {
+                if (id <= res.getInt(1)) {
+                    id = res.getInt(1) + 1;
+                }
+            }
+            return id;
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return -1;
     }
 
     public static boolean hasPictureExtension(String filename) {
@@ -90,9 +113,44 @@ public class UploadBean {
     }
 
     public void delete() {
-        if (fileToDelete != null)
-            //noinspection ResultOfMethodCallIgnored
-            fileToDelete.delete();
+        System.out.println("Delete Pic called");
+        String filename = fetchParameter("name");
+
+        for (File file : getUploadedPictures()) {
+            if (file.getName().equals(filename))
+                fileToDelete = file;
+        }
+        try {
+            if (fileToDelete != null) {
+                //noinspection ResultOfMethodCallIgnored
+                connection.createStatement().executeUpdate("DELETE FROM ordermanager.picture WHERE name = '" + filename + "';");
+                fileToDelete.delete();
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
+        }
         fileToDelete = null;
+    }
+
+    public String fetchParameter(String param) {
+        Map parameters = FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap();
+
+        String value = (String) parameters.get(param);
+
+        if (value == null || value.length() == 0)
+            throw new IllegalArgumentException("Could not find parameter '" + param + "' in request parameters");
+
+        return value;
+    }
+
+    public List<String> getPics() {
+        for (File file : getUploadedPictures()) {
+            pics.add(file.getName().toString());
+        }
+        return pics;
+    }
+
+    public void setPics(List<String> pics) {
+        this.pics = pics;
     }
 }

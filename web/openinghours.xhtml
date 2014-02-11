@@ -1,0 +1,72 @@
+<ui:composition
+        xmlns:ui="http://java.sun.com/jsf/facelets"
+        xmlns:h="http://java.sun.com/jsf/html">
+
+    <table class="floatLeft">
+        <caption>Öffnungszeiten</caption>
+        <tbody>
+        <tr>
+            <th>
+                Montag:
+            </th>
+            <td>
+                <h:outputText value="#{contactInfoBean.mondayAM}"/>
+                <br/>
+                <h:outputText value="#{contactInfoBean.mondayPM}"/>
+            </td>
+        </tr>
+        <tr>
+            <th>
+                Dienstag:
+            </th>
+            <td>
+                <h:outputText value="#{contactInfoBean.tuesdayAM}"/>
+                <br/>
+                <h:outputText value="#{contactInfoBean.tuesdayPM}"/>
+            </td>
+        </tr>
+        <tr>
+            <th>
+                Mittwoch:
+            </th>
+            <td>
+                <h:outputText value="#{contactInfoBean.wednesdayAM}"/>
+                <br/>
+                <h:outputText value="#{contactInfoBean.wednesdayPM}"/>
+            </td>
+        </tr>
+        <tr>
+            <th>
+                Donnerstag:
+            </th>
+            <td>
+                <h:outputText value="#{contactInfoBean.thursdayAM}"/>
+                <br/>
+                <h:outputText value="#{contactInfoBean.thursdayPM}"/>
+            </td>
+        </tr>
+        <tr>
+            <th>
+                Freitag:
+            </th>
+            <td>
+                <h:outputText value="#{contactInfoBean.fridayAM}"/>
+                <br/>
+                <h:outputText value="#{contactInfoBean.fridayPM}"/>
+            </td>
+        </tr>
+        <tr>
+            <th>
+                Samstag:
+            </th>
+            <td>
+                <h:outputText value="#{contactInfoBean.saturdayAM}"/>
+                <br/>
+                <h:outputText value="#{contactInfoBean.saturdayPM}"/>
+            </td>
+        </tr>
+        </tbody>
+    </table>
+
+</ui:composition>
+

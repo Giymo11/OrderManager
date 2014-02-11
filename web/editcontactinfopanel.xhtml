@@ -1,7 +1,8 @@
 <ui:composition
         xmlns="http://www.w3.org/1999/xhtml"
         xmlns:h="http://java.sun.com/jsf/html"
-        xmlns:ui="http://java.sun.com/jsf/facelets">
+        xmlns:ui="http://java.sun.com/jsf/facelets"
+        xmlns:p="http://primefaces.org/ui">
 
     <h:form>
         <table class="floatLeft">
@@ -12,9 +13,9 @@
                     Montag:
                 </th>
                 <td>
-                    <h:inputText value="#{contactInfoBean.mondayAM}"/>
+                    <p:inputText value="#{contactInfoBean.mondayAM}"/>
                     <br/>
-                    <h:inputText value="#{contactInfoBean.mondayPM}"/>
+                    <p:inputText value="#{contactInfoBean.mondayPM}"/>
                 </td>
             </tr>
             <tr>
@@ -22,9 +23,9 @@
                     Dienstag:
                 </th>
                 <td>
-                    <h:inputText value="#{contactInfoBean.tuesdayAM}"/>
+                    <p:inputText value="#{contactInfoBean.tuesdayAM}"/>
                     <br/>
-                    <h:inputText value="#{contactInfoBean.tuesdayPM}"/>
+                    <p:inputText value="#{contactInfoBean.tuesdayPM}"/>
                 </td>
             </tr>
             <tr>
@@ -32,9 +33,9 @@
                     Mittwoch:
                 </th>
                 <td>
-                    <h:inputText value="#{contactInfoBean.wednesdayAM}"/>
+                    <p:inputText value="#{contactInfoBean.wednesdayAM}"/>
                     <br/>
-                    <h:inputText value="#{contactInfoBean.wednesdayPM}"/>
+                    <p:inputText value="#{contactInfoBean.wednesdayPM}"/>
                 </td>
             </tr>
             <tr>
@@ -42,9 +43,9 @@
                     Donnerstag:
                 </th>
                 <td>
-                    <h:inputText value="#{contactInfoBean.thursdayAM}"/>
+                    <p:inputText value="#{contactInfoBean.thursdayAM}"/>
                     <br/>
-                    <h:inputText value="#{contactInfoBean.thursdayPM}"/>
+                    <p:inputText value="#{contactInfoBean.thursdayPM}"/>
                 </td>
             </tr>
             <tr>
@@ -52,9 +53,9 @@
                     Freitag:
                 </th>
                 <td>
-                    <h:inputText value="#{contactInfoBean.fridayAM}"/>
+                    <p:inputText value="#{contactInfoBean.fridayAM}"/>
                     <br/>
-                    <h:inputText value="#{contactInfoBean.fridayPM}"/>
+                    <p:inputText value="#{contactInfoBean.fridayPM}"/>
                 </td>
             </tr>
             <tr>
@@ -62,9 +63,9 @@
                     Samstag:
                 </th>
                 <td>
-                    <h:inputText value="#{contactInfoBean.saturdayAM}"/>
+                    <p:inputText value="#{contactInfoBean.saturdayAM}"/>
                     <br/>
-                    <h:inputText value="#{contactInfoBean.saturdayPM}"/>
+                    <p:inputText value="#{contactInfoBean.saturdayPM}"/>
                 </td>
             </tr>
             </tbody>
@@ -76,38 +77,38 @@
             <tr>
                 <th>Name:</th>
                 <td>
-                    <h:inputText value="#{contactInfoBean.name}"/>
+                    <p:inputText value="#{contactInfoBean.name}"/>
                 </td>
 
             </tr>
             <tr>
                 <th>Straße:</th>
                 <td>
-                    <h:inputText value="#{contactInfoBean.street}"/>
+                    <p:inputText value="#{contactInfoBean.street}"/>
                 </td>
             </tr>
             <tr>
                 <th>Ort:</th>
                 <td>
-                    <h:inputText value="#{contactInfoBean.location}"/>
+                    <p:inputText value="#{contactInfoBean.location}"/>
                 </td>
             </tr>
             <tr>
                 <th>Telefon:</th>
                 <td>
-                    <h:inputText value="#{contactInfoBean.telephone}"/>
+                    <p:inputText value="#{contactInfoBean.telephone}"/>
                 </td>
             </tr>
             <tr>
                 <th>E-Mail:</th>
                 <td>
-                    <h:inputText value="#{contactInfoBean.mail}"/>
+                    <p:inputText value="#{contactInfoBean.mail}"/>
                 </td>
             </tr>
             </tbody>
         </table>
 
-        <h:commandButton type="submit" value="Speichern" action="#{contactInfoBean.writeToDB}"/>
+        <p:commandButton type="submit" value="Speichern" action="#{contactInfoBean.writeToDB}"/>
 
     </h:form>
 </ui:composition>

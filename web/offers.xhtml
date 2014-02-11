@@ -4,9 +4,9 @@
 <html xmlns="http://www.w3.org/1999/xhtml"
       xmlns:h="http://java.sun.com/jsf/html"
       xmlns:p="http://primefaces.org/ui"
-        >
+      xmlns:ui="http://java.sun.com/jsf/facelets">
 <h:head>
-    <title>Index</title>
+    <h:outputStylesheet name="style.css" library="css"/>
 </h:head>
 <h:body>
     <p:messages showDetail="false"/>
@@ -17,6 +17,11 @@
             <h:outputText value="#{item.description}"/>
         </h:column>
     </h:dataTable>
+
+    <div class="topbar">
+        <h1>Unsere Angebote</h1>
+    </div>
+    <ui:include src="menu.xhtml"/>
 </h:body>
 </html>
 

@@ -1,29 +1,31 @@
-<?xml version='1.0' encoding='UTF-8' ?>
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
-        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-<html xmlns="http://www.w3.org/1999/xhtml"
-      xmlns:h="http://java.sun.com/jsf/html"
-      xmlns:p="http://primefaces.org/ui"
-      xmlns:f="http://java.sun.com/jsf/core">
-<h:head>
-    <title>Upload</title>
-</h:head>
-<h:body>
-    <h:form id="fileupload" enctype="multipart/form-data">
-        <p:messages showDetail="false"/>
-        <br/>
-        <p:fileUpload value="#{uploadBean.file}" mode="simple"/>
-        <br/>
-        <h:commandButton value="Upload" action="#{uploadBean.upload}"/>
-    </h:form>
-    <h:form>
-        <h:outputText value="Pojo: "/>
-        <p:selectOneMenu value="#{uploadBean.fileToDelete}" effect="fade" converter="fileConverter">
-            <f:selectItem itemLabel="Select One" itemValue=""/>
-            <f:selectItems value="#{uploadBean.uploadedPictures}" var="picture" itemLabel="#{picture.name}"
-                           itemValue="#{picture}"/>
-        </p:selectOneMenu>
-        <h:commandButton value="Delete" action="#{uploadBean.delete}"/>
-    </h:form>
-</h:body>
-</html>
+<ui:composition
+        xmlns="http://www.w3.org/1999/xhtml"
+        xmlns:h="http://java.sun.com/jsf/html"
+        xmlns:p="http://primefaces.org/ui"
+        xmlns:f="http://java.sun.com/jsf/core"
+        xmlns:ui="http://java.sun.com/jsf/facelets">
+    <h:head>
+        <title>Upload</title>
+    </h:head>
+    <h:body>
+        <h:form id="fileupload" enctype="multipart/form-data">
+            <p:growl id="messages" showDetail="true"/>
+            <br/>
+            <p:fileUpload fileUploadListener="#{uploadBean.upload}" mode="advanced"
+                          allowTypes="/(\.|\/)(gif|jpe?g|png)$/" dragDropSupport="false"
+                          fileLimit="3" invalidFileMessage="Falsches Bildformat" update="@form"/>
+
+            <p:dataTable value="#{uploadBean.pics}" var="picture">
+                <p:column>
+                    <p:graphicImage value="#{picture}" width="250px" height="150px"/>
+                </p:column>
+                <p:column>
+                    <p:commandButton value="Löschen" action="#{uploadBean.delete}" ajax="false" update="@form">
+                        <f:param value="#{picture}" name="name"/>
+                    </p:commandButton>
+                </p:column>
+            </p:dataTable>
+
+        </h:form>
+    </h:body>
+</ui:composition>

@@ -2,43 +2,49 @@
         xmlns="http://www.w3.org/1999/xhtml"
         xmlns:h="http://java.sun.com/jsf/html"
         xmlns:ui="http://java.sun.com/jsf/facelets"
-        xmlns:f="http://java.sun.com/jsf/core">
+        xmlns:f="http://java.sun.com/jsf/core"
+        xmlns:p="http://primefaces.org/ui">
 
     <h:form>
-        <h:dataTable var="item" value="#{offerBean.offers}" cellpadding="15px">
-            <h:column>
+        <p:dataTable var="item" value="#{offerBean.offers}" cellpadding="15px">
+            <p:column headerText="Bild">
                 <h:graphicImage value="#{item.picture}"/>
-            </h:column>
-            <h:column>
-                <h:outputText value="#{item.title}"/>
-            </h:column>
-            <h:column>
-                <h:outputText value="#{item.description}"/>
 
-            </h:column>
-            <h:column>
-                <h:commandButton type="submit" value="Löschen" action="#{offerBean.delete}">
+                <f:facet name="footer">
+                    <p:selectOneMenu value="#{offerBean.selectedPicture}" effect="fade" style="width:160px"
+                                     panelStyle="width:150px" filter="true" filterMatchMode="startsWith">
+                        <f:selectItems value="#{pictureBean.pictureList}"/>
+                    </p:selectOneMenu>
+                </f:facet>
+            </p:column>
+
+            <p:column headerText="Name" width="30px">
+                <p:outputLabel value="#{item.title}"/>
+
+                <f:facet name="footer">
+                    <p:inputText value="#{offerBean.newName}"/>
+                </f:facet>
+            </p:column>
+
+            <p:column headerText="Beschreibung">
+                <p:outputLabel value="#{item.description}"/>
+
+                <f:facet name="footer">
+                    <p:inputTextarea value="#{offerBean.newText}"/>
+                </f:facet>
+            </p:column>
+
+            <p:column>
+                <p:commandButton type="submit" value="Löschen" action="#{offerBean.delete}" ajax="false" update="@form">
                     <f:param value="#{item.id}" name="id"/>
-                </h:commandButton>
-            </h:column>
-        </h:dataTable>
-        <table>
-            <h:column>
-                <h:selectOneMenu valueChangeListener="#{offerBean.selectPicture}">
-                    <f:selectItems value="#{pictureBean.pictureList}"/>
-                </h:selectOneMenu>
-            </h:column>
-            <h:column>
-                Name:
-                <h:inputText value="#{offerBean.newName}"/>
-                Beschreibung:
-                <h:inputTextarea value="#{offerBean.newText}"/>
-            </h:column>
-            <h:column>
-                <h:commandButton type="submit" value="Hinzufügen" action="#{offerBean.addNewOffer}"/>
-            </h:column>
-        </table>
-        <br/>
+                </p:commandButton>
 
+                <f:facet name="footer">
+                    <p:commandButton type="submit" action="#{offerBean.addNewOffer}" value="Hinzufügen" ajax="false"
+                                     update="@form"/>
+                </f:facet>
+            </p:column>
+        </p:dataTable>
     </h:form>
+
 </ui:composition>

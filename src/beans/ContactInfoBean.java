@@ -7,6 +7,7 @@ package beans;
 import dbaccess.ConnectionManager;
 
 import javax.faces.bean.ManagedBean;
+import javax.faces.bean.SessionScoped;
 import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -17,6 +18,7 @@ import java.sql.Statement;
  */
 
 @ManagedBean
+@SessionScoped
 public class ContactInfoBean {
     private String name;
     private String street;

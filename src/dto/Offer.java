@@ -1,7 +1,5 @@
 package dto;
 
-import beans.PictureBean;
-
 import java.io.Serializable;
 import java.util.Objects;
 
@@ -18,6 +16,7 @@ public class Offer implements Serializable {
     private String title;
     private String description;
     private String picture;
+    private int pictureid;
     private int priority;
 
 
@@ -25,8 +24,16 @@ public class Offer implements Serializable {
         setId(id);
         setTitle(title);
         setDescription(description);
-        setPicture(new PictureBean().getStringWithID(pictureid));
+        setPictureid(pictureid);
         setPriority(priority);
+    }
+
+    public int getPictureid() {
+        return pictureid;
+    }
+
+    public void setPictureid(int pictureid) {
+        this.pictureid = pictureid;
     }
 
     public String getTitle() {
@@ -96,7 +103,7 @@ public class Offer implements Serializable {
     }
 
     public String getSQLString() {
-        return id + ", '" + title + "', '" + description + "', " + new PictureBean().getIDWithString(picture) + ", " + priority;
+        return id + ", '" + title + "', '" + description + "', " + pictureid + ", " + priority;
     }
 
     public int getId() {

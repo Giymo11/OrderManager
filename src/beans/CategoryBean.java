@@ -5,6 +5,7 @@ import dto.Category;
 
 import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
+import javax.faces.bean.SessionScoped;
 import javax.faces.context.FacesContext;
 import java.io.IOException;
 import java.sql.Connection;
@@ -24,6 +25,7 @@ import java.util.Map;
  */
 
 @ManagedBean
+@SessionScoped
 public class CategoryBean {
     private List<Category> categories;
 

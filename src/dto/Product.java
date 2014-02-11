@@ -1,7 +1,5 @@
 package dto;
 
-import beans.PictureBean;
-
 /**
  * Created with IntelliJ IDEA.
  * User: Sarah
@@ -22,7 +20,7 @@ public class Product {
 
     public String getSQLString() {
         return id + ", " + categoryID + ", '" + title + "', '" + description + "', " +
-                price + ", " + new PictureBean().getIDWithString(picture) + ", " + priority;
+                price + ", " + pictureID + ", " + priority;
     }
 
     public Product(int id, int categoryID, int priority, String title, String description, float price, int pictureID) {
@@ -31,7 +29,6 @@ public class Product {
         setTitle(title);
         setDescription(description);
         this.pictureID = pictureID;
-        picture = new PictureBean().getStringWithID(pictureID);
         setPriority(priority);
         setPrice(price);
     }

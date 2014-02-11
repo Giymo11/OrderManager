@@ -11,7 +11,6 @@ import java.io.IOException;
 import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -26,21 +25,23 @@ import java.util.Map;
 @ManagedBean
 public class OfferBean {
     private List<Offer> offers;
+
     private String newText;
     private String newName;
     private String selectedPicture;
     private int lastID = 0;
+
     private ConnectionManager connectionManager;
     private Connection connection;
 
     public OfferBean() {
         connectionManager = new ConnectionManager();
         connection = connectionManager.getConnection("jdbc/dataSource", false);
-        offers = null;
+        offers = new ArrayList<>();
     }
 
     public List<Offer> getOffers() {
-        if (offers == null)
+        if (offers.isEmpty())
             try {
                 read();
             } catch (IOException e) {
@@ -54,46 +55,68 @@ public class OfferBean {
         this.offers = offers;
     }
 
-    public void insertOffer(Offer offer) throws IOException {
+    public void insertOffer(Offer offer) {
+        System.out.println("InsertOffer called");
         try {
-            Statement statement = connection.createStatement();
-            statement.executeUpdate("INSERT INTO ordermanager.offer VALUES(" + offer.getSQLString() + ");");
+            connection.createStatement().executeUpdate("INSERT INTO ordermanager.offer VALUES(" + offer.getSQLString() + ");");
             connection.createStatement().executeUpdate("COMMIT;");
-            offers.add(offer);
 
+            offers.add(offer);
         } catch (SQLException e) {
             e.printStackTrace();
         }
     }
 
-    public void addNewOffer() throws IOException {
-        insertOffer(new Offer(++lastID, newName, newText, new PictureBean().getIDWithString(selectedPicture), getNewPriority()));
+    public void addNewOffer() {
+        try {
+            ResultSet res = connection.createStatement().executeQuery("SELECT pictureid FROM ordermanager.picture WHERE Name = '" + selectedPicture + "';");
+            res.next();
+            int pictureID = res.getInt(1);
+            res.close();
+
+            Offer offer = new Offer(++lastID, newName, newText, pictureID, getNewPriority());
+            offer.setPicture(selectedPicture);
+
+            newName = "";
+            newText = "";
+
+            insertOffer(offer);
+        } catch (SQLException e) {
+            FacesContext.getCurrentInstance().addMessage("Failure", new FacesMessage("Fehler beim Hinzufügen des Angebots!"));
+        }
     }
 
     private int getNewPriority() {
         int priority = 10;
 
-        for (Offer offer : offers) {
-            if (offer.getPriority() >= priority)
-                priority = offer.getPriority() + 10;
-        }
+        if (!offers.isEmpty())
+            for (Offer offer : offers) {
+                if (offer.getPriority() >= priority)
+                    priority = offer.getPriority() + 10;
+            }
 
         return priority;
     }
 
     public void read() throws IOException {
-        offers = new ArrayList<>();
         try {
-            Statement statement = connection.createStatement();
-            ResultSet res = statement.executeQuery("SELECT * FROM ordermanager.offer");
+            ResultSet res = connection.createStatement().executeQuery("SELECT * FROM ordermanager.offer");
+            if (res.next())
+                while (true) {
+                    Offer offer = getOfferWithResultSet(res);
+                    offer.setPicture(selectedPicture);
 
-            while (res.next()) {
-                offers.add(getOfferWithResultSet(res));
-                if (lastID < res.getInt("id")) {
-                    lastID = res.getInt("id");
+                    offers.add(offer);
+
+                    if (lastID < res.getInt("id")) {
+                        lastID = res.getInt("id");
+                    }
+
+                    if (res.isLast())
+                        break;
+                    else
+                        res.next();
                 }
-            }
-            statement.close();
             res.close();
         } catch (SQLException e) {
             e.printStackTrace();
@@ -101,22 +124,21 @@ public class OfferBean {
     }
 
     public void delete() {
-        ResultSet res;
-        Offer offer = null;
+        System.out.println("Delete called");
         int id = Integer.parseInt(fetchParameter("id"));
         try {
-            Statement statement = connection.createStatement();
-            res = statement.executeQuery("SELECT * FROM ordermanager.offer WHERE ID = " + id + ";");
-            if (res.next())
-                offer = getOfferWithResultSet(res);
-            if (offer != null) {
-                offers.remove(offer);
+            int indexDel = -1;
+            for (int i = 0; i < offers.size(); i++)
+                if (offers.get(i).getId() == id)
+                    indexDel = i;
+
+            if (indexDel != -1) {
+                offers.remove(indexDel);
+
 
                 connection.createStatement().executeUpdate("DELETE FROM ordermanager.offer WHERE ID = " + id + ";");
                 connection.createStatement().executeUpdate("Commit;");
             }
-            statement.close();
-            res.close();
         } catch (SQLException e) {
             e.printStackTrace();
         }
@@ -162,5 +184,13 @@ public class OfferBean {
 
     public void setNewName(String newName) {
         this.newName = newName;
+    }
+
+    public String getSelectedPicture() {
+        return selectedPicture;
+    }
+
+    public void setSelectedPicture(String selectedPicture) {
+        this.selectedPicture = selectedPicture;
     }
 }
