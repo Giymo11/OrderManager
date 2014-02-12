@@ -8,7 +8,7 @@
     <h:form>
         <p:dataTable var="item" value="#{offerBean.offers}" cellpadding="15px">
             <p:column headerText="Bild">
-                <h:graphicImage value="#{item.picture}"/>
+                <p:graphicImage value="#{item.picture}" style="width: 100px; height: 70px"/>
 
                 <f:facet name="footer">
                     <p:selectOneMenu value="#{offerBean.selectedPicture}" effect="fade" style="width:160px"

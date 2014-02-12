@@ -3,6 +3,7 @@ package beans;
 import dbaccess.ConnectionManager;
 import dto.Product;
 
+import javax.annotation.PreDestroy;
 import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
@@ -268,5 +269,16 @@ public class ProductBean {
 
     public void setSelectedPicture(String selectedPicture) {
         this.selectedPicture = selectedPicture;
+    }
+
+    @PreDestroy
+    public void preDestroy() {
+        System.out.println("ProductBean PreDestroy");
+
+        try {
+            connection.close();
+        } catch (SQLException e) {
+            e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
+        }
     }
 }

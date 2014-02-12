@@ -118,8 +118,7 @@ table {
     border: 1px solid green;
     margin-left: 330px;
     margin-top: 190px;
-    min-width: 500px;
-    width: 100% -330px;
+    width: auto;
     position: absolute;
 }
 
@@ -155,7 +154,6 @@ table {
 }
 
 .specialoffer {
-    border: 2px solid #dddddd;
     width: 600px;
     height: 400px;
     margin-top: 0px;
@@ -172,7 +170,16 @@ table {
     margin-top: 5px;
 }
 
-dataTables tbody tr {
-    max-height: 110px;
-    max-width: 160px;
+.specialoffer p {
+    width: 700px;
+}
+
+.specialoffer hr {
+    margin: 5px;
+    margin-top: 20px;
+    margin-bottom: 20px;
+    height: 2px;
+    border: #31B404;
+    color: #31B404;
+    background-color: #31B404;
 }

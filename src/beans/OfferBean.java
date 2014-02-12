@@ -3,6 +3,7 @@ package beans;
 import dbaccess.ConnectionManager;
 import dto.Offer;
 
+import javax.annotation.PreDestroy;
 import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
 import javax.faces.context.FacesContext;
@@ -101,11 +102,13 @@ public class OfferBean {
     public void read() throws IOException {
         try {
             ResultSet res = connection.createStatement().executeQuery("SELECT * FROM ordermanager.offer");
+            ResultSet resPic = null;
             if (res.next())
                 while (true) {
                     Offer offer = getOfferWithResultSet(res);
-                    offer.setPicture(selectedPicture);
-
+                    resPic = connection.createStatement().executeQuery("SELECT name FROM ordermanager.picture WHERE pictureid = " + res.getInt("pictureid") + ";");
+                    resPic.next();
+                    offer.setPicture(resPic.getString(1));
                     offers.add(offer);
 
                     if (lastID < res.getInt("id")) {
@@ -118,6 +121,7 @@ public class OfferBean {
                         res.next();
                 }
             res.close();
+            resPic.close();
         } catch (SQLException e) {
             e.printStackTrace();
         }
@@ -192,5 +196,15 @@ public class OfferBean {
 
     public void setSelectedPicture(String selectedPicture) {
         this.selectedPicture = selectedPicture;
+    }
+
+    @PreDestroy
+    public void preDestroy() {
+        System.out.println("OfferBean PreDestroy");
+        try {
+            connection.close();
+        } catch (SQLException e) {
+            e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
+        }
     }
 }

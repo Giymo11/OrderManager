@@ -6,6 +6,7 @@ package beans;
 
 import dbaccess.ConnectionManager;
 
+import javax.annotation.PreDestroy;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.SessionScoped;
 import java.sql.Connection;
@@ -330,6 +331,17 @@ public class ContactInfoBean {
             connection.createStatement().executeUpdate("COMMIT;");
         } catch (SQLException e) {
             e.printStackTrace();
+        }
+    }
+
+    @PreDestroy
+    public void preDestroy() {
+        System.out.println("ContactinfoBean PreDestroy");
+
+        try {
+            connection.close();
+        } catch (SQLException e) {
+            e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
         }
     }
 }

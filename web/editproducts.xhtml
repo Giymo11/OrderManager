@@ -7,7 +7,7 @@
 
     <h:form>
         <p:dataTable var="item" value="#{productBean.products}" cellpadding="5px">
-            <p:column headerText="Bild">
+            <p:column headerText="Bild" style="-moz-box-sizing: content-box">
                 <p:graphicImage value="#{item.picture}"/>
 
                 <f:facet name="footer">

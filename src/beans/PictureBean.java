@@ -2,6 +2,7 @@ package beans;
 
 import dbaccess.ConnectionManager;
 
+import javax.annotation.PreDestroy;
 import javax.faces.bean.ManagedBean;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -88,6 +89,16 @@ public class PictureBean {
         try {
             connection.createStatement().executeUpdate("INSERT INTO ordermanager.picture VALUES(" + ++lastID + ", '" + name + "');");
             connection.createStatement().executeUpdate("Commit;");
+        } catch (SQLException e) {
+            e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
+        }
+    }
+
+    @PreDestroy
+    public void preDestroy() {
+        System.out.println("PictureBean PreDestroy");
+        try {
+            connection.close();
         } catch (SQLException e) {
             e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
         }

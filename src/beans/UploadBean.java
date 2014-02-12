@@ -4,6 +4,7 @@ import dbaccess.ConnectionManager;
 import org.primefaces.event.FileUploadEvent;
 import org.primefaces.model.UploadedFile;
 
+import javax.annotation.PreDestroy;
 import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
@@ -152,5 +153,15 @@ public class UploadBean {
 
     public void setPics(List<String> pics) {
         this.pics = pics;
+    }
+
+    @PreDestroy
+    public void preDestroy() {
+        System.out.println("UploadBean PreDestroy");
+        try {
+            connection.close();
+        } catch (SQLException e) {
+            e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
+        }
     }
 }

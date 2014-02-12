@@ -9,15 +9,18 @@
     <h:outputStylesheet name="style.css" library="css"/>
 </h:head>
 <h:body>
-    <p:messages showDetail="false"/>
-    <h:dataTable var="item" value="#{offerBean.offers}">
-        <h:column>
-            <h:graphicImage value="#{item.picture}"/>
-            <br/>
-            <h:outputText value="#{item.description}"/>
-        </h:column>
-    </h:dataTable>
-
+    <div class="content" style="margin-top: 150px">
+        <p:messages showDetail="false"/>
+        <p:dataList var="item" value="#{offerBean.offers}" itemType="none" style="width: 100%; border: 0;">
+            <p:column style="border: 0">
+                <div style="border-bottom: 3px solid green; margin-top: 10px; margin-right: 40px;">
+                    <p:graphicImage value="#{item.picture}" style="height: 70%; width: 70%"/>
+                    <br/>
+                    <p:outputLabel value="#{item.description}"/>
+                </div>
+            </p:column>
+        </p:dataList>
+    </div>
     <div class="topbar">
         <h1>Unsere Angebote</h1>
     </div>

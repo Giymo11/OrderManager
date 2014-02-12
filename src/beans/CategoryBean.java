@@ -3,6 +3,7 @@ package beans;
 import dbaccess.ConnectionManager;
 import dto.Category;
 
+import javax.annotation.PreDestroy;
 import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.SessionScoped;
@@ -152,5 +153,16 @@ public class CategoryBean {
 
     public void setNames(List<String> names) {
         this.names = names;
+    }
+
+    @PreDestroy
+    public void preDestroy() {
+        System.out.println("CategoryBean PreDestroy");
+
+        try {
+            connection.close();
+        } catch (SQLException e) {
+            e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
+        }
     }
 }
