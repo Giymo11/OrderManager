@@ -17,13 +17,14 @@ public class Product {
     private String picture;
     private int pictureID;
     private String categoryName;
+    private boolean visible;
 
     public String getSQLString() {
         return id + ", " + categoryID + ", '" + title + "', '" + description + "', " +
-                price + ", " + pictureID + ", " + priority;
+                price + ", " + pictureID + ", " + priority + ", " + visible;
     }
 
-    public Product(int id, int categoryID, int priority, String title, String description, float price, int pictureID) {
+    public Product(int id, int categoryID, int priority, String title, String description, float price, int pictureID, boolean visible) {
         setId(id);
         setCategoryID(categoryID);
         setTitle(title);
@@ -31,6 +32,7 @@ public class Product {
         this.pictureID = pictureID;
         setPriority(priority);
         setPrice(price);
+        setVisible(visible);
     }
 
     public boolean equals(Product product) {
@@ -47,6 +49,8 @@ public class Product {
         if (price != product.getPrice())
             return false;
         if (!picture.equals(product.getPicture()))
+            return false;
+        if (visible != product.isVisible())
             return false;
 
         return true;
@@ -114,5 +118,13 @@ public class Product {
 
     public void setCategoryName(String categoryName) {
         this.categoryName = categoryName;
+    }
+
+    public boolean isVisible() {
+        return visible;
+    }
+
+    public void setVisible(boolean visible) {
+        this.visible = visible;
     }
 }

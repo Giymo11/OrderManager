@@ -7,8 +7,11 @@
 
     <h:form>
         <p:dataTable var="item" value="#{productBean.products}" cellpadding="5px">
-            <p:column headerText="Bild" style="-moz-box-sizing: content-box">
-                <p:graphicImage value="#{item.picture}"/>
+            <p:column headerText="Sichtbar">
+                <p:selectBooleanCheckbox value="#{item.visible}"/>
+            </p:column>
+            <p:column headerText="Bild">
+                <p:graphicImage value="#{item.picture}" height="100px" width="200px"/>
 
                 <f:facet name="footer">
                     <p:selectOneMenu value="#{productBean.selectedPicture}" effect="fade" style="width:160px"
@@ -19,7 +22,7 @@
             </p:column>
 
             <p:column headerText="Name" width="30px">
-                <p:outputLabel value="#{item.title}"/>
+                <p:inputText value="#{item.title}"/>
 
                 <f:facet name="footer">
                     <p:inputText value="#{productBean.newName}" size="12"/>
@@ -27,7 +30,7 @@
             </p:column>
 
             <p:column headerText="Beschreibung">
-                <p:outputLabel value="#{item.description}"/>
+                <p:inputTextarea value="#{item.description}"/>
 
                 <f:facet name="footer">
                     <p:inputTextarea value="#{productBean.newText}"/>
@@ -57,6 +60,11 @@
                                  update="@form">
                     <f:param value="#{item.id}" name="id"/>
                 </p:commandButton>
+                <p:commandButton type="submit" value="Speichern" action="#{productBean.save}" ajax="false"
+                                 update="@form">
+                    <f:param value="#{item.id}" name="idS"/>
+                </p:commandButton>
+
 
                 <f:facet name="footer">
                     <p:commandButton type="submit" action="#{productBean.addNewProduct}" value="Hinzufügen" ajax="false"

@@ -200,7 +200,6 @@ public class OfferBean {
 
     @PreDestroy
     public void preDestroy() {
-        System.out.println("OfferBean PreDestroy");
         try {
             connection.close();
         } catch (SQLException e) {

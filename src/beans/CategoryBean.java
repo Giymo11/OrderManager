@@ -79,9 +79,10 @@ public class CategoryBean {
         try {
             Statement statement = connection.createStatement();
             statement.executeUpdate("INSERT INTO ordermanager.Category VALUES(" + category.getSQLString() + ");");
+            connection.createStatement().executeUpdate("COMMIT;");
 
             categories.add(category);
-
+            statement.close();
         } catch (SQLException e) {
             e.printStackTrace();
         }
@@ -99,17 +100,27 @@ public class CategoryBean {
     }
 
     public void delete() {
-        int id = Integer.getInteger(fetchParameter("id"));
-        ResultSet res;
+        int id = Integer.parseInt(fetchParameter("id"));
 
         try {
-            Statement statement = connection.createStatement();
-            res = statement.executeQuery("SELECT * FROM ordermanager.Category WHERE ID = " + id + ";");
+            ResultSet res = connection.createStatement().executeQuery("SELECT count(*) FROM ordermanager.product WHERE categoryid = " + id + ";");
+            res.next();
+            if (res.getInt(1) > 0) {
+                FacesContext.getCurrentInstance().addMessage("Failure!", new FacesMessage("Bitte löschen Sie zuerst alle Produkte aus dieser Kategorie!"));
+                return;
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
+        }
 
-            Category category = getCategoryWithResultSet(res);
-            categories.remove(category);
+        try {
+            for (int i = 0; i < categories.size(); ++i) {
+                if (categories.get(i).getId() == id)
+                    categories.remove(i);
+            }
 
             connection.createStatement().executeUpdate("DELETE FROM ordermanager.Category WHERE ID = " + id + ";");
+            connection.createStatement().executeUpdate("COMMIT;");
         } catch (SQLException e) {
             e.printStackTrace();
         }
@@ -129,11 +140,27 @@ public class CategoryBean {
     public void addNewCategory() {
         for (Category cat : categories) {
             if (cat.getName().toUpperCase().equals(newName.toUpperCase())) {
-                FacesContext.getCurrentInstance().addMessage("Failure!", new FacesMessage("Fehler! Diese Kategorie existiert bereits"));
+                FacesContext.getCurrentInstance().addMessage("Failure!",
+                        new FacesMessage("Fehler! Diese Kategorie existiert bereits"));
                 return;
             }
         }
         insertCategory(new Category(++lastID, newName));
+    }
+
+    public void save() {
+        int id = Integer.parseInt(fetchParameter("idS"));
+        try {
+            for (Category cat : categories) {
+                if (cat.getId() == id) {
+                    connection.createStatement().executeUpdate("UPDATE ordermanager.category SET name = '" +
+                            cat.getName() + "' WHERE id = " + id + ";");
+                    connection.createStatement().executeUpdate("COMMIT;");
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
+        }
     }
 
     public List<String> getNames() {
@@ -151,18 +178,20 @@ public class CategoryBean {
         return names;
     }
 
-    public void setNames(List<String> names) {
-        this.names = names;
-    }
-
     @PreDestroy
     public void preDestroy() {
-        System.out.println("CategoryBean PreDestroy");
-
         try {
             connection.close();
         } catch (SQLException e) {
             e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
         }
+    }
+
+    public String getNewName() {
+        return newName;
+    }
+
+    public void setNewName(String newName) {
+        this.newName = newName;
     }
 }

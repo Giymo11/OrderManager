@@ -10,11 +10,11 @@ and open the template in the editor.
       xmlns:ui="http://java.sun.com/jsf/facelets">
 <h:head>
     <h:outputStylesheet name="style.css" library="css"/>
+    <title>Einstellungen</title>
 </h:head>
 
 <h:body>
     <div class="content">
-        <p:messages showDetail="false"/>
         <p:tabView>
             <p:tab title="Produkte">
                 <ui:include src="editproducts.xhtml"/>
@@ -28,7 +28,9 @@ and open the template in the editor.
             <p:tab title="Bild-Upload">
                 <ui:include src="upload.xhtml"/>
             </p:tab>
-
+            <p:tab title="Kategorien">
+                <ui:include src="editcategories.xhtml"/>
+            </p:tab>
         </p:tabView>
     </div>
     <div class="topbar">

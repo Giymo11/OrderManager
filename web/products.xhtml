@@ -11,7 +11,7 @@
 </h:head>
 <h:body>
     <h:form>
-        <div class="content">
+        <div class="content" style="margin-top: 130px">
             <h:selectOneMenu value="#{productBean.selectedCategory}"
                              valueChangeListener="#{productBean.getProductsByCategory}">
                 <f:selectItems value="#{categoryBean.names}"/>
@@ -19,11 +19,11 @@
             <p:commandButton type="submit" value="Los!" action="#{productBean.getProductsByCategory}" update="@form"/>
             <p:dataGrid value="#{productBean.selectedCatProducts}" var="product" columns="3" rows="12" paginator="true"
                         paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
-                        rowsPerPageTemplate="9,12,15">
+                        rowsPerPageTemplate="9,12,15" style="width: 100%">
                 <p:panel header="#{product.title}" style="text-align: center">
                     <h:panelGrid columns="1" style="width:100%">
                         <p:graphicImage value="#{product.picture}"/>
-                        <p:outputLabel value="#{product.price}"/>
+                        <p:outputLabel value="€ #{product.price}"/>
                     </h:panelGrid>
                 </p:panel>
             </p:dataGrid>

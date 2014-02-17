@@ -140,7 +140,8 @@ public class ProductBean {
                 res.getString(3),
                 res.getString(4),
                 res.getFloat(5),
-                res.getInt(6));
+                res.getInt(6),
+                res.getBoolean(8));
     }
 
     public void addNewProduct() {
@@ -153,7 +154,7 @@ public class ProductBean {
             ResultSet resPic = connection.createStatement().executeQuery("SELECT pictureID FROM ordermanager.picture WHERE name = '" + selectedPicture + "';");
             resPic.next();
 
-            Product product = new Product(++lastID, res.getInt(1), getNewPriority(), newName, newText, newPrice, resPic.getInt(1));
+            Product product = new Product(++lastID, res.getInt(1), getNewPriority(), newName, newText, newPrice, resPic.getInt(1), true);
             product.setCategoryName(selectedCategory);
 
             res.close();
@@ -192,7 +193,8 @@ public class ProductBean {
 
             for (Product product : products)
                 if (product.getCategoryID() == res.getInt(1))
-                    selectedCatProducts.add(product);
+                    if (product.isVisible())
+                        selectedCatProducts.add(product);
 
             if (selectedCatProducts.isEmpty())
                 FacesContext.getCurrentInstance().addMessage("Failure!", new FacesMessage("Keine Produkte in dieser Kategorie"));
@@ -273,10 +275,24 @@ public class ProductBean {
 
     @PreDestroy
     public void preDestroy() {
-        System.out.println("ProductBean PreDestroy");
-
         try {
             connection.close();
+        } catch (SQLException e) {
+            e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
+        }
+    }
+
+    public void save() {
+        int id = Integer.parseInt(fetchParameter("idS"));
+        try {
+            for (Product product : products) {
+                if (product.getId() == id) {
+                    connection.createStatement().executeUpdate("UPDATE ordermanager.product SET name = '" +
+                            product.getTitle() + "', description = '" + product.getDescription() + "', visible = " +
+                            product.isVisible() + " WHERE id = " + id + ";");
+                    connection.createStatement().executeUpdate("COMMIT;");
+                }
+            }
         } catch (SQLException e) {
             e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
         }
