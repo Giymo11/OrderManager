@@ -1,8 +1,5 @@
-<?xml version='1.0' encoding='UTF-8'?>
-<Context antiJARLocking="true">
-    <Resource name="jdbc/dataSource" auth="Container"
-              type="javax.sql.DataSource"
-              driverClassName="com.mysql.jdbc.Driver"
-              maxIdle="10" maxWait="-1" password="passwort" username="root"
-              url="jdbc:mysql://localhost:3306/mysql"/>
+<?xml version="1.0" encoding="UTF-8"?>
+<Context antiJARLocking="true" path="/OrderManager_newVersion">
+    <Resource auth="Container" driverClassName="com.mysql.jdbc.Driver" maxIdle="10" maxWait="-1" name="jdbc/dataSource"
+              password="passwort" type="javax.sql.DataSource" url="jdbc:mysql://localhost:3306/mysql" username="root"/>
 </Context>

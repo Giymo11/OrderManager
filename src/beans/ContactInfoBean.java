@@ -66,8 +66,8 @@ public class ContactInfoBean {
             } else
                 System.out.println("resHours is closed");
 
-            resInfo.next();
-            setInfo(resInfo);
+            if (resInfo.first() == true)
+                setInfo(resInfo);
 
             resHours.close();
             resInfo.close();
@@ -275,8 +275,11 @@ public class ContactInfoBean {
 
     public void writeToDB() {
         try {
-            connection.createStatement().executeUpdate("UPDATE ordermanager.contactinfo SET name = '" + name + "', street = '" + street +
-                    "', location = '" + location + "', telephone = '" + telephone + "', email = '" + mail + "';");
+
+            System.out.println("writeToDB");
+            connection.createStatement().executeUpdate("DELETE FROM ordermanager.contactinfo");
+            connection.createStatement().executeUpdate("INSERT INTO ordermanager.contactinfo VALUES('" + name + "', '" + street +
+                    "', '" + location + "', '" + telephone + "', '" + mail + "');");
 
             connection.createStatement().executeUpdate("DELETE FROM ordermanager.openinghours;");
 

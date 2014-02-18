@@ -108,7 +108,8 @@
             </tbody>
         </table>
 
-        <p:commandButton type="submit" value="Speichern" action="#{contactInfoBean.writeToDB}"/>
+        <p:commandButton type="submit" value="Speichern" action="#{contactInfoBean.writeToDB}" update="@form"
+                         ajax="false"/>
 
     </h:form>
 </ui:composition>
