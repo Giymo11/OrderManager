@@ -9,12 +9,12 @@
     <h:outputStylesheet name="style.css" library="css"/>
 </h:head>
 <h:body>
-    <div class="content" style="margin-top: 150px">
+    <div class="content" style="margin-top: 150px; max-width: 73%;">
         <p:messages showDetail="false"/>
-        <p:dataList var="item" value="#{offerBean.offers}" itemType="none" style="width: 100%; border: 0;">
+        <p:dataList var="item" value="#{offerBean.offers}" itemType="none" style="border: 0;">
             <p:column style="border: 0">
                 <div style="border-bottom: 3px solid green; margin-top: 10px; margin-right: 40px;">
-                    <p:graphicImage value="#{item.picture}" style="height: 70%; width: 70%"/>
+                    <p:graphicImage value="#{item.picture}" style="max-width: 70%; max-height: 70%"/>
                     <br/>
                     <p:outputLabel value="#{item.description}"/>
                 </div>

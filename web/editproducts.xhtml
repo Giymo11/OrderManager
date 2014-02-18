@@ -6,12 +6,12 @@
         xmlns:p="http://primefaces.org/ui">
 
     <h:form>
-        <p:dataTable var="item" value="#{productBean.products}" cellpadding="5px">
-            <p:column headerText="Sichtbar">
+        <p:dataTable var="item" value="#{productBean.products}" cellpadding="5px" style="padding: 2px">
+            <p:column headerText="Anzeige">
                 <p:selectBooleanCheckbox value="#{item.visible}"/>
             </p:column>
             <p:column headerText="Bild">
-                <p:graphicImage value="#{item.picture}" height="100px" width="200px"/>
+                <p:graphicImage value="#{item.picture}" style="max-height: 50%; max-width: 50%"/>
 
                 <f:facet name="footer">
                     <p:selectOneMenu value="#{productBean.selectedPicture}" effect="fade" style="width:160px"
@@ -21,8 +21,8 @@
                 </f:facet>
             </p:column>
 
-            <p:column headerText="Name" width="30px">
-                <p:inputText value="#{item.title}"/>
+            <p:column headerText="Name">
+                <p:inputText value="#{item.title}" maxlength="45" size="15"/>
 
                 <f:facet name="footer">
                     <p:inputText value="#{productBean.newName}" size="12"/>

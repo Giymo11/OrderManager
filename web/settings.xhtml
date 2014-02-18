@@ -9,12 +9,16 @@ and open the template in the editor.
       xmlns:p="http://primefaces.org/ui"
       xmlns:ui="http://java.sun.com/jsf/facelets">
 <h:head>
-    <h:outputStylesheet name="style.css" library="css"/>
     <title>Einstellungen</title>
 </h:head>
 
 <h:body>
-    <div class="content">
+    <div style="text-align: center;
+                border: 1px solid green;
+                margin-left: 330px;
+                margin-top: 130px;
+                width: 73%;
+                position: absolute;">
         <p:tabView>
             <p:tab title="Produkte">
                 <ui:include src="editproducts.xhtml"/>
