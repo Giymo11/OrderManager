@@ -21,55 +21,86 @@ table {
     text-align: center;
 }
 
-.workinghours th {
-    color: #222;
-    font-variant: small-caps;
+.aboutimgtd {
+    width: 330px;
+}
+
+.aboutus {
+    min-height: 200px;
+    margin: 5px;
+    margin-bottom: 10px;
+    border: 1px solid green;
+}
+
+.aboutus img {
+    border: 3px solid #dddddd;
+    vertical-align: middle;
+    width: 300px;
+    height: 200px;
+}
+
+.aboutus p {
     text-align: left;
 }
 
-.workinghours td {
-    border-bottom: #0B610B dotted thin;
+.aboutus td {
+    width: auto;
 }
 
-.wrapper {
-    margin: auto;
-}
-
-.workinghours {
-    float: left;
-    font-size: 15px;
-    text-align: left;
+.content {
+    text-align: center;
+    border: 1px solid green;
+    margin-left: 330px;
+    margin-top: 130px;
+    min-width: 600px;
     width: 100%;
-    text-shadow: 1px 1px 5px #BBB;
-    padding-left: 20px;
-    padding-right: 20px;
+    position: absolute;
 }
 
-.sidebar {
-    text-align: left;
-    background-color: #2b812b;
-    background-repeat: repeat-y;
-    text-shadow: 1px 1px 5px #BBB;
-    width: 320px;
-    top: 0px;
-    bottom: 0px;
-    /* border: 1px solid red;*/
-    float: left;
-    position: fixed;
-    min-height: 600px;
-    /*overflow: scroll;*/
+.content h1 {
+    height: 10%;
+    font-size: 14pt;
+    margin: 0 0 0 0;
+    display: inline-block;
 }
 
-.topbar {
-    height: 120px;
-    margin-left: 320px;
-    background-color: #ddd;
-    position: fixed;
+.content img {
+    height: 70%;
+}
+
+.content p {
+    height: 20%;
+    font-size: 11pt;
+    margin: 0 0 0 0;
+    display: inline-block;
+}
+
+.content table {
     width: 100%;
 }
 
-.topbar h1 {
-    margin-left: 50px;
+.content td {
+    width: 33%;
+}
+
+.content tr {
+    height: 250px;
+}
+
+.imgstyle {
+    vertical-align: top;
+    border: 4px solid #aaa;
+    width: 225px;
+    height: 225px;
+}
+
+.login {
+    padding-top: 200px;
+    font-size: 20px;
+}
+
+.loginelements {
+    margin: 10px;
 }
 
 .logo {
@@ -92,71 +123,57 @@ table {
     cursor: pointer;
 }
 
-.menuitem:hover {
-    background-color: #f00;
+.menudiv:hover {
+    background-color: #31B404
 }
 
 .menuitem:active {
 }
 
-.menudiv:hover {
-    background-color: #31B404
+.menuitem:hover {
+    background-color: #f00;
 }
 
-.workinghours caption {
-    font-size: 16pt;
+.opendays {
+    margin-top: 5px;
+    margin-bottom: 5px;
+    width: 300px;
     font-weight: bold;
-    caption-side: top;
-    color: #000000;
-    font-variant: small-caps;
-    text-align: center;
-    width: 100%;
+
 }
 
-.content {
-    text-align: center;
-    border: 1px solid green;
-    margin-left: 330px;
-    margin-top: 130px;
-    min-width: 600px;
-    width: 100%;
-    position: absolute;
-}
 
-.content table {
-    width: 100%;
-}
-
-.content tr {
-    height: 250px;
-}
-
-.content td {
-    width: 33%;
-}
-
-.content img {
-    height: 70%;
-}
-
-.content h1 {
-    height: 10%;
-    font-size: 14pt;
-    margin: 0 0 0 0;
-    display: inline-block;
-}
-
-.content p {
-    height: 20%;
-    font-size: 11pt;
-    margin: 0 0 0 0;
-    display: inline-block;
+.sidebar {
+    text-align: left;
+    background-color: #2b812b;
+    background-repeat: repeat-y;
+    text-shadow: 1px 1px 5px #BBB;
+    width: 320px;
+    top: 0px;
+    bottom: 0px;
+    /* border: 1px solid red;*/
+    float: left;
+    position: fixed;
+    min-height: 600px;
+    /*overflow: scroll;*/
 }
 
 .specialoffer {
     width: 900px;
-    position: center;
-    margin: 20px;
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+
+}
+
+.specialoffer hr {
+    margin: 5px;
+    margin-top: 20px;
+    margin-bottom: 20px;
+    height: 2px;
+    border: #31B404;
+    color: #31B404;
+    background-color: #31B404;
 }
 
 .specialoffer img {
@@ -171,58 +188,52 @@ table {
     width: 700px;
 }
 
-.specialoffer hr {
-    margin: 5px;
-    margin-top: 20px;
-    margin-bottom: 20px;
-    height: 2px;
-    border: #31B404;
-    color: #31B404;
-    background-color: #31B404;
+.topbar {
+    height: 120px;
+    margin-left: 320px;
+    background-color: #ddd;
+    position: fixed;
+    width: 100%;
 }
 
-.login {
-    padding-top: 200px;
-    font-size: 20px;
+.topbar h1 {
+    margin-left: 50px;
 }
 
-.loginelements {
-    margin: 10px;
+.workinghours {
+    float: left;
+    font-size: 15px;
+    text-align: left;
+    width: 100%;
+    text-shadow: 1px 1px 5px #BBB;
+    padding-left: 20px;
+    padding-right: 20px;
 }
 
-.imgstyle {
-    vertical-align: top;
-    border: 4px solid #aaa;
-    width: 225px;
-    height: 225px;
+.workinghours caption {
+    font-size: 16pt;
+    font-weight: bold;
+    caption-side: top;
+    color: #000000;
+    font-variant: small-caps;
+    text-align: center;
+    width: 100%;
 }
 
-.opendays {
-    margin-top: 5px;
+.workinghours td {
+    border-bottom: #0B610B dotted thin;
 }
 
-.aboutus {
-    min-height: 200px;
-    margin: 5px;
-    margin-bottom: 10px;
-    border: 1px solid green;
-}
-
-.aboutus td {
-    width: auto;
-}
-
-.aboutus p {
+.workinghours th {
+    color: #222;
+    font-variant: small-caps;
     text-align: left;
 }
 
-.aboutus img {
-    border: 3px solid #dddddd;
-    vertical-align: middle;
-    width: 300px;
-    height: 200px;
+.workinghours tr{
+    border-bottom: 10px dotted white;
 }
 
-.aboutimgtd {
-    width: 330px;
+.wrapper {
+    margin: auto;
 }
