@@ -19,6 +19,7 @@ import java.sql.Statement;
 public class JDBCDAO {
     private ConnectionManager connectionManager;
     private final static String LAST_INSERT_ID = "SELECT max(id) as maxId FROM ordermanager.";
+    private final static String LAST_INSERT_PIC_ID = "SELECT max(pictureid) as maxId FROM ordermanager.";
 
     public JDBCDAO(){
         connectionManager = new ConnectionManager();
@@ -51,7 +52,11 @@ public class JDBCDAO {
 
     public void deleteObject(String tableName, int id) throws SQLException{
         Statement statement = null;
-        final String DEL_STATEMENT = "DELETE FROM ordermanager." + tableName + " WHERE id = " + id + ";";
+        final String DEL_STATEMENT;
+        if(tableName.equals("picture"))
+            DEL_STATEMENT = "DELETE FROM ordermanager." + tableName + " WHERE pictureid = " + id + ";";
+        else
+            DEL_STATEMENT = "DELETE FROM ordermanager." + tableName + " WHERE id = " + id + ";";
         Connection con = null;
 
         try {
@@ -73,7 +78,12 @@ public class JDBCDAO {
             Statement statement = null;
             ResultSet rs = null;
             try {
-                String sqlCommand = LAST_INSERT_ID + tablename;
+                String sqlCommand;
+                if(tablename.equals("picture"))
+                    sqlCommand = LAST_INSERT_PIC_ID + tablename;
+                else
+                    sqlCommand = LAST_INSERT_ID + tablename;
+
                 statement = con.createStatement();
                 rs = statement.executeQuery(sqlCommand);
                 if (rs.next()) {
