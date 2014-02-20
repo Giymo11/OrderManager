@@ -117,6 +117,7 @@ public class ProductDAO extends JDBCDAO {
                               float newPrice, String selectedPicture){
         Connection con = null;
         Statement stat = null;
+        Statement stat1 = null;
         ResultSet resPicture = null;
         ResultSet resCategory = null;
         Product product = null;
@@ -124,13 +125,14 @@ public class ProductDAO extends JDBCDAO {
         try {
             con = getConnection();
             stat = con.createStatement();
+            stat1 = con.createStatement();
 
             resPicture = stat.executeQuery("SELECT pictureID FROM ordermanager.picture WHERE name = '" +
                                             selectedPicture + "';");
-            resCategory = stat.executeQuery("SELECT id FROM ordermanager.category WHERE name = '" +
-                                            selectedCategory + "';");
-
             resPicture.next();
+
+            resCategory = stat1.executeQuery("SELECT id FROM ordermanager.category WHERE name = '" +
+                                            selectedCategory + "';");
             resCategory.next();
 
             product = new Product(0, resCategory.getInt(1), getNewPriority(),
@@ -143,7 +145,8 @@ public class ProductDAO extends JDBCDAO {
 
         finally {
             close(resPicture, stat, con);
-            close(resCategory, null, null);
+            close(resCategory, stat1, null);
+            productList.add(product);
             if(product!=null)
                 insertProduct(product);
         }
