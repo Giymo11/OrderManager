@@ -1,6 +1,7 @@
 package dto;
 
-import java.io.Serializable;
+import interfaces.Identifiable;
+
 import java.util.Objects;
 
 /**
@@ -10,7 +11,7 @@ import java.util.Objects;
  * Time: 13:14
  * The DTO representing an offer.
  */
-public class Offer implements Serializable {
+public class Offer implements Identifiable {
 
     private int id;
     private String title;
@@ -18,6 +19,11 @@ public class Offer implements Serializable {
     private String picture;
     private int pictureid;
     private int priority;
+
+    public String getSQLSetString() {
+        return "title = '" + title + "', description = '" + description + "', pictureid = " + pictureid +
+                ", priority = " + priority;
+    }
 
 
     public Offer(int id, String title, String description, int pictureid, int priority) {
@@ -102,9 +108,6 @@ public class Offer implements Serializable {
         return true;
     }
 
-    public String getSQLString() {
-        return id + ", '" + title + "', '" + description + "', " + pictureid + ", " + priority;
-    }
 
     public int getId() {
         return id;

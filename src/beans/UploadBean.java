@@ -7,7 +7,7 @@ import org.primefaces.model.UploadedFile;
 import javax.annotation.PreDestroy;
 import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
-import javax.faces.bean.ViewScoped;
+import javax.faces.bean.SessionScoped;
 import javax.faces.context.FacesContext;
 import java.io.*;
 import java.sql.Connection;
@@ -25,7 +25,7 @@ import java.util.Map;
  * Time: 14:04
  */
 @ManagedBean
-@ViewScoped
+@SessionScoped
 public class UploadBean {
 
     private UploadedFile file;
@@ -55,8 +55,13 @@ public class UploadBean {
                 if (!newFile.createNewFile())
                     FacesContext.getCurrentInstance().addMessage("Failure!", new FacesMessage("File already exists and will be overwritten!"));
                 else {
-                    connection.createStatement().executeUpdate("INSERT INTO ordermanager.picture VALUES(" + getNextID() + ", '" + file.getFileName().toString() + "');");
-                    connection.createStatement().executeUpdate("COMMIT;");
+                    ResultSet res = connection.createStatement().executeQuery("SELECT count(*) FROM ordermanager.picture WHERE name = '" + file.getFileName() + "';");
+                    res.next();
+                    if(res.getInt(1)==0){
+                        connection.createStatement().executeUpdate("INSERT INTO ordermanager.picture VALUES(" + getNextID() + ", '" + file.getFileName().toString() + "');");
+                        connection.createStatement().executeUpdate("COMMIT;");
+                    }
+                    res.close();
                 }
 
                 FileOutputStream out = new FileOutputStream(newFile);
@@ -114,7 +119,6 @@ public class UploadBean {
     }
 
     public void delete() {
-        System.out.println("Delete Pic called");
         String filename = fetchParameter("name");
 
         for (File file : getUploadedPictures()) {
@@ -124,8 +128,19 @@ public class UploadBean {
         try {
             if (fileToDelete != null) {
                 //noinspection ResultOfMethodCallIgnored
-                connection.createStatement().executeUpdate("DELETE FROM ordermanager.picture WHERE name = '" + filename + "';");
-                fileToDelete.delete();
+
+                ResultSet res = connection.createStatement().executeQuery("SELECT count(*) FROM ordermanager.product WHERE id = " +
+                        "(SELECT pictureid FROM ordermanager.picture WHERE name = '" + filename + "');");
+                ResultSet res2 = connection.createStatement().executeQuery("SELECT count(*) FROM ordermanager.offer WHERE id = " +
+                        "(SELECT pictureid FROM ordermanager.picture WHERE name = '" + filename + "');");
+                res.next();
+                res2.next();
+                if(res.getInt(1)>0 || res2.getInt(1)>0)
+                    FacesContext.getCurrentInstance().addMessage("Fehler", new FacesMessage("Bitte löschen oder ändern Sie zuerst die Produkte und Angebote, die dieses Bild verwenden!"));
+                else{
+                    connection.createStatement().executeUpdate("DELETE FROM ordermanager.picture WHERE name = '" + filename + "';");
+                    fileToDelete.delete();
+                }
             }
         } catch (SQLException e) {
             e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
@@ -145,9 +160,10 @@ public class UploadBean {
     }
 
     public List<String> getPics() {
-        for (File file : getUploadedPictures()) {
-            pics.add(file.getName().toString());
-        }
+        if(pics.isEmpty())
+            for (File file : getUploadedPictures())
+                pics.add(file.getName().toString());
+
         return pics;
     }
 
@@ -157,7 +173,6 @@ public class UploadBean {
 
     @PreDestroy
     public void preDestroy() {
-        System.out.println("UploadBean PreDestroy");
         try {
             connection.close();
         } catch (SQLException e) {

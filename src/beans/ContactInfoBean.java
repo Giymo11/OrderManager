@@ -336,8 +336,6 @@ public class ContactInfoBean {
 
     @PreDestroy
     public void preDestroy() {
-        System.out.println("ContactinfoBean PreDestroy");
-
         try {
             connection.close();
         } catch (SQLException e) {

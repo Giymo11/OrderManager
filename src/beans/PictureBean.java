@@ -4,6 +4,7 @@ import dbaccess.ConnectionManager;
 
 import javax.annotation.PreDestroy;
 import javax.faces.bean.ManagedBean;
+import javax.faces.bean.SessionScoped;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
@@ -18,6 +19,7 @@ import java.util.List;
  * To change this template use File | Settings | File Templates.
  */
 @ManagedBean
+@SessionScoped
 public class PictureBean {
     List<String> pictureList;
     private int lastID = 0;

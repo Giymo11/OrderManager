@@ -6,7 +6,7 @@
         xmlns:ui="http://java.sun.com/jsf/facelets">
     <h:body>
         <h:form id="fileupload" enctype="multipart/form-data">
-            <p:growl id="messages" showDetail="true"/>
+            <p:growl id="messages" showDetail="false"/>
             <br/>
             <p:fileUpload fileUploadListener="#{uploadBean.upload}" mode="advanced"
                           allowTypes="/(\.|\/)(gif|jpe?g|png)$/" dragDropSupport="false"
