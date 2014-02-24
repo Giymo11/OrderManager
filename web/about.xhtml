@@ -10,51 +10,31 @@
     <title>Über uns</title>
     <h:outputStylesheet name="style.css" library="css"/>
 </head>
-<body>
-<div class="wrapper">
-    <div class="content">
+<h:body>
+    <div class="content" style="min-width: 300px; max-width:73%">
         <table>
-            <tbody>
             <tr>
                 <td>
-                    <p>
-                        <h3>Bäckerei Pock-Ein Familienbetrieb mit Erfolg</h3> Die Bäckerei Pock ist ein gutes Beispiel für einen erfolgreichen Familienbetrieb.
-                        <br/>In den Regionen, die heute zu Deutschland gehören, ist der Beruf des Bäckers mindestens seit der Zeit Karl des Großen (768-814) bekannt. Damals arbeiteten überwiegend Leibeigene an Fronöfen oder Klosterknechte an Klosteröfen. Durch das Wachstum der Städte bildete sich im 10. Jahrhundert der Bäckerberuf als „freier“ Berufsstand heraus. Verwendet wurde die Berufsbezeichnung „Beck“ (kurz für becker) oder „Pfister“ (vom lateinischen „pistor“). Anfangs verfügten die wenigsten Bäcker über einen eigenen Ofen. Ihre Waren buken sie daher in den stadteigenen Öfen, in denen sich die Bäcker abwechseln mussten.
-                    </p>
+                    <p:outputLabel value="#{aboutBean.first.text}" style="margin:0; width: 50%"/>
                 </td>
                 <td>
-                    <p:graphicImage value="logo.jpg"/>
+                    <p:graphicImage value="#{aboutBean.first.pictureName}"/>
                 </td>
             </tr>
-            <tr class="aboutus">
-                <td class="aboutimgtd">
-                    <p:graphicImage value="logo.jpg"/>
+            <tr>
+                <td>
+                    <p:graphicImage value="#{aboutBean.second.pictureName}"/>
                 </td>
                 <td>
-                    <p>
-                        <h3>Lokalität</h3>
-                        In den Regionen, die heute zu Deutschland gehören, ist der Beruf des Bäckers mindestens seit der Zeit Karl des Großen (768-814) bekannt. Damals arbeiteten überwiegend Leibeigene an Fronöfen oder Klosterknechte an Klosteröfen. Durch das Wachstum der Städte bildete sich im 10. Jahrhundert der Bäckerberuf als „freier“ Berufsstand heraus. Verwendet wurde die Berufsbezeichnung „Beck“ (kurz für becker) oder „Pfister“ (vom lateinischen „pistor“). Anfangs verfügten die wenigsten Bäcker über einen eigenen Ofen. Ihre Waren buken sie daher in den stadteigenen Öfen, in denen sich die Bäcker abwechseln mussten.
-                    </p>
+                    <h3>Lokalität</h3>
+                    <p:outputLabel value="#{aboutBean.second.text}"/>
                 </td>
             </tr>
-            <tr class="aboutus">
-                <td>
-                    <p>
-                        <h3>Unsere Produkte</h3>
-                        In den Regionen, die heute zu Deutschland gehören, ist der Beruf des Bäckers mindestens seit der Zeit Karl des Großen (768-814) bekannt. Damals arbeiteten überwiegend Leibeigene an Fronöfen oder Klosterknechte an Klosteröfen. Durch das Wachstum der Städte bildete sich im 10. Jahrhundert der Bäckerberuf als „freier“ Berufsstand heraus. Verwendet wurde die Berufsbezeichnung „Beck“ (kurz für becker) oder „Pfister“ (vom lateinischen „pistor“). Anfangs verfügten die wenigsten Bäcker über einen eigenen Ofen. Ihre Waren buken sie daher in den stadteigenen Öfen, in denen sich die Bäcker abwechseln mussten.
-                    </p>
-                </td>
-                <td class="aboutimgtd">
-                    <p:graphicImage value="logo.jpg"/>
-                </td>
-            </tr>
-            </tbody>
         </table>
     </div>
     <div class="topbar">
         <h1>ÜBER UNS</h1>
     </div>
     <ui:include src="menu.xhtml"/>
-</div>
-</body>
+</h:body>
 </html>

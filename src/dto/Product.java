@@ -1,5 +1,7 @@
 package dto;
 
+import interfaces.Identifiable;
+
 /**
  * Created with IntelliJ IDEA.
  * User: Sarah
@@ -7,7 +9,7 @@ package dto;
  * Time: 13:34
  * Constructor: int id, int categoryID, int priority, String title, String description, float price, String picture
  */
-public class Product {
+public class Product implements Identifiable{
     private int id;
     private int categoryID;
     private int priority;
@@ -19,9 +21,9 @@ public class Product {
     private String categoryName;
     private boolean visible;
 
-    public String getSQLString() {
-        return id + ", " + categoryID + ", '" + title + "', '" + description + "', " +
-                price + ", " + pictureID + ", " + priority + ", " + visible;
+    public String getSQLSetString() {
+        return "categoryid = " + categoryID + ", name =  '" + title + "', description = '" + description + "', price = " +
+                price + ", pictureid = " + pictureID + ", priority = " + priority + ", visible = " + visible;
     }
 
     public Product(int id, int categoryID, int priority, String title, String description, float price, int pictureID, boolean visible) {

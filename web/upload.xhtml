@@ -4,17 +4,21 @@
         xmlns:p="http://primefaces.org/ui"
         xmlns:f="http://java.sun.com/jsf/core"
         xmlns:ui="http://java.sun.com/jsf/facelets">
+    <h:head>
+        <title>Einstellungen - Bild Upload</title>
+    </h:head>
     <h:body>
         <h:form id="fileupload" enctype="multipart/form-data">
-            <p:growl id="messages" showDetail="true"/>
+            <p:growl id="messages" showDetail="false"/>
             <br/>
             <p:fileUpload fileUploadListener="#{uploadBean.upload}" mode="advanced"
                           allowTypes="/(\.|\/)(gif|jpe?g|png)$/" dragDropSupport="false"
                           fileLimit="3" invalidFileMessage="Falsches Bildformat" update="@form"/>
+            <br/>
 
             <p:dataTable value="#{uploadBean.pics}" var="picture">
                 <p:column>
-                    <p:graphicImage value="#{picture}" width="250px" height="150px"/>
+                    <p:graphicImage value="#{picture}" style="max-width: 60%; max-height: 60%"/>
                 </p:column>
                 <p:column>
                     <p:commandButton value="Löschen" action="#{uploadBean.delete}" ajax="false" update="@form">
@@ -22,7 +26,6 @@
                     </p:commandButton>
                 </p:column>
             </p:dataTable>
-
         </h:form>
     </h:body>
 </ui:composition>

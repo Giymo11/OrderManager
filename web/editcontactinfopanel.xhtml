@@ -5,108 +5,117 @@
         xmlns:p="http://primefaces.org/ui">
 
     <h:form>
-        <table class="floatLeft">
-            <caption>Öffnungszeiten</caption>
-            <tbody>
-            <tr>
-                <th>
-                    Montag:
-                </th>
-                <td>
-                    <p:inputText value="#{contactInfoBean.mondayAM}"/>
-                    <br/>
-                    <p:inputText value="#{contactInfoBean.mondayPM}"/>
-                </td>
-            </tr>
-            <tr>
-                <th>
-                    Dienstag:
-                </th>
-                <td>
-                    <p:inputText value="#{contactInfoBean.tuesdayAM}"/>
-                    <br/>
-                    <p:inputText value="#{contactInfoBean.tuesdayPM}"/>
-                </td>
-            </tr>
-            <tr>
-                <th>
-                    Mittwoch:
-                </th>
-                <td>
-                    <p:inputText value="#{contactInfoBean.wednesdayAM}"/>
-                    <br/>
-                    <p:inputText value="#{contactInfoBean.wednesdayPM}"/>
-                </td>
-            </tr>
-            <tr>
-                <th>
-                    Donnerstag:
-                </th>
-                <td>
-                    <p:inputText value="#{contactInfoBean.thursdayAM}"/>
-                    <br/>
-                    <p:inputText value="#{contactInfoBean.thursdayPM}"/>
-                </td>
-            </tr>
-            <tr>
-                <th>
-                    Freitag:
-                </th>
-                <td>
-                    <p:inputText value="#{contactInfoBean.fridayAM}"/>
-                    <br/>
-                    <p:inputText value="#{contactInfoBean.fridayPM}"/>
-                </td>
-            </tr>
-            <tr>
-                <th>
-                    Samstag:
-                </th>
-                <td>
-                    <p:inputText value="#{contactInfoBean.saturdayAM}"/>
-                    <br/>
-                    <p:inputText value="#{contactInfoBean.saturdayPM}"/>
-                </td>
-            </tr>
-            </tbody>
-        </table>
-
         <table class="contact">
-            <caption>Kontakt</caption>
-            <tbody>
             <tr>
-                <th>Name:</th>
-                <td>
-                    <p:inputText value="#{contactInfoBean.name}"/>
-                </td>
+                 <td>
+                    <table class="contactdetails">
+                        <caption class="contactdetails">ÖFFNUNGSZEITEN</caption>
+                        <tbody>
+                        <tr>
+                            <th>
+                                Montag:
+                            </th>
+                            <td>
+                                <p:inputText value="#{contactInfoBean.mondayAM}"/>
+                                <br/>
+                                <p:inputText value="#{contactInfoBean.mondayPM}"/>
+                            </td>
+                        </tr>
+                        <tr>
+                            <th>
+                                Dienstag:
+                            </th>
+                            <td>
+                                <p:inputText value="#{contactInfoBean.tuesdayAM}"/>
+                                <br/>
+                                <p:inputText value="#{contactInfoBean.tuesdayPM}"/>
+                            </td>
+                        </tr>
+                        <tr>
+                            <th>
+                                Mittwoch:
+                            </th>
+                            <td>
+                                <p:inputText value="#{contactInfoBean.wednesdayAM}"/>
+                                <br/>
+                                <p:inputText value="#{contactInfoBean.wednesdayPM}"/>
+                            </td>
+                        </tr>
+                        <tr>
+                            <th>
+                                Donnerstag:
+                            </th>
+                            <td>
+                                <p:inputText value="#{contactInfoBean.thursdayAM}"/>
+                                <br/>
+                                <p:inputText value="#{contactInfoBean.thursdayPM}"/>
+                            </td>
+                        </tr>
+                        <tr>
+                            <th>
+                                Freitag:
+                            </th>
+                            <td>
+                                <p:inputText value="#{contactInfoBean.fridayAM}"/>
+                                <br/>
+                                <p:inputText value="#{contactInfoBean.fridayPM}"/>
+                            </td>
+                        </tr>
+                        <tr>
+                            <th>
+                                Samstag:
+                            </th>
+                            <td>
+                                <p:inputText value="#{contactInfoBean.saturdayAM}"/>
+                                <br/>
+                                <p:inputText value="#{contactInfoBean.saturdayPM}"/>
+                            </td>
+                        </tr>
+                        </tbody>
+                    </table>
+            </td>
+            <td>
+                    <table class="contactdetails">
+                        <caption>KONTAKTDATEN</caption>
+                        <tbody>
+                        <tr>
+                            <th>Name:</th>
+                            <td>
+                                <p:inputText value="#{contactInfoBean.name}"/>
+                            </td>
 
+                        </tr>
+                        <tr>
+                            <th>Straße:</th>
+                            <td>
+                                <p:inputText value="#{contactInfoBean.street}"/>
+                            </td>
+                        </tr>
+                        <tr>
+                            <th>Ort:</th>
+                            <td>
+                                <p:inputText value="#{contactInfoBean.location}"/>
+                            </td>
+                        </tr>
+                        <tr>
+                            <th>Telefon:</th>
+                            <td>
+                                <p:inputText value="#{contactInfoBean.telephone}"/>
+                            </td>
+                        </tr>
+                        <tr>
+                            <th>E-Mail:</th>
+                            <td>
+                                <p:inputText value="#{contactInfoBean.mail}"/>
+                            </td>
+                        </tr>
+                        </tbody>
+                    </table>
+            </td>
             </tr>
-            <tr>
-                <th>Straße:</th>
-                <td>
-                    <p:inputText value="#{contactInfoBean.street}"/>
-                </td>
-            </tr>
-            <tr>
-                <th>Ort:</th>
-                <td>
-                    <p:inputText value="#{contactInfoBean.location}"/>
-                </td>
-            </tr>
-            <tr>
-                <th>Telefon:</th>
-                <td>
-                    <p:inputText value="#{contactInfoBean.telephone}"/>
-                </td>
-            </tr>
-            <tr>
-                <th>E-Mail:</th>
-                <td>
-                    <p:inputText value="#{contactInfoBean.mail}"/>
-                </td>
-            </tr>
-            </tbody>
+
         </table>
+
 
         <p:commandButton type="submit" value="Speichern" action="#{contactInfoBean.writeToDB}"/>
 
