@@ -157,4 +157,25 @@ public class OfferDAO extends JDBCDAO{
                     res.getInt("Priority"));
         return null;
     }
+
+    public void save(int id){
+        Connection connection = null;
+        Statement stat = null;
+        try {
+            connection = getConnection();
+            stat = connection.createStatement();
+            for (Offer offer : offerList) {
+                if (offer.getId() == id) {
+                    stat.executeUpdate("UPDATE ordermanager.offer SET title = '" + offer.getTitle() +
+                            "', description = '" + offer.getDescription() + "' WHERE id = " + id + ";");
+                    stat.executeUpdate("COMMIT;");
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
+        }
+        finally{
+            close(null, stat, connection);
+        }
+    }
 }

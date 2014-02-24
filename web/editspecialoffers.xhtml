@@ -19,7 +19,7 @@
             </p:column>
 
             <p:column headerText="Name" width="30px">
-                <p:outputLabel value="#{item.title}"/>
+                <p:inputText value="#{item.title}"/>
 
                 <f:facet name="footer">
                     <p:inputText value="#{offerBean.newName}"/>
@@ -27,7 +27,7 @@
             </p:column>
 
             <p:column headerText="Beschreibung">
-                <p:outputLabel value="#{item.description}"/>
+                <p:inputTextarea value="#{item.description}"/>
 
                 <f:facet name="footer">
                     <p:inputTextarea value="#{offerBean.newText}"/>
@@ -37,6 +37,10 @@
             <p:column>
                 <p:commandButton type="submit" value="Löschen" action="#{offerBean.delete}" ajax="false" update="@form">
                     <f:param value="#{item.id}" name="id"/>
+                </p:commandButton>
+
+                <p:commandButton type="submit" action="#{offerBean.save}" value="Speichern" ajax="false" update="@form">
+                    <f:param value="#{item.id}" name="ids"/>
                 </p:commandButton>
 
                 <f:facet name="footer">

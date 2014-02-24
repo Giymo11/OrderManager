@@ -43,6 +43,11 @@ public class OfferBean {
         offerDAO.delete(id);
     }
 
+    public void save(){
+        int id = Integer.parseInt(fetchParameter("ids"));
+        offerDAO.save(id);
+    }
+
     public String fetchParameter(String param) {
         Map parameters = FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap();
 
