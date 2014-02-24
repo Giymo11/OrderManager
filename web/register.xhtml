@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html
+        PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:p="http://primefaces.org/ui">
+<head>
+    <title>Registrierem</title>
+</head>
+<body>
+
+<h:form>
+    <table class="Registrieren">
+        <caption class="Register">Registrieren</caption>
+        <tbody>
+        <tr>
+            <th>E-Mail:</th>
+            <td>
+                <p:inputText required="true" value="#{registerBean.email}">
+                    <f:validator validatorId="emailValidator"/>
+                </p:inputText>
+            </td>
+        </tr>
+        <tr>
+            <th>Passwort:</th>
+            <td>
+                <p:password required="true" value="#{registerBean.password}" feedback="true"/>
+            </td>
+        </tr>
+        <tr>
+            <th>Passwort wiederholen:</th>
+            <td>
+                <p:password required="true" value="#{registerBean.passwordWdh}"/>
+            </td>
+        </tr>
+        <tr>
+            <th>Telefonnummer (Optional):</th>
+            <td>
+                <p:inputText value="#{registerBean.telNr}"/>
+            </td>
+        </tr>
+        <tr>
+            <th>Vorname:</th>
+            <td>
+                <p:inputText required="true" value="#{registerBean.firstName}"/>
+            </td>
+        </tr>
+        <tr>
+            <th>Nachname:</th>
+            <td>
+                <p:inputText required="true" value="#{registerBean.lastName}"/>
+            </td>
+        </tr>
+        <tr>
+            <th>PLZ:</th>
+            <td>
+                <p:inputText required="true" value="#{registerBean.plz}"/>
+            </td>
+        </tr>
+        <tr>
+            <th>Ort:</th>
+            <td>
+                <p:inputText required="true" value="#{registerBean.location}"/>
+            </td>
+        </tr>
+        <tr>
+            <th>Straße:</th>
+            <td>
+                <p:inputText required="true" value="#{registerBean.street}"/>
+            </td>
+        </tr>
+        <tr>
+            <th>Hausnummer:</th>
+            <td>
+                <p:inputText required="true" value="#{registerBean.houseNr}"/>
+            </td>
+        </tr>
+
+        </tbody>
+    </table>
+    <p:commandButton value="Registrieren" actionListener="#{registerBean.register}" action="login"/>
+</h:form>
+</body>
+</html>

@@ -3,21 +3,30 @@
         "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml"
       xmlns:h="http://java.sun.com/jsf/html"
-      xmlns:f="http://java.sun.com/jsf/core">
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:p="http://primefaces.org/ui">
 <h:head>
     <title>Login</title>
 </h:head>
 <h:body>
     <h:form>
-        E-Mail-Adresse:
-        <h:inputText required="true" value="#{loginBean.email}">
-            <f:validator validatorId="emailValidator"/>
-        </h:inputText>
+        <h:panelGrid columns="3">
+            E-Mail-Adresse:
+            <p:inputText id="email" required="true" value="#{loginBean.email}"
+                         requiredMessage="E-Mail Adresse benötigt!">
+                <f:validator validatorId="emailValidator" for="email"/>
+            </p:inputText>
+            <p:message for="email"/>
+            <br/>
+            Passwort:
+            <p:inputText id="password" value="#{loginBean.password}" requiredMessage="Passwort benötigt!"
+                         type="password" required="true"/>
+            <p:message for="password"/>
+        </h:panelGrid>
         <br/>
-        Passwort:
-        <h:inputSecret id="password" value="#{loginBean.password}"/>
-        <br/>
-        <h:commandButton value="Anmelden" actionListener="#{loginBean.check}"/>
+        <p:commandButton id="anmelden" value="Anmelden" ajax="false" action="#{loginBean.check}"/>
+        <p:button value="Registrieren" outcome="register.xhtml"/>
+        <h:outputText id="WrongPasswordMessage" value="#{loginBean.wrongPassword}"/>
     </h:form>
 </h:body>
 </html>
