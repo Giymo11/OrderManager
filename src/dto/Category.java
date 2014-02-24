@@ -1,5 +1,7 @@
 package dto;
 
+import interfaces.Identifiable;
+
 /**
  * Created with IntelliJ IDEA.
  * User: Sarah
@@ -7,11 +9,15 @@ package dto;
  * Time: 14:45
  * To change this template use File | Settings | File Templates.
  */
-public class Category {
+public class Category implements Identifiable{
     private int id;
     private String name;
 
-    public Category(int id, String name) {
+    public Category(String name) {
+        setName(name);
+    }
+
+    public Category(int id, String name){
         setId(id);
         setName(name);
     }

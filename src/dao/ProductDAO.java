@@ -2,7 +2,9 @@ package dao;
 
 import dto.Product;
 
+import javax.faces.application.FacesMessage;
 import javax.faces.bean.SessionScoped;
+import javax.faces.context.FacesContext;
 import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -75,6 +77,9 @@ public class ProductDAO extends JDBCDAO {
                     else
                         res.next();
                 }
+            else{
+                FacesContext.getCurrentInstance().addMessage("Failure", new FacesMessage("Warnung! Keine Angebote gespeichert!"));
+            }
         } catch (SQLException e) {
             e.printStackTrace();
         }
