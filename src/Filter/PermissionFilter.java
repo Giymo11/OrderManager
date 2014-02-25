@@ -23,41 +23,31 @@ public class PermissionFilter implements Filter {
     }
 
     public void doFilter(ServletRequest req, ServletResponse resp, FilterChain chain) throws ServletException, IOException {
-
-
         HttpServletRequest request = (HttpServletRequest) req;
         HttpServletResponse response = (HttpServletResponse) resp;
 
         boolean loggedIn = false;
 
         if (request.getSession().getAttribute("loggedIn") != null) {
-
             loggedIn = (boolean) request.getSession().getAttribute("loggedIn");
-            System.out.println("loggedIn set to true");
         }
 
 
         if (request.getRequestURI().equals(request.getContextPath() + "/faces/login.xhtml")) {
             if (loggedIn) {
-                System.out.println(request.getContextPath());
                 response.sendRedirect(request.getContextPath() + "/faces/orders.xhtml");
-                System.out.println("Weiterleitung zu orders.xhtml");
                 return;
             } else {
-                System.out.println("Noch nicht eingeloggt");
                 chain.doFilter(req, resp);
                 return;
             }
         }
 
-
-        System.out.println("Filter nicht genutzt.");
         chain.doFilter(req, resp);
     }
 
 
     public void init(FilterConfig config) throws ServletException {
-        System.out.println("Filter Initialized");
         this.fc = config;
     }
 

@@ -1,7 +1,7 @@
 package beans;
 
-import dbaccess.ConnectionManager;
-import dto.Adress;
+import dao.RegisterDAO;
+import dto.Address;
 import dto.User;
 
 import javax.faces.application.FacesMessage;
@@ -9,10 +9,6 @@ import javax.faces.bean.ManagedBean;
 import javax.faces.context.FacesContext;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
-import java.sql.Connection;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.sql.Statement;
 
 /**
  * Created with IntelliJ IDEA.
@@ -23,16 +19,53 @@ import java.sql.Statement;
  */
 @ManagedBean
 public class RegisterBean {
-    private String email, password, passwordWdh, salt, firstName, lastName, hash, location, street, houseNr, telNr;
-    private int id, adressId, lastID, plz;
-    private ConnectionManager connectionManager;
-    private Connection connection;
-    private Adress adress;
+    private String email, password, passwordWdh, firstName, lastName, location, street, houseNr, telNr;
+    private int plz;
+    private Address address;
+    private RegisterDAO registerDAO;
 
     public RegisterBean() {
-        connectionManager = new ConnectionManager();
-        connection = connectionManager.getConnection("jdbc/dataSource", false);
-        lastID = 0;
+        registerDAO = new RegisterDAO();
+    }
+
+    public void register() {
+        if (password.equals(passwordWdh)) {
+            String hash = hash(password);
+            address = new Address(plz, location, street, houseNr);
+            User u = new User(email, email, firstName, lastName, hash, telNr, 1);
+
+            registerDAO.register(u, address);
+
+        } else {
+            FacesContext.getCurrentInstance().addMessage("FAILURE", new FacesMessage("Passwörter stimmen nicht überein"));
+        }
+    }
+
+    public String hash(String password) {
+        MessageDigest md = null;
+        try {
+            md = MessageDigest.getInstance("SHA-256");
+        } catch (NoSuchAlgorithmException e) {
+            e.printStackTrace();
+        }
+        md.update(password.getBytes());
+
+        byte byteData[] = md.digest();
+
+        //convert the byte to hex format method 1
+        StringBuffer sb = new StringBuffer();
+        for (int i = 0; i < byteData.length; i++) {
+            sb.append(Integer.toString((byteData[i] & 0xff) + 0x100, 16).substring(1));
+        }
+
+        //convert the byte to hex format method 2
+        StringBuffer hexString = new StringBuffer();
+        for (int i = 0; i < byteData.length; i++) {
+            String hex = Integer.toHexString(0xff & byteData[i]);
+            if (hex.length() == 1) hexString.append('0');
+            hexString.append(hex);
+        }
+        return hexString.toString();
     }
 
     public String getLocation() {
@@ -91,7 +124,6 @@ public class RegisterBean {
         this.passwordWdh = passwordWdh;
     }
 
-
     public String getFirstName() {
         return firstName;
     }
@@ -116,103 +148,5 @@ public class RegisterBean {
     public void setTelNr(String telNr) {
         this.telNr = telNr;
     }
-
-
-    public void register() {
-        if (password.equals(passwordWdh)) {
-            String hash = this.hash(password);
-            this.id = getIDUser();
-            this.adressId = getIDAdress();
-            this.adress = new Adress(adressId, plz, location, street, houseNr);
-            User u = new User(email, email, firstName, lastName, hash, id, telNr, adressId);
-            this.adress = new Adress(this.getIDAdress(), plz, location, street, houseNr);
-            try {
-                connection.createStatement().executeUpdate(" INSERT INTO ordermanager.adress VALUES(" + adress.getSQLString() + ");");
-                connection.createStatement().executeUpdate("INSERT INTO ordermanager.user VALUES(" + u.getSQLString() + ");");
-                connection.createStatement().executeUpdate("COMMIT;");
-            } catch (SQLException e) {
-                e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
-            }
-
-
-        } else {
-            FacesContext.getCurrentInstance().addMessage("FAILURE", new FacesMessage("Passwörter stimmen nicht überein"));
-        }
-    }
-
-    public String hash(String password) {
-        MessageDigest md = null;
-        try {
-            md = MessageDigest.getInstance("SHA-256");
-        } catch (NoSuchAlgorithmException e) {
-            e.printStackTrace();
-        }
-        md.update(password.getBytes());
-
-        byte byteData[] = md.digest();
-
-        //convert the byte to hex format method 1
-        StringBuffer sb = new StringBuffer();
-        for (int i = 0; i < byteData.length; i++) {
-            sb.append(Integer.toString((byteData[i] & 0xff) + 0x100, 16).substring(1));
-        }
-
-        System.out.println("Hex format : " + sb.toString());
-
-        //convert the byte to hex format method 2
-        StringBuffer hexString = new StringBuffer();
-        for (int i = 0; i < byteData.length; i++) {
-            String hex = Integer.toHexString(0xff & byteData[i]);
-            if (hex.length() == 1) hexString.append('0');
-            hexString.append(hex);
-        }
-        return hexString.toString();
-    }
-
-    public int getIDUser() {
-        try {
-            Statement statement = connection.createStatement();
-
-            ResultSet resultSet = statement.executeQuery("SELECT id from ordermanager.user");
-
-            this.lastID = 0;
-            while (resultSet.next()) {
-                if (this.lastID <= resultSet.getInt(1))
-                    this.lastID = resultSet.getInt(1);
-            }
-
-            resultSet.close();
-            return this.lastID + 1;
-        } catch (SQLException e) {
-            e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
-        }
-
-        return 0;
-    }
-
-    public int getIDAdress() {
-        try {
-            Statement statement = connection.createStatement();
-
-            ResultSet resultSet = statement.executeQuery("SELECT id from ordermanager.adress");
-
-            this.lastID = 0;
-            while (resultSet.next()) {
-                if (this.lastID <= resultSet.getInt(1))
-                    this.lastID = resultSet.getInt(1);
-            }
-
-            resultSet.close();
-
-            return this.lastID + 1;
-
-        } catch (SQLException e) {
-            e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
-        }
-
-        return 0;
-    }
-
-
 }
 

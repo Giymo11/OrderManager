@@ -1,5 +1,7 @@
 package dto;
 
+import interfaces.Identifiable;
+
 /**
  * Created with IntelliJ IDEA.
  * User: Markus
@@ -7,17 +9,16 @@ package dto;
  * Time: 14:26
  * To change this template use File | Settings | File Templates.
  */
-public class User {
+public class User implements Identifiable {
     private String email, salt, firstName, lastName, hash, telNr;
     private int id, adressID;
 
-    public User(String email, String salt, String firstName, String lastName, String hash, int id, String telNr, int adressID) {
+    public User(String email, String salt, String firstName, String lastName, String hash, String telNr, int adressID) {
         this.email = email;
         this.salt = salt;
         this.firstName = firstName;
         this.lastName = lastName;
         this.hash = hash;
-        this.id = id;
         this.telNr = telNr;
         this.adressID = adressID;
     }

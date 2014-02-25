@@ -1,5 +1,7 @@
 package dto;
 
+import interfaces.Identifiable;
+
 /**
  * Created with IntelliJ IDEA.
  * User: Markus
@@ -7,12 +9,11 @@ package dto;
  * Time: 13:28
  * To change this template use File | Settings | File Templates.
  */
-public class Adress {
+public class Address implements Identifiable {
     private int id, plz;
     private String location, street, housNr;
 
-    public Adress(int id, int plz, String location, String street, String housNr) {
-        this.id = id;
+    public Address(int plz, String location, String street, String housNr) {
         this.plz = plz;
         this.location = location;
         this.street = street;

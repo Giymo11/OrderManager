@@ -23,6 +23,7 @@ public class CategoryDAO extends JDBCDAO {
     private List<Category> categories;
 
     public CategoryDAO(){
+        super();
         categories = new ArrayList<>();
         try {
             read();
