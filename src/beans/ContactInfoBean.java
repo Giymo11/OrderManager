@@ -4,15 +4,10 @@
  */
 package beans;
 
-import dbaccess.ConnectionManager;
+import dao.ContactInfoDAO;
 
-import javax.annotation.PreDestroy;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.SessionScoped;
-import java.sql.Connection;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.sql.Statement;
 
 /**
  * @author Sarah
@@ -40,306 +35,150 @@ public class ContactInfoBean {
     private String saturdayAM;
     private String saturdayPM;
 
-    private ConnectionManager connectionManager;
-    private Connection connection;
+    private ContactInfoDAO contactInfoDAO;
 
     public ContactInfoBean() {
-        connectionManager = new ConnectionManager();
-        connection = connectionManager.getConnection("jdbc/dataSource", false);
-        read();
-    }
-
-    private void read() {
-        try {
-            Statement statement = connection.createStatement();
-            Statement statementInfo = connection.createStatement();
-
-            ResultSet resHours = statement.executeQuery("SELECT * FROM ordermanager.openinghours");
-            ResultSet resInfo = statementInfo.executeQuery("SELECT * FROM ordermanager.contactinfo");
-
-            if (!resHours.isClosed()) {
-                while (resHours.next()) {
-                    setDays(resHours);
-                    if (resHours.isLast())
-                        break;
-                }
-            } else
-                System.out.println("resHours is closed");
-
-            resInfo.next();
-            setInfo(resInfo);
-
-            resHours.close();
-            resInfo.close();
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-
-    }
-
-    private void setDays(ResultSet res) throws SQLException {
-        String str = res.getString(2);      //returns start of working hours. getString(3) returns end of working hours
-        int firstOpenHour = 0;
-
-        //init firstOpenHour with the first two digits of the first working hour
-        if (str != null) {
-            str = str.substring(0, 2);
-            firstOpenHour = Integer.valueOf(str);
-        }
-
-        //res.getInt(1) returns day of the week
-        switch (res.getInt(1)) {
-            case 1:
-                if (firstOpenHour < 12)
-                    mondayAM = res.getString(2) + " - " + res.getString(3);
-                else
-                    mondayPM = res.getString(2) + " - " + res.getString(3);
-                break;
-            case 2:
-                if (firstOpenHour < 12)
-                    tuesdayAM = res.getString(2) + " - " + res.getString(3);
-                else
-                    tuesdayPM = res.getString(2) + " - " + res.getString(3);
-                break;
-            case 3:
-                if (firstOpenHour < 12)
-                    wednesdayAM = res.getString(2) + " - " + res.getString(3);
-                else
-                    wednesdayPM = res.getString(2) + " - " + res.getString(3);
-                break;
-            case 4:
-                if (firstOpenHour < 12)
-                    thursdayAM = res.getString(2) + " - " + res.getString(3);
-                else
-                    thursdayPM = res.getString(2) + " - " + res.getString(3);
-                break;
-            case 5:
-                if (firstOpenHour < 12)
-                    fridayAM = res.getString(2) + " - " + res.getString(3);
-                else
-                    fridayPM = res.getString(2) + " - " + res.getString(3);
-                break;
-            case 6:
-                if (firstOpenHour < 12)
-                    saturdayAM = res.getString(2) + " - " + res.getString(3);
-                else
-                    saturdayPM = res.getString(2) + " - " + res.getString(3);
-                break;
-        }
-    }
-
-    private void setInfo(ResultSet res) throws SQLException {
-        name = res.getString(1);
-        street = res.getString(2);
-        location = res.getString(3);
-        telephone = res.getString(4);
-        mail = res.getString(5);
+        contactInfoDAO = new ContactInfoDAO();
     }
 
     public String getName() {
-        return name;
+        return contactInfoDAO.getName();
     }
 
     public void setName(String name) {
-        this.name = name;
+        contactInfoDAO.setName(name);
     }
 
     public String getStreet() {
-        return street;
+        return contactInfoDAO.getStreet();
     }
 
     public void setStreet(String street) {
-        this.street = street;
+        contactInfoDAO.setStreet(street);
     }
 
     public String getLocation() {
-        return location;
+        return contactInfoDAO.getLocation();
     }
 
     public void setLocation(String location) {
-        this.location = location;
+        contactInfoDAO.setLocation(location);
     }
 
     public String getTelephone() {
-        return telephone;
+        return contactInfoDAO.getTelephone();
 
     }
 
     public void setTelephone(String telephone) {
-        this.telephone = telephone;
+        contactInfoDAO.setTelephone(telephone);
     }
 
     public String getMail() {
-        return mail;
+        return contactInfoDAO.getMail();
     }
 
     public void setMail(String mail) {
-        this.mail = mail;
+        contactInfoDAO.setMail(mail);
     }
 
     public String getMondayAM() {
-        return mondayAM;
+        return contactInfoDAO.getMondayAM();
     }
 
     public void setMondayAM(String mondayAM) {
-        this.mondayAM = mondayAM.replace(" ", "");
+        contactInfoDAO.setMondayAM(mondayAM.replace(" ", ""));
     }
 
     public String getMondayPM() {
-        return mondayPM;
+        return contactInfoDAO.getMondayPM();
     }
 
     public void setMondayPM(String mondayPM) {
-        this.mondayPM = mondayPM.replace(" ", "");
+        contactInfoDAO.setMondayPM(mondayPM.replace(" ", ""));
     }
 
     public String getTuesdayAM() {
-        return tuesdayAM;
+        return contactInfoDAO.getTuesdayAM();
     }
 
     public void setTuesdayAM(String tuesdayAM) {
-        this.tuesdayAM = tuesdayAM.replace(" ", "");
+        contactInfoDAO.setTuesdayAM(tuesdayAM.replace(" ", ""));
     }
 
     public String getTuesdayPM() {
-        return tuesdayPM;
+        return contactInfoDAO.getTuesdayPM();
     }
 
     public void setTuesdayPM(String tuesdayPM) {
-        this.tuesdayPM = tuesdayPM.replace(" ", "");
+        contactInfoDAO.setTuesdayPM(tuesdayPM.replace(" ", ""));
     }
 
     public String getWednesdayAM() {
-        return wednesdayAM;
+        return contactInfoDAO.getWednesdayAM();
     }
 
     public void setWednesdayAM(String wednesdayAM) {
-        this.wednesdayAM = wednesdayAM.replace(" ", "");
+        contactInfoDAO.setWednesdayAM(wednesdayAM.replace(" ", ""));
     }
 
     public String getWednesdayPM() {
-        return wednesdayPM;
+        return contactInfoDAO.getWednesdayPM();
     }
 
     public void setWednesdayPM(String wednesdayPM) {
-        this.wednesdayPM = wednesdayPM.replace(" ", "");
+        contactInfoDAO.setWednesdayPM(wednesdayPM.replace(" ", ""));
     }
 
     public String getThursdayAM() {
-        return thursdayAM;
+        return contactInfoDAO.getThursdayAM();
     }
 
     public void setThursdayAM(String thursdayAM) {
-        this.thursdayAM = thursdayAM.replace(" ", "");
+        contactInfoDAO.setThursdayAM(thursdayAM.replace(" ", ""));
     }
 
     public String getThursdayPM() {
-        return thursdayPM;
+        return contactInfoDAO.getThursdayPM();
     }
 
     public void setThursdayPM(String thursdayPM) {
-        this.thursdayPM = thursdayPM.replace(" ", "");
+        contactInfoDAO.setThursdayPM(thursdayPM.replace(" ", ""));
     }
 
     public String getFridayAM() {
-        return fridayAM;
+        return contactInfoDAO.getFridayAM();
     }
 
     public void setFridayAM(String fridayAM) {
-        this.fridayAM = fridayAM.replace(" ", "");
+        contactInfoDAO.setFridayAM(fridayAM.replace(" ", ""));
     }
 
     public String getFridayPM() {
-        return fridayPM;
+        return contactInfoDAO.getFridayPM();
     }
 
     public void setFridayPM(String fridayPM) {
-        this.fridayPM = fridayPM.replace(" ", "");
+        contactInfoDAO.setFridayPM(fridayPM.replace(" ", ""));
     }
 
     public String getSaturdayAM() {
-        return saturdayAM;
+        return contactInfoDAO.getSaturdayAM();
     }
 
     public void setSaturdayAM(String saturdayAM) {
-        this.saturdayAM = saturdayAM.replace(" ", "");
+        contactInfoDAO.setSaturdayAM(saturdayAM.replace(" ", ""));
     }
 
     public String getSaturdayPM() {
-        return saturdayPM;
+        return contactInfoDAO.getSaturdayPM();
     }
 
     public void setSaturdayPM(String saturdayPM) {
-        this.saturdayPM = saturdayPM.replace(" ", "");
+        contactInfoDAO.setSaturdayPM(saturdayPM.replace(" ", ""));
     }
 
-    public void writeToDB() {
-        try {
-            connection.createStatement().executeUpdate("UPDATE ordermanager.contactinfo SET name = '" + name + "', street = '" + street +
-                    "', location = '" + location + "', telephone = '" + telephone + "', email = '" + mail + "';");
-
-            connection.createStatement().executeUpdate("DELETE FROM ordermanager.openinghours;");
-
-            if (mondayAM.length() > 1)
-                connection.createStatement().executeUpdate("INSERT INTO ordermanager.openinghours " +
-                        "VALUES(1, '" + mondayAM.substring(0, 5) + "', '" + mondayAM.replace("-", "").substring(5) + "');");
-
-            if (mondayPM.length() > 1)
-                connection.createStatement().executeUpdate("INSERT INTO ordermanager.openinghours " +
-                        "VALUES(1, '" + mondayPM.substring(0, 5) + "', '" + mondayPM.replace("-", "").substring(5) + "');");
-
-            if (thursdayAM.length() > 1)
-                connection.createStatement().executeUpdate("INSERT INTO ordermanager.openinghours " +
-                        "VALUES(4, '" + thursdayAM.substring(0, 5) + "', '" + thursdayAM.replace("-", "").substring(5) + "');");
-
-            if (thursdayPM.length() > 1)
-                connection.createStatement().executeUpdate("INSERT INTO ordermanager.openinghours " +
-                        "VALUES(4, '" + thursdayPM.substring(0, 5) + "', '" + thursdayPM.replace("-", "").substring(5) + "');");
-
-            if (wednesdayAM.length() > 1)
-                connection.createStatement().executeUpdate("INSERT INTO ordermanager.openinghours " +
-                        "VALUES(3, '" + wednesdayAM.substring(0, 5) + "', '" + wednesdayAM.replace("-", "").substring(5) + "');");
-
-            if (wednesdayPM.length() > 1)
-                connection.createStatement().executeUpdate("INSERT INTO ordermanager.openinghours " +
-                        "VALUES(3, '" + wednesdayPM.substring(0, 5) + "', '" + wednesdayPM.replace("-", "").substring(5) + "');");
-
-            if (tuesdayAM.length() > 1)
-                connection.createStatement().executeUpdate("INSERT INTO ordermanager.openinghours " +
-                        "VALUES(2, '" + tuesdayAM.substring(0, 5) + "', '" + tuesdayAM.replace("-", "").substring(5) + "');");
-
-            if (tuesdayPM.length() > 1)
-                connection.createStatement().executeUpdate("INSERT INTO ordermanager.openinghours " +
-                        "VALUES(2, '" + tuesdayPM.substring(0, 5) + "', '" + tuesdayPM.replace("-", "").substring(5) + "');");
-
-            if (fridayAM.length() > 1)
-                connection.createStatement().executeUpdate("INSERT INTO ordermanager.openinghours " +
-                        "VALUES(5, '" + fridayAM.substring(0, 5) + "', '" + fridayAM.replace("-", "").substring(5) + "');");
-
-            if (fridayPM.length() > 1)
-                connection.createStatement().executeUpdate("INSERT INTO ordermanager.openinghours " +
-                        "VALUES(5, '" + fridayPM.substring(0, 5) + "', '" + fridayPM.replace("-", "").substring(5) + "');");
-
-            if (saturdayAM.length() > 1)
-                connection.createStatement().executeUpdate("INSERT INTO ordermanager.openinghours " +
-                        "VALUES(6, '" + saturdayAM.substring(0, 5) + "', '" + saturdayAM.replace("-", "").substring(5) + "');");
-
-            if (saturdayPM.length() > 1)
-                connection.createStatement().executeUpdate("INSERT INTO ordermanager.openinghours " +
-                        "VALUES(6, '" + saturdayPM.substring(0, 5) + "', '" + saturdayPM.replace("-", "").substring(5) + "');");
-
-            connection.createStatement().executeUpdate("COMMIT;");
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-    }
-
-    @PreDestroy
-    public void preDestroy() {
-        try {
-            connection.close();
-        } catch (SQLException e) {
-            e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
-        }
+    public void writeToDB(){
+        contactInfoDAO.writeToDB();
     }
 }
