@@ -2,6 +2,7 @@ package beans;
 
 import dao.RegisterDAO;
 import dto.Address;
+import dto.Town;
 import dto.User;
 
 import javax.faces.application.FacesMessage;
@@ -22,6 +23,7 @@ public class RegisterBean {
     private String email, password, passwordWdh, firstName, lastName, location, street, houseNr, telNr;
     private int plz;
     private Address address;
+    private Town town;
     private RegisterDAO registerDAO;
 
     public RegisterBean() {
@@ -31,10 +33,12 @@ public class RegisterBean {
     public void register() {
         if (password.equals(passwordWdh)) {
             String hash = hash(password);
-            address = new Address(plz, location, street, houseNr);
+
+            town = new Town(plz, location);
+            address = new Address(street, houseNr);
             User u = new User(email, email, firstName, lastName, hash, telNr, 1);
 
-            registerDAO.register(u, address);
+            registerDAO.register(u, address, town);
 
         } else {
             FacesContext.getCurrentInstance().addMessage("FAILURE", new FacesMessage("Passwörter stimmen nicht überein"));

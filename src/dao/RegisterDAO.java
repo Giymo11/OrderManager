@@ -1,6 +1,7 @@
 package dao;
 
 import dto.Address;
+import dto.Town;
 import dto.User;
 
 import java.sql.Connection;
@@ -19,10 +20,32 @@ public class RegisterDAO extends JDBCDAO {
         super();
     }
 
-    public void register(User user, Address address) {
+    public void register(User user, Address address, Town town) {
+        writeTown(town);
+        address.setTownid(town.getId());
         writeAddress(address);
         user.setAdressID(address.getId());
         writeUser(user);
+    }
+
+    private void writeTown(Town town) {
+        Connection connection = null;
+        Statement statement = null;
+        try{
+            insertObject("town", town);
+
+            connection = getConnection();
+            statement = connection.createStatement();
+
+            statement.executeUpdate("UPDATE ordermanager.town SET plz = " + town.getPlz() +
+                    ", name = '" + town.getName() + "' WHERE id = " + town.getId() + ";");
+            statement.executeUpdate("COMMIT;");
+        } catch (SQLException e) {
+            e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
+        }
+        finally {
+            close(null, statement, connection);
+        }
     }
 
     private void writeUser(User user) {
@@ -55,9 +78,9 @@ public class RegisterDAO extends JDBCDAO {
             connection = getConnection();
             statement = connection.createStatement();
 
-            statement.executeUpdate("UPDATE ordermanager.address SET plz = " + address.getPlz() + ", location = '" + address.getLocation() +
-                    "', street = '" + address.getStreet() + "', HouseNr = '" + address.getHousNr() + "' " +
-                    "WHERE id = " + address.getId() + ";");
+            statement.executeUpdate("UPDATE ordermanager.address SET street = '" + address.getStreet() +
+                    "', HouseNr = '" + address.getHousNr() + "', townid = " + address.getTownid() +
+                    " WHERE id = " + address.getId() + ";");
             statement.executeUpdate("COMMIT;");
         } catch (SQLException e) {
             e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.

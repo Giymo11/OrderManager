@@ -10,18 +10,16 @@ import interfaces.Identifiable;
  * To change this template use File | Settings | File Templates.
  */
 public class Address implements Identifiable {
-    private int id, plz;
-    private String location, street, housNr;
+    private int id, townid;
+    private String street, housNr;
 
-    public Address(int plz, String location, String street, String housNr) {
-        this.plz = plz;
-        this.location = location;
+    public Address(String street, String housNr) {
         this.street = street;
         this.housNr = housNr;
     }
 
     public String getSQLString() {
-        return id + ", " + plz + ", '" + location + "', '" + street + "', '" + housNr + "'" ;
+        return id + ", " + street + "', '" + housNr + "'," + townid;
     }
 
     public String getHousNr() {
@@ -40,27 +38,19 @@ public class Address implements Identifiable {
         this.id = id;
     }
 
-    public int getPlz() {
-        return plz;
-    }
-
-    public void setPlz(int plz) {
-        this.plz = plz;
-    }
-
-    public String getLocation() {
-        return location;
-    }
-
-    public void setLocation(String location) {
-        this.location = location;
-    }
-
     public String getStreet() {
         return street;
     }
 
     public void setStreet(String street) {
         this.street = street;
+    }
+
+    public int getTownid() {
+        return townid;
+    }
+
+    public void setTownid(int townid) {
+        this.townid = townid;
     }
 }
