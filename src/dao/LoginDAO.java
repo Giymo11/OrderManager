@@ -1,5 +1,6 @@
 package dao;
 
+import javax.faces.context.FacesContext;
 import javax.servlet.http.HttpServletRequest;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
@@ -32,19 +33,26 @@ public class LoginDAO extends JDBCDAO {
             connection = getConnection();
             stat = connection.createStatement();
             res = stat.executeQuery("SELECT Email, Hash, Salt from ordermanager.user where Email = '" + email + "';");
-            res.next();
+            if(res.next()){
+                checkEmail = res.getString(1);
+                checkHash = res.getString(2);
+                checkSalt = res.getString(3);
 
-            checkEmail = res.getString(1);
-            checkHash = res.getString(2);
-            checkSalt = res.getString(3);
+                if (email.equals(checkEmail) && checkHash.equals(hash(password)) && email.equals(checkSalt)) {
+                    wrongPassword = "";
+                    req.getSession().setAttribute("loggedIn", true);
+                    req.getSession().setAttribute("email", this.email);
 
-            if (email.equals(checkEmail) && checkHash.equals(hash(password)) && email.equals(checkSalt)) {
-                wrongPassword = "";
-                req.getSession().setAttribute("loggedIn", true);
-                return "/offers.xhtml?faces-redirect=true";
-            } else {
-                wrongPassword = "Falsches Passwort!";
+                    return "/offers.xhtml?faces-redirect=true";
+                } else {
+                    wrongPassword = "Falsches Passwort!";
+                }
             }
+            else{
+               wrongPassword = "Falsche Email Adresse";
+            }
+
+
 
         } catch (SQLException e) {
             e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.

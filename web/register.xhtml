@@ -7,7 +7,7 @@
       xmlns:f="http://java.sun.com/jsf/core"
       xmlns:p="http://primefaces.org/ui">
 <head>
-    <title>Registrierem</title>
+    <title>Registrieren</title>
 </head>
 <body>
 
@@ -53,16 +53,14 @@
                 <p:inputText required="true" value="#{registerBean.lastName}"/>
             </td>
         </tr>
-        <tr>
-            <th>PLZ:</th>
-            <td>
-                <p:inputText required="true" value="#{registerBean.plz}"/>
-            </td>
-        </tr>
+
+
         <tr>
             <th>Ort:</th>
             <td>
-                <p:inputText required="true" value="#{registerBean.location}"/>
+                <h:selectOneMenu value="#{registerBean.selectedTown}" >
+                    <f:selectItems value="#{townBean.stringTowns}"/>
+                </h:selectOneMenu>
             </td>
         </tr>
         <tr>
