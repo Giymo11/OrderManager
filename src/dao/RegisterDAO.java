@@ -5,8 +5,10 @@ import dto.Town;
 import dto.User;
 
 import java.sql.Connection;
+import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.List;
 
 /**
  * Created with IntelliJ IDEA.
@@ -20,33 +22,39 @@ public class RegisterDAO extends JDBCDAO {
         super();
     }
 
-    public void register(User user, Address address, Town town) {
-        writeTown(town);
-        address.setTownid(town.getId());
+    public void register(User user, Address address,String selectedTown){
+        System.out.println("register in registerDAO");
+        int id = getTownID(selectedTown);
+        System.out.println(id);
+        address.setTownid(id);
         writeAddress(address);
         user.setAdressID(address.getId());
         writeUser(user);
     }
 
-    private void writeTown(Town town) {
+    private int getTownID(String selectedTown) {
         Connection connection = null;
         Statement statement = null;
-        try{
-            insertObject("town", town);
+        ResultSet resultSet = null;
 
+        try{
             connection = getConnection();
             statement = connection.createStatement();
+            resultSet = statement.executeQuery("select id from ordermanager.town where name = '" + selectedTown + "';");
+            resultSet.next();
 
-            statement.executeUpdate("UPDATE ordermanager.town SET plz = " + town.getPlz() +
-                    ", name = '" + town.getName() + "' WHERE id = " + town.getId() + ";");
-            statement.executeUpdate("COMMIT;");
+            return resultSet.getInt(1);
         } catch (SQLException e) {
             e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
         }
+
         finally {
-            close(null, statement, connection);
+            close(resultSet, statement, connection);
         }
+        System.out.println("Error: TownID not found");
+        return 0;
     }
+
 
     private void writeUser(User user) {
         Connection connection = null;
@@ -67,7 +75,9 @@ public class RegisterDAO extends JDBCDAO {
         finally {
             close(null, statement, connection);
         }
+
     }
+
 
     private void writeAddress(Address address) {
         Connection connection = null;

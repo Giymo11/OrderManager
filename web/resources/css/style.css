@@ -3,6 +3,7 @@ body, html {
     padding: 0;
     margin: 0;
     font-family: Arial;
+    overflow: auto;
 }
 
 body {
@@ -62,7 +63,7 @@ table {
     padding-left: 20px;
     padding-right: 20px;
     font-weight: bold;
-    border: 2px solid red;
+    /*border: 2px solid red;*/
 }
 
 .contactdetails caption {
@@ -100,6 +101,7 @@ table {
     min-width: 600px;
     width: 100%;
     position: absolute;
+    overflow: auto;
 }
 
 .content h1 {
@@ -139,14 +141,6 @@ table {
     height: 225px;
 }
 
-.login {
-    padding-top: 200px;
-    font-size: 20px;
-}
-
-.loginelements {
-    margin: 10px;
-}
 
 .logo {
     height: 120px;

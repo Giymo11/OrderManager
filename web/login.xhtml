@@ -4,30 +4,40 @@
 <html xmlns="http://www.w3.org/1999/xhtml"
       xmlns:h="http://java.sun.com/jsf/html"
       xmlns:f="http://java.sun.com/jsf/core"
-      xmlns:p="http://primefaces.org/ui">
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:ui="http://java.sun.com/jsf/facelets">
 <h:head>
-    <title>Login</title>
+    <title>Bäckerei Pock - Anmelden</title>
+    <h:outputStylesheet name="style.css" library="css"/>
+    <h:outputStylesheet name="registerstyle.css" library="css"/>
 </h:head>
 <h:body>
-    <h:form>
-        <h:panelGrid columns="3">
-            E-Mail-Adresse:
-            <p:inputText id="email" required="true" value="#{loginBean.email}"
-                         requiredMessage="E-Mail Adresse benötigt!">
-                <f:validator validatorId="emailValidator" for="email"/>
-            </p:inputText>
-            <p:message for="email"/>
+    <div class="logincontainer">
+        <h:form>
+                <label class="loginlabel">E-Mail-Adresse</label>
+                <br/>
+                <p:inputText id="email" type="text" placeholder="E-Mail-Adresse" value="#{loginBean.email}" required="true"
+                             requiredMessage="E-Mail Adresse benötigt!">
+                    <f:validator validatorId="emailValidator" for="email"/>
+                </p:inputText>
+                <p:message for="email"/>
+                <br/>
+                <label class="loginlabel">Passwort</label>
+                <br/>
+                <p:inputText id="password" type="password" placeholder="Passwort" value="#{loginBean.password}" required="true"
+                             requiredMessage="Passwort benötigt!"
+                        />
+                <p:message for="password"/>
+
             <br/>
-            Passwort:
-            <p:inputText id="password" value="#{loginBean.password}" requiredMessage="Passwort benötigt!"
-                         type="password" required="true"/>
-            <p:message for="password"/>
-        </h:panelGrid>
-        <br/>
-        <p:commandButton id="anmelden" value="Anmelden" ajax="false" action="#{loginBean.check}"/>
-        <p:button value="Registrieren" outcome="register.xhtml"/>
-        <h:outputText id="WrongPasswordMessage" value="#{loginBean.wrongPassword}"/>
-    </h:form>
+            <div class="loginlower">
+                <p:commandButton id="anmelden" value="Anmelden" ajax="false" action="#{loginBean.check}"/>
+                <p:button value="Registrieren" outcome="register.xhtml"/>
+                <h:outputText id="WrongPasswordMessage" value="#{loginBean.wrongPassword}"/>
+            </div>
+        </h:form>
+    </div>
+    <ui:include src="menu.xhtml"/>
 </h:body>
 </html>
 

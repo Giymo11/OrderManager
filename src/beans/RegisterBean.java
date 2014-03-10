@@ -10,6 +10,7 @@ import javax.faces.bean.ManagedBean;
 import javax.faces.context.FacesContext;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
+import java.util.List;
 
 /**
  * Created with IntelliJ IDEA.
@@ -21,9 +22,8 @@ import java.security.NoSuchAlgorithmException;
 @ManagedBean
 public class RegisterBean {
     private String email, password, passwordWdh, firstName, lastName, location, street, houseNr, telNr;
-    private int plz;
+    private String selectedTown;
     private Address address;
-    private Town town;
     private RegisterDAO registerDAO;
 
     public RegisterBean() {
@@ -31,14 +31,15 @@ public class RegisterBean {
     }
 
     public void register() {
+        System.out.println("register");
         if (password.equals(passwordWdh)) {
             String hash = hash(password);
 
-            town = new Town(plz, location);
+
             address = new Address(street, houseNr);
             User u = new User(email, email, firstName, lastName, hash, telNr, 1);
 
-            registerDAO.register(u, address, town);
+            registerDAO.register(u, address, selectedTown);
 
         } else {
             FacesContext.getCurrentInstance().addMessage("FAILURE", new FacesMessage("Passwörter stimmen nicht überein"));
@@ -96,13 +97,7 @@ public class RegisterBean {
         this.houseNr = houseNr;
     }
 
-    public int getPlz() {
-        return plz;
-    }
 
-    public void setPlz(int plz) {
-        this.plz = plz;
-    }
 
     public String getEmail() {
         return email;
@@ -151,6 +146,14 @@ public class RegisterBean {
 
     public void setTelNr(String telNr) {
         this.telNr = telNr;
+    }
+
+    public String getSelectedTown() {
+        return selectedTown;
+    }
+
+    public void setSelectedTown(String selectedTown) {
+        this.selectedTown = selectedTown;
     }
 }
 
