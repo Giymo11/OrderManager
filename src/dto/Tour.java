@@ -2,6 +2,8 @@ package dto;
 
 import interfaces.Identifiable;
 
+import java.util.Date;
+
 /**
  * Created with IntelliJ IDEA.
  * User: Sarah
@@ -11,6 +13,11 @@ import interfaces.Identifiable;
  */
 public class Tour implements Identifiable {
     private int id;
+    private Date date;
+
+    public Tour(Date date){
+        setDate(date);
+    }
 
     public int getId() {
         return id;
@@ -18,5 +25,13 @@ public class Tour implements Identifiable {
 
     public void setId(int id) {
         this.id = id;
+    }
+
+    public Date getDate() {
+        return date;
+    }
+
+    public void setDate(Date date) {
+        this.date = date;
     }
 }
