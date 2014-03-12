@@ -1,6 +1,5 @@
 package dao;
 
-import javax.faces.context.FacesContext;
 import javax.servlet.http.HttpServletRequest;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
@@ -51,8 +50,6 @@ public class LoginDAO extends JDBCDAO {
             else{
                wrongPassword = "Falsche Email Adresse";
             }
-
-
 
         } catch (SQLException e) {
             e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
