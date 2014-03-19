@@ -12,10 +12,7 @@ import javax.faces.bean.ManagedBean;
 import javax.faces.bean.SessionScoped;
 import javax.faces.context.FacesContext;
 import javax.servlet.http.HttpServletRequest;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * Created with IntelliJ IDEA.
@@ -32,11 +29,12 @@ public class OrderBean {
     private TourDAO tourDAO;
     private OrderDAO orderDAO;
     private int productID;
-    private Date date;
+    private Date date, startDate, endDate;
     private String memo;
     private int currentOrderid;
     private List<OrderItem> allOrdered;
     private List<OrderItem> orderItemsForDate;
+    private List<Order> ordersInDateRange;
 
     public OrderBean(){
         orderItemDAO = new OrderItemDAO();
@@ -47,6 +45,10 @@ public class OrderBean {
         allOrdered = new ArrayList<>();
         newOrderItems = new ArrayList<>();
         sumOrders();
+        ordersInDateRange = new ArrayList<>();
+        startDate = new Date();
+        startDate.setDate(11);
+        endDate = new Date();
     }
 
     private Date getNextDay() {
@@ -196,7 +198,7 @@ public class OrderBean {
         orderItemDAO.deleteOneItem(id);
     }
 
-    public String getDate(int orderid){
+    public String getDateWithOrderID(int orderid){
         Date date = new Date();
 
         int tourID = orderDAO.getTourIDWithID(orderid);
@@ -204,10 +206,6 @@ public class OrderBean {
             date = tourDAO.getDateWithID(tourID);
 
         return (date.getYear()+1900) + "-" + (date.getMonth()+1) + "-" + date.getDate();
-    }
-
-    public List<Order> getOrderList(){
-        return orderDAO.getOrderList();
     }
 
     public List<OrderItem> getAllItemsWithID(int orderid){
@@ -227,5 +225,44 @@ public class OrderBean {
         date1.setDate(day);
 
         return date1;
+    }
+
+    public Date getStartDate() {
+        return startDate;
+    }
+
+    public void setStartDate(Date startDate) {
+        this.startDate = startDate;
+    }
+
+    public Date getEndDate() {
+        return endDate;
+    }
+
+    public void setEndDate(Date endDate) {
+        this.endDate = endDate;
+    }
+
+    public List<Order> getOrdersInDateRange(){
+        if(ordersInDateRange.isEmpty())
+            setOrdersInDateRange();
+
+        return ordersInDateRange;
+    }
+
+    public void handleDateSelectStart(SelectEvent event){
+        setStartDate((Date) event.getObject());
+        setOrdersInDateRange();
+    }
+
+    public void handleDateSelectEnd(SelectEvent event){
+        endDate = (Date) event.getObject();
+        setOrdersInDateRange();
+    }
+
+    private void setOrdersInDateRange(){
+        HttpServletRequest req = (HttpServletRequest) FacesContext.getCurrentInstance().getExternalContext().getRequest();
+        String email = (String) req.getSession().getAttribute("email");
+        ordersInDateRange = orderDAO.getOrdersInDateRange(startDate, endDate, email);
     }
 }

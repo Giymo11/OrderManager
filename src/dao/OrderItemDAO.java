@@ -6,9 +6,7 @@ import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
+import java.util.*;
 
 /**
  * Created with IntelliJ IDEA.
@@ -30,7 +28,7 @@ public class OrderItemDAO extends JDBCDAO {
         Connection connection = null;
         Statement statement = null;
         ResultSet resultSet = null;
-        OrderItem order = null;
+        OrderItem order;
 
         try{
             connection = getConnection();
@@ -38,19 +36,19 @@ public class OrderItemDAO extends JDBCDAO {
             resultSet = statement.executeQuery("SELECT * FROM ordermanager.orderItem WHERE delivered=-1");
 
             while(resultSet.next()){
-                order = getOrderWithResultSet(resultSet);
+                order = getOrderItemWithResultSet(resultSet);
                 if(order != null)
                     orderItemList.add(order);
             }
         } catch (SQLException e) {
-            e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
+            e.printStackTrace();
         }
         finally {
             close(resultSet, statement, connection);
         }
     }
 
-    private OrderItem getOrderWithResultSet(ResultSet res) throws SQLException {
+    private OrderItem getOrderItemWithResultSet(ResultSet res) throws SQLException {
         OrderItem order = new OrderItem(
                 res.getInt("orderid"),
                 res.getInt("productid"),
@@ -107,7 +105,7 @@ public class OrderItemDAO extends JDBCDAO {
                 statement.executeUpdate("COMMIT;");
             }
         } catch (SQLException e) {
-            e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
+            e.printStackTrace();
         }
         finally {
             close(null, statement, connection);
@@ -130,7 +128,7 @@ public class OrderItemDAO extends JDBCDAO {
                 return resultSet.getInt(2);
 
         } catch (SQLException e) {
-            e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
+            e.printStackTrace();
         }
         finally {
             close(resultSet, statement, connection);
@@ -154,10 +152,10 @@ public class OrderItemDAO extends JDBCDAO {
                     "WHERE email = '" + email + "')); ");
 
             while(resultSet.next()){
-                orderItems.add(getOrderWithResultSet(resultSet));
+                orderItems.add(getOrderItemWithResultSet(resultSet));
             }
         } catch (SQLException e) {
-            e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
+            e.printStackTrace();
         }
         finally{
             close(resultSet, statement, connection);
@@ -183,7 +181,7 @@ public class OrderItemDAO extends JDBCDAO {
                             "WHERE email = '" + email + "'));");
 
             while(resultSet.next())
-                orderItems.add(getOrderWithResultSet(resultSet));
+                orderItems.add(getOrderItemWithResultSet(resultSet));
 
         } catch (SQLException e) {
             e.printStackTrace();
@@ -214,4 +212,6 @@ public class OrderItemDAO extends JDBCDAO {
             e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
         }
     }
+
+
 }

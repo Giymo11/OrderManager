@@ -9,6 +9,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -31,7 +32,7 @@ public class OrderDAO extends JDBCDAO {
         Connection connection = null;
         Statement statement = null;
         ResultSet resultSet = null;
-        Order order = null;
+        Order order;
 
         try{
             connection = getConnection();
@@ -42,11 +43,10 @@ public class OrderDAO extends JDBCDAO {
                 order = getOrderWithResultSet(resultSet);
                 order.setId(resultSet.getInt("id"));
 
-                if(order != null)
-                    orderList.add(order);
+                orderList.add(order);
             }
         } catch (SQLException e) {
-            e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
+            e.printStackTrace();
         }
         finally {
             close(resultSet, statement, connection);
@@ -54,10 +54,12 @@ public class OrderDAO extends JDBCDAO {
     }
 
     private Order getOrderWithResultSet(ResultSet resultSet) throws SQLException {
-        return new Order(resultSet.getInt("tourid"),
+        Order order = new  Order(resultSet.getInt("tourid"),
                 resultSet.getInt("addressid"),
                 resultSet.getString("memoForCustomer"),
                 resultSet.getString("memoForPock"));
+        order.setId(resultSet.getInt("id"));
+        return order;
     }
 
     public void addOrder(int tourID, String email, String memo){
@@ -87,7 +89,7 @@ public class OrderDAO extends JDBCDAO {
                 FacesContext.getCurrentInstance().addMessage("Achtung", new FacesMessage("Für diesen Tag gibt es schon eine Bestellung"));
             }
         } catch (SQLException e) {
-            e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
+            e.printStackTrace();
         }
         finally {
             close(null, statement, connection);
@@ -108,7 +110,7 @@ public class OrderDAO extends JDBCDAO {
             if(resultSet.next())
                 return resultSet.getInt(1);
         } catch (SQLException e) {
-            e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
+            e.printStackTrace();
         }
         finally {
             close(resultSet, statement, connection);
@@ -130,7 +132,7 @@ public class OrderDAO extends JDBCDAO {
             if(resultSet.next())
                 id = resultSet.getInt(1);
         } catch (SQLException e) {
-            e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
+            e.printStackTrace();
         }
         finally {
             close(resultSet, statement, connection);
@@ -151,13 +153,54 @@ public class OrderDAO extends JDBCDAO {
     }
 
     public int getTourIDWithID(int orderid) {
-        for(Order order : orderList)
+        for(Order order : orderList){
             if(order.getId() == orderid)
                 return order.getTourid();
+        }
         return -1;
     }
 
     public List<Order> getOrderList() {
         return orderList;
+    }
+
+    public List<Order> getOrdersInDateRange(Date start, Date end, String email) {
+        Connection connection = null;
+        Statement statement = null;
+        ResultSet resultSet = null;
+        List<Order> orders = new ArrayList<>();
+        try{
+            connection = getConnection();
+            statement = connection.createStatement();
+            resultSet = statement.executeQuery("SELECT * FROM ordermanager.order AS orderT JOIN" +
+                    "(SELECT id `TourID`, date FROM ordermanager.tour WHERE date BETWEEN " +
+                            "'" + getDateSQL(start) + "' AND '" + getDateSQL(end) + "') AS tour " +
+                    "ON orderT.tourid = tour.TourID " +
+                    "AND addressid = (SELECT addressid FROM ordermanager.user " +
+                    "WHERE email = '" + email + "') ORDER BY tour.date desc;");
+
+            while(resultSet.next()){
+                orders.add(getOrderWithResultSet(resultSet));
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        finally {
+            close(resultSet, statement, connection);
+        }
+        return orders;
+    }
+
+    private String getDateSQL(Date date) {
+        if(date.getMonth()<10 && date.getDate()<10)
+            return (date.getYear()+1900) + "-0" + (1+date.getMonth()) + "-0" + date.getDate();
+        else
+        if(date.getMonth()<10)
+            return (date.getYear()+1900) + "-0" + (1+date.getMonth()) + "-" + date.getDate();
+        if(date.getDate()<10)
+            return (date.getYear()+1900) + "-" + (1+date.getMonth()) + "-0" + date.getDate();
+
+
+        return (date.getYear()+1900) + "-" + (1+date.getMonth()) + "-" + date.getDate();
     }
 }
