@@ -122,4 +122,18 @@ public class ProductBean {
     public void setSelectedPicture(String selectedPicture) {
         this.selectedPicture = selectedPicture;
     }
+
+    public String getName(int id){
+        for(Product p : productDAO.getProductList())
+            if(p.getId() == id)
+                return p.getTitle();
+        return null;
+    }
+
+    public float getPrice(int id){
+        for(Product p : productDAO.getProductList())
+            if(p.getId() == id)
+                return p.getPrice();
+        return 0;
+    }
 }

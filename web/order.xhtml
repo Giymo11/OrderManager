@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html
+        PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:f="http://java.sun.com/jsf/core">
+<head>
+    <title>Bestellungen</title>
+    <p:growl showDetail="false"/>
+</head>
+<body>
+    <h:form>
+    <p:panel style="text-align: center;
+                    border: 1px solid green;
+                    margin-left: 330px;
+                    margin-top: 130px;
+                    min-width: 600px;
+                    max-width: 51.5%;
+                    position: absolute;">
+        <p:outputLabel value="Bitte überprüfen Sie ihre Eingaben"/>
+        <p:dataList value="#{orderBean.orderItems}" var="item" id="order" itemType="none" style="text-align: left" emptyMessage="Keine Daten vorhanden">
+            <p:outputLabel value="#{item.ordered}  "/>
+            <p:outputLabel value="#{productBean.getName(item.productid)}   "/>
+            <p:outputLabel value="€  #{productBean.getPrice(item.productid)}"/>
+            <p:commandButton value="Löschen" action="#{orderBean.deleteOneOrderItem}" update="@form" ajax="false">
+                <f:param value="#{item.id}" name="orderItemID"/>
+            </p:commandButton>
+        </p:dataList>
+        <p:inputText value="#{orderBean.memo}"/>
+        <p:commandButton value="Bestellung abschicken!" action="#{orderBean.addOrder}" onclick="PF('dlg1').show();"/>
+        <p:dialog id="basicDialog" header="Dankeschön!" widgetVar="dlg1">
+            <h:outputText value="Ihre Bestellung wurde abgeschickt. Um alle ihre bisherigen Bestellungen anzusehen klicken Sie bitte auf 'Bestellungen'"/>
+        </p:dialog>
+    </p:panel>
+    </h:form>
+    <div class="topbar">
+        <h1>Unsere Produkte</h1>
+    </div>
+    <ui:include src="menu.xhtml"/>
+</body>
+</html>

@@ -12,13 +12,13 @@
     <title>Unsere Produkte</title>
 </h:head>
 <h:body>
-    <h:form>
-        <div style="text-align: center;
+    <h:form id="form">
+        <p:panel style="text-align: center;
                     border: 1px solid green;
                     margin-left: 330px;
                     margin-top: 130px;
                     min-width: 600px;
-                    max-width: 73%;
+                    max-width: 51.5%;
                     position: absolute;">
             <h:selectOneMenu value="#{productBean.selectedCategory}"
                              valueChangeListener="#{productBean.getProductsByCategory}">
@@ -26,18 +26,38 @@
             </h:selectOneMenu>
             <p:commandButton type="submit" value="Los!" action="#{productBean.getProductsByCategory}" update="@form"/>
             <p:dataGrid value="#{productBean.selectedCatProducts}" var="product"
-                        style="max-width: 73%" columns="3">
+                        style="max-width: 65%" columns="3">
                 <p:panel header="#{product.title}" style="text-align: center">
                     <h:panelGrid columns="1" style="width: 100%">
-                        <p:graphicImage value="#{product.picture}" style="max-height: 50%; max-width: 50%"/>
-                        <p:outputLabel value="€ #{product.price}"/>
+                        <table>
+                            <p:graphicImage value="#{product.picture}" style="max-height: 50%; max-width: 50%"/>
+                            <p:outputLabel value="€ #{product.price}"/>
+                            <tr>
+                                <p:inputText binding="#{quantity}" type="number"/>
+                                <p:commandButton value="Hinzufügen" action="#{orderBean.addOneOrderItem(quantity.value)}"
+                                                  ajax="true" update=":form:order">
+                                    <f:param value="#{product.id}" name="productID"/>
+                                </p:commandButton>
+                            </tr>
+                        </table>
                     </h:panelGrid>
                 </p:panel>
             </p:dataGrid>
-        </div>
+        </p:panel>
         <div class="topbar">
             <h1>Unsere Produkte</h1>
         </div>
+        <p:panel style="margin-top: 130px; margin-right: 5px; float: right; max-width: 20%">
+            <p:dataList value="#{orderBean.orderItems}" var="item" id="order" itemType="none" emptyMessage="Keine Daten vorhanden">
+                <p:outputLabel value="#{item.ordered}  "/>
+                <p:outputLabel value="#{productBean.getName(item.productid)}   "/>
+                <p:outputLabel value="€  #{productBean.getPrice(item.productid)}"/>
+            </p:dataList>
+            <p:calendar value="#{orderBean.date}" mindate="#{orderBean.minDate}">
+                <p:ajax event="dateSelect" listener="#{orderBean.handleDateSelect}" update="order" />
+            </p:calendar>
+            <p:commandButton action="#{orderBean.redirectToOrders}" value="Abschicken" update="@form" ajax="false"/>
+        </p:panel>
         <ui:include src="menu.xhtml"/>
     </h:form>
 </h:body>

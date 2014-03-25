@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html
+        PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      >
+<h:head>
+    <title>Bestellungen</title>
+</h:head>
+<body>
+
+    <p:panel style="text-align: center;
+                border: 1px solid green;
+                margin-left: 330px;
+                margin-top: 130px;
+                width: 73%;
+                position: absolute;">
+        <h:form>
+        <p:calendar value="#{orderBean.startDate}" maxdate="#{orderBean.endDate}">
+            <p:ajax event="dateSelect" listener="#{orderBean.handleDateSelectStart}" update="@form" />
+        </p:calendar>
+        <p:calendar value="#{orderBean.endDate}" mindate="#{orderBean.startDate}">
+            <p:ajax event="dateSelect" listener="#{orderBean.handleDateSelectEnd}" update="@form" />
+        </p:calendar>
+        <br/>
+        <p:panel id="orders">
+            <p:dataTable value="#{orderBean.ordersInDateRange}" var="order">
+                <p:column headerText="Bestellungen">
+                    <p:outputLabel value="#{orderBean.getDateWithOrderID(order.id)}"/><br/>
+                    <p:dataTable value="#{orderBean.getAllItemsWithIDForCurrentUser(order.id)}" var="item"
+                                 emptyMessage="Noch keine aufgegebenen Bestellungen">
+                        <p:column headerText="Menge">
+                            <p:outputLabel value="#{item.ordered}"/>
+                        </p:column>
+                        <p:column headerText="Produkt">
+                            <p:outputLabel value="#{productBean.getName(item.productid)}"/>
+                        </p:column>
+                        <p:column headerText="Preis">
+                            <p:outputLabel value="€  #{productBean.getPrice(item.productid)}"/>
+                        </p:column>
+                    </p:dataTable>
+                </p:column>
+                <p:column headerText="Notiz vom Bäcker">
+                    <p:outputLabel value="#{order.memoForCustomer}"/>
+                </p:column>
+            </p:dataTable>
+        </p:panel>
+        </h:form>
+    </p:panel>
+    <div class="topbar">
+        <h1>Ihre Bestellungen</h1>
+    </div>
+    <ui:include src="menu.xhtml"/>
+</body>
+</html>

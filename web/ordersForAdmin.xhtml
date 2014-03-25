@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html
+        PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:f="http://java.sun.com/jsf/core">
+
+<h:head>
+    <title>Bestellungen</title>
+</h:head>
+<h:body>
+    <p:panel style="text-align: center;
+                border: 1px solid green;
+                margin-left: 330px;
+                margin-top: 130px;
+                width: 73%;
+                position: absolute;">
+        <h:form>
+            <h3>Auslieferung</h3>
+            <p:calendar value="#{orderBean.startDate}">
+                <p:ajax event="dateSelect" listener="#{orderBean.handleDateSelectStart}" update="@form"/>
+            </p:calendar>
+            <br/>
+            <br/>
+            <p:dataTable value="#{orderBean.orderItemSum}" var="item" type="definition">
+                <p:column headerText="Anzahl">
+                    <p:outputLabel value="#{item.ordered}"/>
+                </p:column>
+                <p:column headerText="Produkt">
+                    <p:outputLabel value="#{productBean.getName(item.productid)}"/>
+                </p:column>
+                <p:column headerText="Preis">
+                    <p:outputLabel value="€ #{productBean.getPrice(item.productid)}"/>
+                </p:column>
+                <p:column headerText="Summe">
+                    <p:outputLabel value="€ #{orderBean.sumUp(productBean.getPrice(item.productid), item.ordered)}"/>
+
+                    <f:facet name="footer">
+                        <p:outputLabel value="€ #{orderBean.sumAll}"/>
+                    </f:facet>
+                </p:column>
+            </p:dataTable>
+            <br/>
+            <p:panel id="orders">
+                <p:dataTable value="#{orderBean.undeliveredOrders}" var="order" emptyMessage="Keine Bestellungen für diesen Tag">
+                    <p:column headerText="Adresse">
+                        <p:dataList value="#{addressBean.getAddressWithID(order.addressid)}" var="address"
+                                    type="definition">
+                            <p:outputLabel value="#{townBean.getPostalCodeWithID(address.townid)} "/>
+                            <p:outputLabel value="#{townBean.getNameWithID(address.townid)},     "/>
+                            <p:outputLabel value="#{address.street} #{address.houseNr}"/>
+                        </p:dataList>
+                    </p:column>
+                    <p:column headerText="Notiz vom Kunden">
+                        <p:outputLabel value="#{order.memoForPock}"/>
+                    </p:column>
+                    <p:column headerText="Notiz an den Kunden">
+                        <p:inputTextarea binding="#{memoForCustomer}" placeholder="#{order.memoForCustomer}"/>
+                        <p:commandButton type="submit" value="Senden"
+                                         action="#{orderBean.writeMemo(memoForCustomer.value)}" ajax="false">
+                            <f:param value="#{order.id}" name="orderMemo"/>
+                        </p:commandButton>
+                    </p:column>
+                </p:dataTable>
+            </p:panel>
+        </h:form>
+    </p:panel>
+    <div class="topbar">
+        <h1>Ihre Bestellungen</h1>
+    </div>
+    <ui:include src="menu.xhtml"/>
+</h:body>
+</html>

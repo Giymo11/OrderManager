@@ -6,7 +6,8 @@
         xmlns:p="http://primefaces.org/ui">
 
     <h:form>
-        <p:commandButton value="#{loginBean.status}" action="#{loginBean.handleClick}" style="margin-left: 1000px" update="@form" ajax="false"/>
+        <p:commandButton value="#{loginBean.status}" action="#{loginBean.handleClick}"
+                         style="position: fixed; right: 5px; top: 5px" update="@form" ajax="false"/>
     </h:form>
 
 </ui:composition>

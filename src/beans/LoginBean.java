@@ -7,8 +7,8 @@ package beans;
 
 import dao.LoginDAO;
 
+import javax.annotation.PreDestroy;
 import javax.faces.bean.ManagedBean;
-import javax.faces.bean.RequestScoped;
 import javax.faces.bean.SessionScoped;
 import javax.faces.context.FacesContext;
 import javax.servlet.http.HttpServletRequest;
@@ -20,19 +20,13 @@ public class LoginBean {
     private LoginDAO loginDAO;
     private String status;
 
-
     public String getStatus() {
         return status;
-    }
-
-    public void setStatus(String status) {
-        this.status = status;
     }
 
     public LoginBean() {
         loginDAO = new LoginDAO();
         status = "Anmelden";
-
     }
 
     public String getWrongPassword() {
@@ -65,7 +59,13 @@ public class LoginBean {
         if (FacesContext.getCurrentInstance() != null) {
             req = (HttpServletRequest) FacesContext.getCurrentInstance().getExternalContext().getRequest();
         }
-        return loginDAO.check(req);
+        String returnValue = loginDAO.check(req);
+        if(returnValue.equals(""))
+            status = "Anmelden";
+        else
+            status = "Abmelden";
+
+        return returnValue;
     }
 
     public String handleClick(){
@@ -75,7 +75,6 @@ public class LoginBean {
             req = (HttpServletRequest) FacesContext.getCurrentInstance().getExternalContext().getRequest();
         }
         if(status.equals("Anmelden")){
-            status="Abmelden";
             return "/login.xhtml?faces-redirect=true";
         }
         else{
@@ -87,4 +86,15 @@ public class LoginBean {
         }
     }
 
+    @PreDestroy
+    public void preDestroy(){
+        HttpServletRequest req = null;
+
+        if (FacesContext.getCurrentInstance() != null) {
+            req = (HttpServletRequest) FacesContext.getCurrentInstance().getExternalContext().getRequest();
+        }
+        req.setAttribute("loggedIn", false);
+        req.setAttribute("email", null);
+        FacesContext.getCurrentInstance().getExternalContext().invalidateSession();
+    }
 }
