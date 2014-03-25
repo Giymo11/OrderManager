@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html
+        PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:f="http://java.sun.com/jsf/core">
+
+<h:head>
+    <title>Unsere Produkte</title>
+</h:head>
+<h:body>
+    <h:form id="form">
+        <p:panel style="text-align: center;
+                    border: 1px solid green;
+                    margin-left: 330px;
+                    margin-top: 130px;
+                    min-width: 600px;
+                    max-width: 51.5%;
+                    position: absolute;">
+            <h:selectOneMenu value="#{productBean.selectedCategory}"
+                             valueChangeListener="#{productBean.getProductsByCategory}">
+                <f:selectItems value="#{categoryBean.names}"/>
+            </h:selectOneMenu>
+            <p:commandButton type="submit" value="Los!" action="#{productBean.getProductsByCategory}" update="@form"/>
+            <p:dataGrid value="#{productBean.selectedCatProducts}" var="product"
+                        style="max-width: 65%" columns="3">
+                <p:panel header="#{product.title}" style="text-align: center">
+                    <h:panelGrid columns="1" style="width: 100%">
+                        <table>
+                            <p:graphicImage value="#{product.picture}" style="max-height: 50%; max-width: 50%"/>
+                            <p:outputLabel value="€ #{product.price}"/>
+                        </table>
+                    </h:panelGrid>
+                </p:panel>
+            </p:dataGrid>
+        </p:panel>
+        <ui:include src="menu.xhtml"/>
+    </h:form>
+</h:body>
+</html>

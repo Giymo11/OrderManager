@@ -27,21 +27,63 @@ public class PermissionFilter implements Filter {
         HttpServletResponse response = (HttpServletResponse) resp;
 
         boolean loggedIn = false;
+        boolean adminLoggedIn = false;
 
         if (request.getSession().getAttribute("loggedIn") != null) {
             loggedIn = (boolean) request.getSession().getAttribute("loggedIn");
         }
 
+        if(request.getSession().getAttribute("adminLoggedIn")!=null){
+            adminLoggedIn = (boolean) request.getSession().getAttribute("adminLoggedIn");
+        }
 
         if (request.getRequestURI().equals(request.getContextPath() + "/faces/login.xhtml")) {
             if (loggedIn) {
                 response.sendRedirect(request.getContextPath() + "/faces/ordersForCustomer.xhtml");
                 return;
-            } else {
+            }
+            if(adminLoggedIn){
+                response.sendRedirect(request.getContextPath() + "/faces/orders.xhtml");
+                return;
+            }
+             else {
                 chain.doFilter(req, resp);
                 return;
             }
+
+
         }
+
+        if(request.getRequestURI().equals(request.getContextPath() + "/faces/settings.xhtml")){
+            if(loggedIn){
+                response.sendRedirect(request.getContextPath() + "/faces/settingsCustomer.xhtml");
+                return;
+            }
+            if(adminLoggedIn){
+                chain.doFilter(req, resp);
+                return;
+            }
+            response.sendRedirect(request.getContextPath() + "/faces/login.xhtml");
+            return;
+        }
+
+
+        if(request.getRequestURI().equals(request.getContextPath() + "/faces/productsNL.xhtml")){
+            if(loggedIn){
+                response.sendRedirect(request.getContextPath() + "/faces/products.xhtml");
+                return;
+            }
+            if(adminLoggedIn){
+                response.sendRedirect(request.getContextPath() + "/faces/products.xhtml");
+                return;
+            }
+            chain.doFilter(req, resp);
+            return;
+        }
+
+
+
+
 
         chain.doFilter(req, resp);
     }
