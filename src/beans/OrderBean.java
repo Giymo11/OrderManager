@@ -2,9 +2,11 @@ package beans;
 
 import dao.OrderDAO;
 import dao.OrderItemDAO;
+import dao.ProductDAO;
 import dao.TourDAO;
 import dto.Order;
 import dto.OrderItem;
+import dto.Product;
 import org.primefaces.event.SelectEvent;
 
 import javax.faces.application.FacesMessage;
@@ -12,7 +14,10 @@ import javax.faces.bean.ManagedBean;
 import javax.faces.bean.SessionScoped;
 import javax.faces.context.FacesContext;
 import javax.servlet.http.HttpServletRequest;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
+import java.util.Map;
 
 /**
  * Created with IntelliJ IDEA.
@@ -35,6 +40,8 @@ public class OrderBean {
     private List<OrderItem> allOrdered;
     private List<OrderItem> orderItemsForDate;
     private List<Order> ordersInDateRange;
+    private List<Order> undeliveredOrders;
+    private ProductDAO productDAO;
 
     public OrderBean(){
         orderItemDAO = new OrderItemDAO();
@@ -47,8 +54,11 @@ public class OrderBean {
         sumOrders();
         ordersInDateRange = new ArrayList<>();
         startDate = new Date();
-        startDate.setDate(11);
         endDate = new Date();
+        endDate.setDate(startDate.getDate()+1);
+        undeliveredOrders = new ArrayList<>();
+
+        productDAO = new ProductDAO();
     }
 
     private Date getNextDay() {
@@ -81,7 +91,7 @@ public class OrderBean {
         for(OrderItem item : newOrderItems)
             orderItemDAO.addOrderItem(item);
 
-        return "/orders.xhtml?faces-redirect=true";
+        return "/ordersForCustomer.xhtml?faces-redirect=true";
     }
 
     private boolean verifyDate(Date date) {
@@ -208,7 +218,7 @@ public class OrderBean {
         return (date.getYear()+1900) + "-" + (date.getMonth()+1) + "-" + date.getDate();
     }
 
-    public List<OrderItem> getAllItemsWithID(int orderid){
+    public List<OrderItem> getAllItemsWithIDForCurrentUser(int orderid){
         List<OrderItem> orderItems = new ArrayList<>();
 
         for(OrderItem orderItem : getAllOrdered())
@@ -264,5 +274,76 @@ public class OrderBean {
         HttpServletRequest req = (HttpServletRequest) FacesContext.getCurrentInstance().getExternalContext().getRequest();
         String email = (String) req.getSession().getAttribute("email");
         ordersInDateRange = orderDAO.getOrdersInDateRange(startDate, endDate, email);
+    }
+
+    public List<Order> getUndeliveredOrders(){
+        undeliveredOrders = orderDAO.getOrdersByStatus(startDate, false);
+        return orderDAO.getOrdersByStatus(startDate, false);
+    }
+
+    public void writeMemo(String memo){
+        int id = Integer.parseInt(fetchParameter("orderMemo"));
+        orderDAO.writeMemoWithID(id, memo);
+    }
+
+    public List<OrderItem> getOrderItemSum(){
+        List<OrderItem> list = new ArrayList<>();
+        int count = 0;
+        if(undeliveredOrders.isEmpty())
+            getUndeliveredOrders();
+        for(Order order : undeliveredOrders)
+            for(OrderItem item : getItemsForOrderID(order.getId())) {
+                for(OrderItem listItem : list) {
+                    if (listItem.getProductid() == item.getProductid()) {
+                        listItem.setOrdered(listItem.getOrdered() + item.getOrdered());
+                        break;
+                    } else{
+                        ++count;
+                    }
+                }
+                if(count == list.size()) {
+                    list.add(item);
+                    count=0;
+                }
+            }
+        return list;
+    }
+
+    private List<OrderItem> getItemsForOrderID(int id) {
+        return orderItemDAO.getOrderItemsForOrderID(id);
+    }
+
+    public String sumUp(float price, int quantity){
+        float sum = (float) Math.round(price*quantity * 100) / 100;
+        String sumStr = sum + "";
+        String string = sumStr.substring(sumStr.indexOf('.'));
+
+        if(string.length()<=2)
+            sumStr += "0";
+
+        return sumStr;
+    }
+
+    public String getSumAll(){
+        List<OrderItem> list = getOrderItemSum();
+        float sum = 0.0f;
+
+        for(OrderItem item : list)
+            sum += getPrice(item.getProductid())*item.getOrdered();
+
+        String sumStr = sum + "";
+        String string = sumStr.substring(sumStr.indexOf('.'));
+
+        if(string.length()<=2)
+            sumStr += "0";
+
+        return sumStr;
+    }
+
+    private float getPrice(int id){
+        for(Product p : productDAO.getProductList())
+            if(p.getId() == id)
+                return p.getPrice();
+        return 0;
     }
 }

@@ -35,7 +35,7 @@ public class PermissionFilter implements Filter {
 
         if (request.getRequestURI().equals(request.getContextPath() + "/faces/login.xhtml")) {
             if (loggedIn) {
-                response.sendRedirect(request.getContextPath() + "/faces/orders.xhtml");
+                response.sendRedirect(request.getContextPath() + "/faces/ordersForCustomer.xhtml");
                 return;
             } else {
                 chain.doFilter(req, resp);

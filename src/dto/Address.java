@@ -11,23 +11,23 @@ import interfaces.Identifiable;
  */
 public class Address implements Identifiable {
     private int id, townid;
-    private String street, housNr;
+    private String street, houseNr;
 
-    public Address(String street, String housNr) {
+    public Address(String street, String houseNr) {
         this.street = street;
-        this.housNr = housNr;
+        this.houseNr = houseNr;
     }
 
     public String getSQLString() {
-        return id + ", " + street + "', '" + housNr + "'," + townid;
+        return id + ", " + street + "', '" + houseNr + "'," + townid;
     }
 
-    public String getHousNr() {
-        return housNr;
+    public String getHouseNr() {
+        return houseNr;
     }
 
-    public void setHousNr(String housNr) {
-        this.housNr = housNr;
+    public void setHouseNr(String houseNr) {
+        this.houseNr = houseNr;
     }
 
     public int getId() {

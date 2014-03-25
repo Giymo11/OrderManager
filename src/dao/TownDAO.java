@@ -2,8 +2,6 @@ package dao;
 
 import dto.Town;
 
-import javax.faces.application.FacesMessage;
-import javax.faces.context.FacesContext;
 import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -19,7 +17,7 @@ import java.util.List;
  * To change this template use File | Settings | File Templates.
  */
 public class TownDAO extends JDBCDAO {
-
+    private final static String DATABASE = "ordermanager";
     private List<Town> towns;
 
     public TownDAO(){
@@ -62,7 +60,7 @@ public class TownDAO extends JDBCDAO {
         try {
             connection = getConnection();
             statement = connection.createStatement();
-            resultSet = statement.executeQuery("SELECT * from ordermanager.town;");
+            resultSet = statement.executeQuery("SELECT * FROM " + DATABASE + ".town;");
             while(resultSet.next()){
                 Town town = new Town(resultSet.getInt("PLZ"), resultSet.getString("Name"));
                 town.setId(resultSet.getInt("ID"));
@@ -80,5 +78,33 @@ public class TownDAO extends JDBCDAO {
 
         return towns;
 
+    }
+
+    public Town getTownWithID(int id) {
+        Connection connection = null;
+        Statement statement = null;
+        ResultSet resultSet = null;
+        Town town = null;
+
+        try{
+            connection = getConnection();
+            statement = connection.createStatement();
+            resultSet = statement.executeQuery("SELECT * FROM " + DATABASE + ".town WHERE id = " + id + ";");
+            resultSet.next();
+            town = getTownWithResultSet(resultSet);
+        } catch (SQLException e) {
+            e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
+        }
+        finally {
+            close(resultSet, statement, connection);
+        }
+
+        return town;
+    }
+
+    private Town getTownWithResultSet(ResultSet resultSet) throws SQLException {
+        Town town = new Town(resultSet.getInt("PLZ"), resultSet.getString("Name"));
+        town.setId(resultSet.getInt("id"));
+        return town;
     }
 }

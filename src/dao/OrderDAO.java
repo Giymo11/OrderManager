@@ -21,6 +21,7 @@ import java.util.List;
  */
 public class OrderDAO extends JDBCDAO {
     private List<Order> orderList;
+    private final static String DATABASE = "ordermanager";
 
     public OrderDAO(){
         super();
@@ -37,7 +38,7 @@ public class OrderDAO extends JDBCDAO {
         try{
             connection = getConnection();
             statement = connection.createStatement();
-            resultSet = statement.executeQuery("SELECT * FROM ordermanager.order;");
+            resultSet = statement.executeQuery("SELECT * FROM " + DATABASE + ".order;");
 
             while(resultSet.next()){
                 order = getOrderWithResultSet(resultSet);
@@ -57,14 +58,15 @@ public class OrderDAO extends JDBCDAO {
         Order order = new  Order(resultSet.getInt("tourid"),
                 resultSet.getInt("addressid"),
                 resultSet.getString("memoForCustomer"),
-                resultSet.getString("memoForPock"));
+                resultSet.getString("memoForPock"),
+                resultSet.getBoolean("delivered"));
         order.setId(resultSet.getInt("id"));
         return order;
     }
 
     public void addOrder(int tourID, String email, String memo){
         int addressid = getAddressID(email);
-        Order order =  new Order(tourID, addressid, "", memo);
+        Order order =  new Order(tourID, addressid, "", memo, false);
 
         Connection connection = null;
         Statement statement = null;
@@ -80,7 +82,7 @@ public class OrderDAO extends JDBCDAO {
                 connection = getConnection();
                 statement = connection.createStatement();
 
-                statement.executeUpdate("UPDATE ordermanager.order SET tourid = " + order.getTourid() + ", addressid = "
+                statement.executeUpdate("UPDATE " + DATABASE + ".order SET tourid = " + order.getTourid() + ", addressid = "
                         + order.getAddressid() + ", memoForCustomer = '" + order.getMemoForCustomer() + "', memoForPock = '"
                         + order.getMemoForPock() + "' WHERE id = " + order.getId());
                 statement.executeUpdate("COMMIT;");
@@ -105,7 +107,7 @@ public class OrderDAO extends JDBCDAO {
             connection = getConnection();
             statement = connection.createStatement();
 
-            resultSet = statement.executeQuery("SELECT id from ordermanager.order WHERE tourid = " + tourID +
+            resultSet = statement.executeQuery("SELECT id from " + DATABASE + ".order WHERE tourid = " + tourID +
                         " AND addressid = " + addressid + ";");
             if(resultSet.next())
                 return resultSet.getInt(1);
@@ -127,7 +129,7 @@ public class OrderDAO extends JDBCDAO {
         try{
             connection = getConnection();
             statement = connection.createStatement();
-            resultSet = statement.executeQuery("SELECT addressid from ordermanager.user WHERE email = '" + email + "';");
+            resultSet = statement.executeQuery("SELECT addressid from " + DATABASE + ".user WHERE email = '" + email + "';");
 
             if(resultSet.next())
                 id = resultSet.getInt(1);
@@ -172,11 +174,11 @@ public class OrderDAO extends JDBCDAO {
         try{
             connection = getConnection();
             statement = connection.createStatement();
-            resultSet = statement.executeQuery("SELECT * FROM ordermanager.order AS orderT JOIN" +
-                    "(SELECT id `TourID`, date FROM ordermanager.tour WHERE date BETWEEN " +
+            resultSet = statement.executeQuery("SELECT * FROM " + DATABASE + ".order AS orderT JOIN" +
+                    "(SELECT id `TourID`, date FROM " + DATABASE + ".tour WHERE date BETWEEN " +
                             "'" + getDateSQL(start) + "' AND '" + getDateSQL(end) + "') AS tour " +
                     "ON orderT.tourid = tour.TourID " +
-                    "AND addressid = (SELECT addressid FROM ordermanager.user " +
+                    "AND addressid = (SELECT addressid FROM " + DATABASE + ".user " +
                     "WHERE email = '" + email + "') ORDER BY tour.date desc;");
 
             while(resultSet.next()){
@@ -202,5 +204,68 @@ public class OrderDAO extends JDBCDAO {
 
 
         return (date.getYear()+1900) + "-" + (1+date.getMonth()) + "-" + date.getDate();
+    }
+
+    public List<Order> getOrdersByStatus(Date start, boolean status){
+        Connection connection = null;
+        Statement statement = null;
+        Statement statement2 = null;
+        ResultSet resultSet = null;
+        ResultSet resultSet2 = null;
+        List<Order> orders = new ArrayList<>();
+
+        try{
+            connection = getConnection();
+            statement = connection.createStatement();
+            resultSet = statement.executeQuery("SELECT * FROM " + DATABASE + ".order AS orderT JOIN " +
+                    "(SELECT id `TourID`, date FROM " + DATABASE + ".tour WHERE date = " +
+                    "'" + getDateSQL(start)+ "') AS tour JOIN (SELECT * FROM " + DATABASE + ".town) AS town " +
+                    "ON orderT.tourid = tour.TourID AND orderT.addressID = " +
+                    "(SELECT id FROM " + DATABASE + ".address WHERE townid = town.id) " +
+                    "AND orderT.delivered = " + status + " AND memoForPock <> '' " +
+                    "ORDER BY town.name;");
+
+            while(resultSet.next()){
+                orders.add(getOrderWithResultSet(resultSet));
+            }
+
+            statement2 = connection.createStatement();
+            resultSet2 = statement2.executeQuery("SELECT * FROM " + DATABASE + ".order AS orderT JOIN " +
+                    "(SELECT id `TourID`, date FROM " + DATABASE + ".tour WHERE date = " +
+                    "'" + getDateSQL(start)+ "') AS tour JOIN (SELECT * FROM " + DATABASE + ".town) AS town " +
+                    "ON orderT.tourid = tour.TourID AND orderT.addressID = " +
+                    "(SELECT id FROM " + DATABASE + ".address WHERE townid = town.id) " +
+                    "AND orderT.delivered = " + status + " AND memoForPock = '' " +
+                    "ORDER BY town.name;");
+
+            while(resultSet2.next())
+                orders.add(getOrderWithResultSet(resultSet2));
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        finally {
+            close(resultSet, statement, connection);
+            close(resultSet2, statement2, null);
+        }
+        return orders;
+    }
+
+    public void writeMemoWithID(int id, String memo) {
+        Connection connection = null;
+        Statement statement = null;
+
+        try{
+            connection = getConnection();
+            statement = connection.createStatement();
+
+            statement.executeUpdate("UPDATE " + DATABASE + ".order SET memoForCustomer = '" + memo + "' WHERE id = " + id + ";");
+            statement.executeUpdate("COMMIT;");
+        } catch (SQLException e) {
+            e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
+        }
+        finally {
+            close(null, statement, connection);
+        }
     }
 }

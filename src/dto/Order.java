@@ -15,12 +15,14 @@ public class Order implements Identifiable {
     private int addressid;
     private String memoForPock;
     private String memoForCustomer;
+    private boolean delivered;
 
-    public Order(int tourid, int addressid, String memoForCustomer, String memoForPock){
+    public Order(int tourid, int addressid, String memoForCustomer, String memoForPock, boolean delivered){
         setTourid(tourid);
         setAddressid(addressid);
         setMemoForCustomer(memoForCustomer);
         setMemoForPock(memoForPock);
+        setDelivered(delivered);
     }
 
     public int getId() {
@@ -61,5 +63,13 @@ public class Order implements Identifiable {
 
     public void setMemoForCustomer(String memoForCustomer) {
         this.memoForCustomer = memoForCustomer;
+    }
+
+    public boolean isDelivered() {
+        return delivered;
+    }
+
+    public void setDelivered(boolean delivered) {
+        this.delivered = delivered;
     }
 }

@@ -100,4 +100,12 @@ public class TownBean {
     public void setStringTowns(List<String> stringTowns) {
         this.stringTowns = stringTowns;
     }
+
+    public String getNameWithID(int id){
+        return townDAO.getTownWithID(id).getName();
+    }
+
+    public int getPostalCodeWithID(int id){
+        return townDAO.getTownWithID(id).getPlz();
+    }
 }

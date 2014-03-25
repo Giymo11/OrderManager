@@ -6,7 +6,7 @@
       xmlns:p="http://primefaces.org/ui"
       xmlns:h="http://java.sun.com/jsf/html"
       xmlns:ui="http://java.sun.com/jsf/facelets"
-      xmlns:f="http://java.sun.com/jsf/core">
+      >
 <h:head>
     <title>Bestellungen</title>
 </h:head>
@@ -30,7 +30,7 @@
             <p:dataTable value="#{orderBean.ordersInDateRange}" var="order">
                 <p:column headerText="Bestellungen">
                     <p:outputLabel value="#{orderBean.getDateWithOrderID(order.id)}"/><br/>
-                    <p:dataTable value="#{orderBean.getAllItemsWithID(order.id)}" var="item"
+                    <p:dataTable value="#{orderBean.getAllItemsWithIDForCurrentUser(order.id)}" var="item"
                                  emptyMessage="Noch keine aufgegebenen Bestellungen">
                         <p:column headerText="Menge">
                             <p:outputLabel value="#{item.ordered}"/>
@@ -54,6 +54,6 @@
         <h1>Ihre Bestellungen</h1>
     </div>
     <ui:include src="menu.xhtml"/>
-    <ui:include src="logbutton.xhtml"/>
+    <ui:include src="logbutton.logbutton.html"/>
 </body>
 </html>

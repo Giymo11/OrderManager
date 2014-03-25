@@ -16,6 +16,7 @@ import java.util.*;
  * To change this template use File | Settings | File Templates.
  */
 public class OrderItemDAO extends JDBCDAO {
+    private static final String DATABASE = "ordermanager";
     private List<OrderItem> orderItemList;
 
     public OrderItemDAO(){
@@ -59,7 +60,7 @@ public class OrderItemDAO extends JDBCDAO {
         return order;
     }
 
-    public List<OrderItem> getDeliveredOrders(){
+    public List<OrderItem> getDeliveredOrderItems(){
         List<OrderItem> temp = new ArrayList<>();
 
         for(OrderItem order : orderItemList)
@@ -69,7 +70,7 @@ public class OrderItemDAO extends JDBCDAO {
         return temp;
     }
 
-    public List<OrderItem> getUndeliveredOrders(){
+    public List<OrderItem> getUndeliveredOrderItems(){
         List<OrderItem> temp = new ArrayList<>();
 
         for(OrderItem order : orderItemList)
@@ -214,4 +215,11 @@ public class OrderItemDAO extends JDBCDAO {
     }
 
 
+    public List<OrderItem> getOrderItemsForOrderID(int id) {
+        List<OrderItem> temp = new ArrayList<>();
+        for(OrderItem item : orderItemList)
+            if(item.getOrderid() == id)
+                temp.add(item);
+        return temp;
+    }
 }

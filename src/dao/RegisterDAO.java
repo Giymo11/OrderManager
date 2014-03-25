@@ -1,14 +1,12 @@
 package dao;
 
 import dto.Address;
-import dto.Town;
 import dto.User;
 
 import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
-import java.util.List;
 
 /**
  * Created with IntelliJ IDEA.
@@ -89,7 +87,7 @@ public class RegisterDAO extends JDBCDAO {
             statement = connection.createStatement();
 
             statement.executeUpdate("UPDATE ordermanager.address SET street = '" + address.getStreet() +
-                    "', HouseNr = '" + address.getHousNr() + "', townid = " + address.getTownid() +
+                    "', HouseNr = '" + address.getHouseNr() + "', townid = " + address.getTownid() +
                     " WHERE id = " + address.getId() + ";");
             statement.executeUpdate("COMMIT;");
         } catch (SQLException e) {
