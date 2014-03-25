@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+To change this template, choose Tools | Templates
+and open the template in the editor.
+-->
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:ui="http://java.sun.com/jsf/facelets">
+<h:head>
+    <title>Einstellungen</title>
+</h:head>
+
+<h:body>
+    <div style="text-align: center;
+                border: 1px solid green;
+                margin-left: 330px;
+                margin-top: 130px;
+                width: 73%;
+                position: absolute;">
+        <p:tabView>
+            <p:tab title="Logindaten ändern">
+                <ui:include src="editLogindata.xhtml"/>
+            </p:tab>
+            <p:tab title="Benutzerdaten ändern">
+                <ui:include src="editUserdata.xhtml"/>
+            </p:tab>
+        </p:tabView>
+    </div>
+    <div class="topbar">
+        <h1>Einstellungen</h1>
+    </div>
+    <ui:include src="menu.xhtml"/>
+    <ui:include src="logbutton.xhtml"/>
+</h:body>
+</html>
