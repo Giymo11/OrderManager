@@ -23,6 +23,9 @@
                 <p:commandButton value="Löschen" action="#{townBean.delete}" update="@form" ajax="false">
                     <f:param name="id" value="#{item.id}"/>
                 </p:commandButton>
+                <p:commandButton value="Speichern" action="#{townBean.save}" update="@form" ajax="false">
+                    <f:param name="idS" value="#{item.id}"/>
+                </p:commandButton>
                 <f:facet name="footer">
                     <p:commandButton value="Hinzufügen" action="#{townBean.addTown}" update="@form"
                                      ajax="false"/>
