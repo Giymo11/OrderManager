@@ -18,8 +18,9 @@ import java.sql.Statement;
  */
 public class JDBCDAO {
     private ConnectionManager connectionManager;
-    private final static String LAST_INSERT_ID = "SELECT max(id) as maxId FROM ordermanager.";
-    private final static String LAST_INSERT_PIC_ID = "SELECT max(pictureid) as maxId FROM ordermanager.";
+    protected final static String DATABASE_NAME = "pock_tc7";
+    private final static String LAST_INSERT_ID = "SELECT max(id) as maxId FROM " + DATABASE_NAME + ".";
+    private final static String LAST_INSERT_PIC_ID = "SELECT max(pictureid) as maxId FROM " + DATABASE_NAME + ".";
 
     public JDBCDAO(){
         connectionManager = new ConnectionManager();
@@ -36,7 +37,7 @@ public class JDBCDAO {
         try {
             connection = getConnection();
             statement = connection.createStatement();
-            statement.executeUpdate("INSERT INTO ordermanager." + tableName + " VALUES();");
+            statement.executeUpdate("INSERT INTO " + DATABASE_NAME + "." + tableName + " VALUES();");
             statement.executeUpdate("COMMIT;");
 
             int lastId = getLastInsertId(connection, tableName);
@@ -54,9 +55,9 @@ public class JDBCDAO {
         Statement statement = null;
         final String DEL_STATEMENT;
         if(tableName.equals("picture"))
-            DEL_STATEMENT = "DELETE FROM ordermanager." + tableName + " WHERE pictureid = " + id + ";";
+            DEL_STATEMENT = "DELETE FROM " + DATABASE_NAME + "." + tableName + " WHERE pictureid = " + id + ";";
         else
-            DEL_STATEMENT = "DELETE FROM ordermanager." + tableName + " WHERE id = " + id + ";";
+            DEL_STATEMENT = "DELETE FROM " + DATABASE_NAME + "." + tableName + " WHERE id = " + id + ";";
         Connection con = null;
 
         try {

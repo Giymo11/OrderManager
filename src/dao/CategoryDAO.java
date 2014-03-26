@@ -39,7 +39,7 @@ public class CategoryDAO extends JDBCDAO {
         try {
             connection = getConnection();
             statement = connection.createStatement();
-            res = statement.executeQuery("SELECT * FROM ordermanager.category");
+            res = statement.executeQuery("SELECT * FROM " + DATABASE_NAME + ".category");
             Category cat;
 
             while (res.next()) {
@@ -86,7 +86,7 @@ public class CategoryDAO extends JDBCDAO {
             connection = getConnection();
             statement = connection.createStatement();
 
-            statement.executeUpdate("UPDATE ordermanager.category SET name = '" + cat.getName() + "' WHERE id = " + cat.getId() + ";");
+            statement.executeUpdate("UPDATE " + DATABASE_NAME + ".category SET name = '" + cat.getName() + "' WHERE id = " + cat.getId() + ";");
             statement.executeUpdate("COMMIT;");
 
             categories.add(cat);
@@ -105,7 +105,7 @@ public class CategoryDAO extends JDBCDAO {
         try {
             con = getConnection();
             stat = con.createStatement();
-            res = stat.executeQuery("SELECT count(*) FROM ordermanager.product WHERE categoryid = " + id + ";");
+            res = stat.executeQuery("SELECT count(*) FROM " + DATABASE_NAME + ".product WHERE categoryid = " + id + ";");
             res.next();
             if (res.getInt(1) > 0) {
                 FacesContext.getCurrentInstance().addMessage("Failure!", new FacesMessage("Bitte löschen Sie zuerst alle Produkte aus dieser Kategorie!"));
@@ -137,7 +137,7 @@ public class CategoryDAO extends JDBCDAO {
             stat = connection.createStatement();
             for (Category cat : categories) {
                 if (cat.getId() == id) {
-                    stat.executeUpdate("UPDATE ordermanager.category SET name = '" + cat.getName() + "' WHERE id = " + id + ";");
+                    stat.executeUpdate("UPDATE " + DATABASE_NAME + ".category SET name = '" + cat.getName() + "' WHERE id = " + id + ";");
                     stat.executeUpdate("COMMIT;");
                 }
             }

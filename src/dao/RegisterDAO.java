@@ -21,9 +21,7 @@ public class RegisterDAO extends JDBCDAO {
     }
 
     public void register(User user, Address address,String selectedTown){
-        System.out.println("register in registerDAO");
         int id = getTownID(selectedTown);
-        System.out.println(id);
         address.setTownid(id);
         writeAddress(address);
         user.setAdressID(address.getId());
@@ -38,7 +36,7 @@ public class RegisterDAO extends JDBCDAO {
         try{
             connection = getConnection();
             statement = connection.createStatement();
-            resultSet = statement.executeQuery("select id from ordermanager.town where name = '" + selectedTown + "';");
+            resultSet = statement.executeQuery("select id from " + DATABASE_NAME +  ".town where name = '" + selectedTown + "';");
             resultSet.next();
 
             return resultSet.getInt(1);
@@ -63,7 +61,7 @@ public class RegisterDAO extends JDBCDAO {
             connection = getConnection();
             statement = connection.createStatement();
 
-            statement.executeUpdate("UPDATE ordermanager.user SET email = '" + user.getEmail() + "', salt= '" + user.getSalt() +
+            statement.executeUpdate("UPDATE " + DATABASE_NAME + ".user SET email = '" + user.getEmail() +
                     "', hash = '" + user.getHash() + "', firstname = '" + user.getFirstName() + "', lastname = '" + user.getLastName() +
                     "', telnr = '" + user.getTelNr() + "', addressid = " + user.getAdressID() + " WHERE id = " + user.getId() + ";");
             statement.executeUpdate("COMMIT;");
@@ -86,7 +84,7 @@ public class RegisterDAO extends JDBCDAO {
             connection = getConnection();
             statement = connection.createStatement();
 
-            statement.executeUpdate("UPDATE ordermanager.address SET street = '" + address.getStreet() +
+            statement.executeUpdate("UPDATE " + DATABASE_NAME + ".address SET street = '" + address.getStreet() +
                     "', HouseNr = '" + address.getHouseNr() + "', townid = " + address.getTownid() +
                     " WHERE id = " + address.getId() + ";");
             statement.executeUpdate("COMMIT;");

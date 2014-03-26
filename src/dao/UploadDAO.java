@@ -36,14 +36,14 @@ public class UploadDAO extends JDBCDAO {
             else {
                 Connection con = getConnection();
                 Statement s = con.createStatement();
-                ResultSet res = s.executeQuery("SELECT count(*) FROM ordermanager.picture"
+                ResultSet res = s.executeQuery("SELECT count(*) FROM " + DATABASE_NAME + ".picture"
                         + " WHERE name = '" + file.getFileName() + "';");
                 res.next();
                 if(res.getInt(1)==0){
                     Picture pic = new Picture(file.getFileName().toString());
                     insertObject("picture", pic);
 
-                    s.executeUpdate("UPDATE ordermanager.picture SET name = '" + pic.getName() + "' WHERE pictureid = " + pic.getId() + ";");
+                    s.executeUpdate("UPDATE " + DATABASE_NAME + ".picture SET name = '" + pic.getName() + "' WHERE pictureid = " + pic.getId() + ";");
                     s.executeUpdate("COMMIT;");
                 }
                 else{
@@ -91,19 +91,19 @@ public class UploadDAO extends JDBCDAO {
                 s = con.createStatement();
                 s2 = con.createStatement();
                 System.out.println("before initialisation of res&res2");
-                res = s.executeQuery("SELECT count(*) FROM ordermanager.product " +
-                        "WHERE id = (SELECT pictureid FROM ordermanager.picture WHERE name = '" + filename + "');");
+                res = s.executeQuery("SELECT count(*) FROM " + DATABASE_NAME + ".product " +
+                        "WHERE id = (SELECT pictureid FROM " + DATABASE_NAME + ".picture WHERE name = '" + filename + "');");
                 res.next();
 
-                res2 = s2.executeQuery("SELECT count(*) FROM ordermanager.offer " +
-                        "WHERE id = (SELECT pictureid FROM ordermanager.picture WHERE name = '" + filename + "');");
+                res2 = s2.executeQuery("SELECT count(*) FROM " + DATABASE_NAME + ".offer " +
+                        "WHERE id = (SELECT pictureid FROM " + DATABASE_NAME + ".picture WHERE name = '" + filename + "');");
                 res2.next();
 
                 if(res.getInt(1)>0 || res2.getInt(1)>0)
                     FacesContext.getCurrentInstance().addMessage("Fehler", new FacesMessage("Bitte löschen oder ändern "
                             + "Sie zuerst die Produkte und Angebote, die dieses Bild verwenden!"));
                 else{
-                    resId = s.executeQuery("SELECT pictureid FROM ordermanager.picture WHERE name = '" + filename + "';");
+                    resId = s.executeQuery("SELECT pictureid FROM " + DATABASE_NAME + ".picture WHERE name = '" + filename + "';");
                     resId.next();
                     deleteObject("picture", resId.getInt(1));
                     fileToDelete.delete();
@@ -139,7 +139,7 @@ public class UploadDAO extends JDBCDAO {
     public List<String> getPictures(){
         List<String> pics = new ArrayList<>();
         for (File file : getUploadedPictures())
-            pics.add(file.getName().toString());
+            pics.add(file.getName());
 
         Connection con = null;
         Statement stat = null;
@@ -148,7 +148,7 @@ public class UploadDAO extends JDBCDAO {
         try {
             con = getConnection();
             stat = con.createStatement();
-            res = stat.executeQuery("SELECT count(*) FROM ordermanager.picture");
+            res = stat.executeQuery("SELECT count(*) FROM " + DATABASE_NAME + ".picture");
             res.next();
             if(res.getInt(1)!=pics.size())
                 FacesContext.getCurrentInstance().addMessage("Picture", new FacesMessage(

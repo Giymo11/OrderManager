@@ -43,7 +43,7 @@ public class TourDAO extends JDBCDAO {
         try{
             connection = getConnection();
             statement = connection.createStatement();
-            resultSet = statement.executeQuery("SELECT * FROM ordermanager.tour;");
+            resultSet = statement.executeQuery("SELECT * FROM " + DATABASE_NAME + ".tour;");
 
             while(resultSet.next()){
                 tour = new Tour(resultSet.getDate("Date"));
@@ -80,7 +80,7 @@ public class TourDAO extends JDBCDAO {
 
             connection = getConnection();
             statement = connection.createStatement();
-            statement.executeUpdate("UPDATE ordermanager.tour SET date = '" + (1900+date.getYear()) + "-" + (date.getMonth()+1) + "-"
+            statement.executeUpdate("UPDATE " + DATABASE_NAME + ".tour SET date = '" + (1900+date.getYear()) + "-" + (date.getMonth()+1) + "-"
                     + date.getDate() + "' WHERE id = " + newTour.getId() + ";");
             statement.executeUpdate("COMMIT;");
         } catch (SQLException e) {

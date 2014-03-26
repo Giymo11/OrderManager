@@ -3,7 +3,6 @@
                 xmlns:p="http://primefaces.org/ui"
                 xmlns:f="http://java.sun.com/jsf/core"
                 xmlns:h="http://java.sun.com/jsf/html">
-    <h:form>
         <p:dataTable var="item" value="#{categoryBean.categories}">
             <p:column headerText="Name">
                 <p:inputText value="#{item.name}"/>
@@ -25,5 +24,5 @@
                 </f:facet>
             </p:column>
         </p:dataTable>
-    </h:form>
+
 </ui:composition>

@@ -2,9 +2,7 @@ package dao;
 
 import dto.Product;
 
-import javax.faces.application.FacesMessage;
 import javax.faces.bean.SessionScoped;
-import javax.faces.context.FacesContext;
 import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -44,19 +42,19 @@ public class ProductDAO extends JDBCDAO {
         try {
             connection = getConnection();
             statement = connection.createStatement();
-            res = statement.executeQuery("SELECT * FROM ordermanager.product");
+            res = statement.executeQuery("SELECT * FROM " + DATABASE_NAME + ".product");
 
             Product product;
             if (res.next())
                 while (true) {
                     statement = connection.createStatement();
 
-                    resCat = statement.executeQuery("SELECT name FROM ordermanager.category WHERE id = " +
+                    resCat = statement.executeQuery("SELECT name FROM " + DATABASE_NAME + ".category WHERE id = " +
                                                     res.getInt("CategoryID") + ";");
 
                     statement = connection.createStatement();
 
-                    resPic = statement.executeQuery("SELECT name FROM ordermanager.picture WHERE pictureid = "
+                    resPic = statement.executeQuery("SELECT name FROM " + DATABASE_NAME + ".picture WHERE pictureid = "
                                                    + res.getInt(6) + ";");
 
                     product = getProductWithResultSet(res);
@@ -77,9 +75,6 @@ public class ProductDAO extends JDBCDAO {
                     else
                         res.next();
                 }
-            else{
-                FacesContext.getCurrentInstance().addMessage("Failure", new FacesMessage("Warnung! Keine Angebote gespeichert!"));
-            }
         } catch (SQLException e) {
             e.printStackTrace();
         }
@@ -106,7 +101,7 @@ public class ProductDAO extends JDBCDAO {
             Connection con = getConnection();
             Statement stat = con.createStatement();
 
-            stat.executeUpdate("UPDATE ordermanager.product SET " + product.getSQLSetString() +
+            stat.executeUpdate("UPDATE " + DATABASE_NAME + ".product SET " + product.getSQLSetString() +
                     " WHERE id = " + product.getId() + ";");
 
             stat.executeUpdate("COMMIT;");
@@ -132,18 +127,19 @@ public class ProductDAO extends JDBCDAO {
             stat = con.createStatement();
             stat1 = con.createStatement();
 
-            resPicture = stat.executeQuery("SELECT pictureID FROM ordermanager.picture WHERE name = '" +
+            resPicture = stat.executeQuery("SELECT pictureID FROM " + DATABASE_NAME + ".picture WHERE name = '" +
                                             selectedPicture + "';");
             resPicture.next();
 
-            resCategory = stat1.executeQuery("SELECT id FROM ordermanager.category WHERE name = '" +
+            resCategory = stat1.executeQuery("SELECT id FROM " + DATABASE_NAME + ".category WHERE name = '" +
                                             selectedCategory + "';");
-            resCategory.next();
 
-            product = new Product(0, resCategory.getInt(1), getNewPriority(),
-                                                newName, newText, newPrice, resPicture.getInt(1), true);
-            product.setPicture(selectedPicture);
-            product.setCategoryName(selectedCategory);
+            if(resCategory.next()&&resPicture.isFirst()) {
+                product = new Product(0, resCategory.getInt(1), getNewPriority(),
+                        newName, newText, newPrice, resPicture.getInt(1), true);
+                product.setPicture(selectedPicture);
+                product.setCategoryName(selectedCategory);
+            }
         } catch (SQLException e) {
             e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
         }
@@ -188,9 +184,9 @@ public class ProductDAO extends JDBCDAO {
             try {
                 Connection con = getConnection();
                 Statement stat = con.createStatement();
-                ResultSet res = stat.executeQuery("SELECT name from ordermanager.category;");
-                res.next();
-                category=res.getString(1);
+                ResultSet res = stat.executeQuery("SELECT name from " + DATABASE_NAME + ".category;");
+                if(res.next())
+                    category=res.getString(1);
 
                 close(res, stat, con);
             } catch (SQLException e) {
@@ -204,7 +200,7 @@ public class ProductDAO extends JDBCDAO {
         try {
             Connection connection = getConnection();
             Statement stat = connection.createStatement();
-            ResultSet r = stat.executeQuery("SELECT id FROM ordermanager.category WHERE name = '" + category + "';");
+            ResultSet r = stat.executeQuery("SELECT id FROM " + DATABASE_NAME + ".category WHERE name = '" + category + "';");
             r.next();
 
             for(Product p : productList)
@@ -228,7 +224,7 @@ public class ProductDAO extends JDBCDAO {
 
             for (Product product : productList) {
                 if (product.getId() == id) {
-                    stat.executeUpdate("UPDATE ordermanager.product SET name = '" + product.getTitle() +
+                    stat.executeUpdate("UPDATE " + DATABASE_NAME + ".product SET name = '" + product.getTitle() +
                             "', description = '" + product.getDescription() + "', visible = " +
                             product.isVisible() + " WHERE id = " + id + ";");
 

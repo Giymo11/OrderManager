@@ -17,7 +17,6 @@ import java.util.List;
  * To change this template use File | Settings | File Templates.
  */
 public class TownDAO extends JDBCDAO {
-    private final static String DATABASE = "ordermanager";
     private List<Town> towns;
 
     public TownDAO(){
@@ -60,7 +59,7 @@ public class TownDAO extends JDBCDAO {
         try {
             connection = getConnection();
             statement = connection.createStatement();
-            resultSet = statement.executeQuery("SELECT * FROM " + DATABASE + ".town;");
+            resultSet = statement.executeQuery("SELECT * FROM " + DATABASE_NAME + ".town;");
             while(resultSet.next()){
                 Town town = new Town(resultSet.getInt("PLZ"), resultSet.getString("Name"));
                 town.setId(resultSet.getInt("ID"));
@@ -89,7 +88,7 @@ public class TownDAO extends JDBCDAO {
         try{
             connection = getConnection();
             statement = connection.createStatement();
-            resultSet = statement.executeQuery("SELECT * FROM " + DATABASE + ".town WHERE id = " + id + ";");
+            resultSet = statement.executeQuery("SELECT * FROM " + DATABASE_NAME + ".town WHERE id = " + id + ";");
             resultSet.next();
             town = getTownWithResultSet(resultSet);
         } catch (SQLException e) {

@@ -48,8 +48,8 @@ public class ContactInfoDAO extends JDBCDAO{
             statement = connection.createStatement();
             statementInfo = connection.createStatement();
 
-            resHours = statement.executeQuery("SELECT * FROM ordermanager.openinghours");
-            resInfo = statementInfo.executeQuery("SELECT * FROM ordermanager.contactinfo");
+            resHours = statement.executeQuery("SELECT * FROM " + DATABASE_NAME + ".openinghours");
+            resInfo = statementInfo.executeQuery("SELECT * FROM " + DATABASE_NAME + ".contactinfo");
 
             if (!resHours.isClosed())
                 while (resHours.next()) {
@@ -57,9 +57,8 @@ public class ContactInfoDAO extends JDBCDAO{
                     if (resHours.isLast())
                         break;
                 }
-
-            resInfo.next();
-            setInfo(resInfo);
+            if(resInfo.next())
+                setInfo(resInfo);
         } catch (SQLException e) {
             e.printStackTrace();
         }
@@ -135,56 +134,56 @@ public class ContactInfoDAO extends JDBCDAO{
             connection = getConnection();
             statement = connection.createStatement();
 
-            statement.executeUpdate("UPDATE ordermanager.contactinfo SET name = '" + name + "', street = '" + street +
+            statement.executeUpdate("UPDATE " + DATABASE_NAME + ".contactinfo SET name = '" + name + "', street = '" + street +
                     "', location = '" + location + "', telephone = '" + telephone + "', email = '" + mail + "';");
-            statement.executeUpdate("DELETE FROM ordermanager.openinghours;");
+            statement.executeUpdate("DELETE FROM " + DATABASE_NAME + ".openinghours;");
 
             if (mondayAM.length() > 1)
-                statement.executeUpdate("INSERT INTO ordermanager.openinghours " +
+                statement.executeUpdate("INSERT INTO " + DATABASE_NAME + ".openinghours " +
                         "VALUES(1, '" + mondayAM.substring(0, 5) + "', '" + mondayAM.replace("-", "").substring(5) + "');");
 
             if (mondayPM.length() > 1)
-                statement.executeUpdate("INSERT INTO ordermanager.openinghours " +
+                statement.executeUpdate("INSERT INTO " + DATABASE_NAME + ".openinghours " +
                         "VALUES(1, '" + mondayPM.substring(0, 5) + "', '" + mondayPM.replace("-", "").substring(5) + "');");
 
             if (thursdayAM.length() > 1)
-                statement.executeUpdate("INSERT INTO ordermanager.openinghours " +
+                statement.executeUpdate("INSERT INTO " + DATABASE_NAME + ".openinghours " +
                         "VALUES(4, '" + thursdayAM.substring(0, 5) + "', '" + thursdayAM.replace("-", "").substring(5) + "');");
 
             if (thursdayPM.length() > 1)
-                statement.executeUpdate("INSERT INTO ordermanager.openinghours " +
+                statement.executeUpdate("INSERT INTO " + DATABASE_NAME + ".openinghours " +
                         "VALUES(4, '" + thursdayPM.substring(0, 5) + "', '" + thursdayPM.replace("-", "").substring(5) + "');");
 
             if (wednesdayAM.length() > 1)
-                statement.executeUpdate("INSERT INTO ordermanager.openinghours " +
+                statement.executeUpdate("INSERT INTO " + DATABASE_NAME + ".openinghours " +
                         "VALUES(3, '" + wednesdayAM.substring(0, 5) + "', '" + wednesdayAM.replace("-", "").substring(5) + "');");
 
             if (wednesdayPM.length() > 1)
-                statement.executeUpdate("INSERT INTO ordermanager.openinghours " +
+                statement.executeUpdate("INSERT INTO " + DATABASE_NAME + ".openinghours " +
                         "VALUES(3, '" + wednesdayPM.substring(0, 5) + "', '" + wednesdayPM.replace("-", "").substring(5) + "');");
 
             if (tuesdayAM.length() > 1)
-                statement.executeUpdate("INSERT INTO ordermanager.openinghours " +
+                statement.executeUpdate("INSERT INTO " + DATABASE_NAME + ".openinghours " +
                         "VALUES(2, '" + tuesdayAM.substring(0, 5) + "', '" + tuesdayAM.replace("-", "").substring(5) + "');");
 
             if (tuesdayPM.length() > 1)
-                statement.executeUpdate("INSERT INTO ordermanager.openinghours " +
+                statement.executeUpdate("INSERT INTO " + DATABASE_NAME + ".openinghours " +
                         "VALUES(2, '" + tuesdayPM.substring(0, 5) + "', '" + tuesdayPM.replace("-", "").substring(5) + "');");
 
             if (fridayAM.length() > 1)
-                statement.executeUpdate("INSERT INTO ordermanager.openinghours " +
+                statement.executeUpdate("INSERT INTO " + DATABASE_NAME + ".openinghours " +
                         "VALUES(5, '" + fridayAM.substring(0, 5) + "', '" + fridayAM.replace("-", "").substring(5) + "');");
 
             if (fridayPM.length() > 1)
-                statement.executeUpdate("INSERT INTO ordermanager.openinghours " +
+                statement.executeUpdate("INSERT INTO " + DATABASE_NAME + ".openinghours " +
                         "VALUES(5, '" + fridayPM.substring(0, 5) + "', '" + fridayPM.replace("-", "").substring(5) + "');");
 
             if (saturdayAM.length() > 1)
-                statement.executeUpdate("INSERT INTO ordermanager.openinghours " +
+                statement.executeUpdate("INSERT INTO " + DATABASE_NAME + ".openinghours " +
                         "VALUES(6, '" + saturdayAM.substring(0, 5) + "', '" + saturdayAM.replace("-", "").substring(5) + "');");
 
             if (saturdayPM.length() > 1)
-                statement.executeUpdate("INSERT INTO ordermanager.openinghours " +
+                statement.executeUpdate("INSERT INTO " + DATABASE_NAME + ".openinghours " +
                         "VALUES(6, '" + saturdayPM.substring(0, 5) + "', '" + saturdayPM.replace("-", "").substring(5) + "');");
 
             connection.createStatement().executeUpdate("COMMIT;");

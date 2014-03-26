@@ -2,7 +2,6 @@ package beans;
 
 import dao.RegisterDAO;
 import dto.Address;
-import dto.Town;
 import dto.User;
 
 import javax.faces.application.FacesMessage;
@@ -10,7 +9,6 @@ import javax.faces.bean.ManagedBean;
 import javax.faces.context.FacesContext;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
-import java.util.List;
 
 /**
  * Created with IntelliJ IDEA.
@@ -25,6 +23,7 @@ public class RegisterBean {
     private String selectedTown;
     private Address address;
     private RegisterDAO registerDAO;
+    private String newEmail;
 
     public RegisterBean() {
         registerDAO = new RegisterDAO();
@@ -33,8 +32,7 @@ public class RegisterBean {
     public void register() {
         System.out.println("register");
         if (password.equals(passwordWdh)) {
-            String passwordForHash = password + email;
-            String hash = hash(passwordForHash);
+            String hash = hash(password.concat(email));
 
 
             address = new Address(street, houseNr);
@@ -47,14 +45,14 @@ public class RegisterBean {
         }
     }
 
-    public String hash(String password) {
+    public String hash(String saltedPass) {
         MessageDigest md = null;
         try {
             md = MessageDigest.getInstance("SHA-256");
         } catch (NoSuchAlgorithmException e) {
             e.printStackTrace();
         }
-        md.update(password.getBytes());
+        md.update(saltedPass.getBytes());
 
         byte byteData[] = md.digest();
 
@@ -155,6 +153,14 @@ public class RegisterBean {
 
     public void setSelectedTown(String selectedTown) {
         this.selectedTown = selectedTown;
+    }
+
+    public String getNewEmail() {
+        return newEmail;
+    }
+
+    public void setNewEmail(String newEmail) {
+        this.newEmail = newEmail;
     }
 }
 
