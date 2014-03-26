@@ -33,7 +33,8 @@ public class RegisterBean {
     public void register() {
         System.out.println("register");
         if (password.equals(passwordWdh)) {
-            String hash = hash(password);
+            String passwordForHash = password + email;
+            String hash = hash(passwordForHash);
 
 
             address = new Address(street, houseNr);

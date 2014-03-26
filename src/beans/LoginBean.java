@@ -80,6 +80,7 @@ public class LoginBean {
         else{
                 req.setAttribute("loggedIn", false);
                 req.setAttribute("email", null);
+                req.setAttribute("adminLoggedIn", false);
                 FacesContext.getCurrentInstance().getExternalContext().invalidateSession();
                 status="Anmelden";
                 return "/offers.xhtml?faces-redirect=true";
@@ -95,6 +96,7 @@ public class LoginBean {
         }
         req.setAttribute("loggedIn", false);
         req.setAttribute("email", null);
+        req.setAttribute("adminLoggedIn", false);
         FacesContext.getCurrentInstance().getExternalContext().invalidateSession();
     }
 }

@@ -43,7 +43,7 @@ public class PermissionFilter implements Filter {
                 return;
             }
             if(adminLoggedIn){
-                response.sendRedirect(request.getContextPath() + "/faces/orders.xhtml");
+                response.sendRedirect(request.getContextPath() + "/faces/ordersForAdmin.xhtml");
                 return;
             }
              else {

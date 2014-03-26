@@ -37,10 +37,18 @@ public class LoginDAO extends JDBCDAO {
                 checkHash = res.getString(2);
                 checkSalt = res.getString(3);
 
-                if (email.equals(checkEmail) && checkHash.equals(hash(password)) && email.equals(checkSalt)) {
+                if (email.equals(checkEmail) && checkHash.equals(hash(password+email)) && email.equals(checkSalt)) {
                     wrongPassword = "";
-                    req.getSession().setAttribute("loggedIn", true);
+
                     req.getSession().setAttribute("email", this.email);
+                    if(email.equals("baeckerei.pock@a1.net")){
+                        req.getSession().setAttribute("adminLoggedIn", true);
+                        System.out.println("Admin eingeloggt");
+                    }
+                    else{
+                        req.getSession().setAttribute("loggedIn", true);
+                        System.out.println("User eingeloggt");
+                    }
 
                     return "/offers.xhtml?faces-redirect=true";
                 } else {
