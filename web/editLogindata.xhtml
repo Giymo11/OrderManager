@@ -1,18 +1,41 @@
 <ui:composition xmlns:h="http://java.sun.com/jsf/html"
       xmlns:p="http://primefaces.org/ui"
-      xmlns:ui="http://java.sun.com/jsf/facelets"
-      xmlns:f="http://java.sun.com/jsf/core">
+      xmlns:ui="http://java.sun.com/jsf/facelets">
     <h:form>
+        <h:head>
+            <p:growl showDetail="false"/>
+        </h:head>
         <table>
-            <tr>
+            <h:column>
                 <p:outputLabel value="E-Mail "/>
-                <p:inputText value="#{registerBean.newEmail}"/>
-            </tr>
-            <tr>
-                <td>
-                <p:outputLabel value="Passwort "/>
-                </td>
-            </tr>
+            </h:column>
+            <h:column>
+                <p:inputText value="#{settingsBean.newEmail}"/>
+            </h:column>
+            <br/>
+            <h:column>
+                <p:outputLabel value="Altes Passwort "/>
+            </h:column>
+            <h:column>
+                <p:inputText value="#{settingsBean.oldPass}" type="password"/>
+            </h:column>
+            <br/>
+            <h:column>
+                <p:outputLabel value="Neues Passwort "/>
+            </h:column>
+            <h:column>
+                <p:inputText value="#{settingsBean.newPass1}" type="password"/>
+            </h:column>
+            <br/>
+            <h:column>
+                <p:outputLabel value="Neues Passwort wiederholen"/>
+            </h:column>
+            <h:column>
+                <p:inputText value="#{settingsBean.newPass2}" type="password"/>
+            </h:column>
         </table>
+        <div class="loginlower">
+            <p:commandButton value="Speichern" ajax="false" action="#{settingsBean.saveLogin}"/>
+        </div>
     </h:form>
 </ui:composition>

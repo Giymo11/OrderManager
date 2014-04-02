@@ -10,12 +10,11 @@ import interfaces.Identifiable;
  * To change this template use File | Settings | File Templates.
  */
 public class User implements Identifiable {
-    private String email, salt, firstName, lastName, hash, telNr;
+    private String email, firstName, lastName, hash, telNr;
     private int id, adressID;
 
-    public User(String email, String salt, String firstName, String lastName, String hash, String telNr, int adressID) {
+    public User(String email, String firstName, String lastName, String hash, String telNr, int adressID) {
         this.email = email;
-        this.salt = salt;
         this.firstName = firstName;
         this.lastName = lastName;
         this.hash = hash;
@@ -24,7 +23,7 @@ public class User implements Identifiable {
     }
 
     public String getSQLString() {
-        return id + ", '" + email + "', '" + salt + "', '" + hash + "', " +
+        return id + ", '" + email + "', '" + hash + "', " +
                 "'" + firstName +  "', '" + lastName + "', '"+ telNr + "'," + adressID;
     }
 
@@ -34,15 +33,6 @@ public class User implements Identifiable {
 
     public void setEmail(String email) {
         this.email = email;
-    }
-
-
-    public String getSalt() {
-        return salt;
-    }
-
-    public void setSalt(String salt) {
-        this.salt = salt;
     }
 
     public String getFirstName() {

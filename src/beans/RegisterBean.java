@@ -23,7 +23,7 @@ public class RegisterBean {
     private String selectedTown;
     private Address address;
     private RegisterDAO registerDAO;
-    private String newEmail;
+
 
     public RegisterBean() {
         registerDAO = new RegisterDAO();
@@ -36,7 +36,7 @@ public class RegisterBean {
 
 
             address = new Address(street, houseNr);
-            User u = new User(email, email, firstName, lastName, hash, telNr, 1);
+            User u = new User(email, firstName, lastName, hash, telNr, 1);
 
             registerDAO.register(u, address, selectedTown);
 
@@ -153,14 +153,6 @@ public class RegisterBean {
 
     public void setSelectedTown(String selectedTown) {
         this.selectedTown = selectedTown;
-    }
-
-    public String getNewEmail() {
-        return newEmail;
-    }
-
-    public void setNewEmail(String newEmail) {
-        this.newEmail = newEmail;
     }
 }
 
