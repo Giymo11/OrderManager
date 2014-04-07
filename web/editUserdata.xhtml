@@ -1,13 +1,47 @@
 <ui:composition xmlns:h="http://java.sun.com/jsf/html"
                 xmlns:p="http://primefaces.org/ui"
-                xmlns:ui="http://java.sun.com/jsf/facelets">
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:f="http://java.sun.com/jsf/core">
     <h:head>
         <p:growl showDetail="false"/>
     </h:head>
     <h:form>
-        <p:inputText value="#{settingsBean.user.firstName}"/>
-        <p:inputText value="#{settingsBean.user.lastName}"/>
-        <p:inputText value="#{settingsBean.user.telNr}"/>
-
+        Vorname
+        <br/>
+        <p:inputText value="#{userSettingsBean.user.firstName}"/>
+        <br/>
+        <br/>
+        Nachname
+        <br/>
+        <p:inputText value="#{userSettingsBean.user.lastName}"/>
+        <br/>
+        <br/>
+        Telefon
+        <br/>
+        <p:inputText value="#{userSettingsBean.user.telNr}"/>
+        <br/>
+        <br/>
+        Geburtstag
+        <br/>
+        <p:calendar value="#{userSettingsBean.user.birthdate}" maxdate="#{registerBean.getMaxDate}"/>
+        <br/>
+        <br/>
+        Straße
+        <br/>
+        <p:inputText value="#{userSettingsBean.address.street}"/>
+        <br/>
+        <br/>
+        HausNr.
+        <br/>
+        <p:inputText value="#{userSettingsBean.address.houseNr}"/>
+        <br/>
+        <br/>
+        Ort
+        <br/>
+        <h:selectOneMenu value="#{userSettingsBean.selectedTown}" >
+            <f:selectItems value="#{townBean.stringTowns}"/>
+        </h:selectOneMenu>
+        <br/>
+        <p:commandButton value="Speichern" ajax="false" update="@form" action="#{userSettingsBean.saveUserData}"/>
     </h:form>
 </ui:composition>

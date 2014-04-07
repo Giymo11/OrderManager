@@ -25,6 +25,8 @@ public class TownBean {
     private TownDAO townDAO;
     private List<String> stringTowns;
 
+
+
     public String getSelectedTown() {
         return selectedTown;
     }
@@ -40,10 +42,6 @@ public class TownBean {
 
     public List<Town> getTowns() {
         return townDAO.getTowns();
-    }
-
-    public void setTowns(List<Town> towns) {
-        townDAO.setTowns(towns);
     }
 
     public int getPlz() {
@@ -64,7 +62,8 @@ public class TownBean {
 
     public void addTown(){
         Town town = new Town(plz, name);
-        System.out.println(plz + " " + name);
+
+        townDAO.addTown(town);
         plz = 0;
         name = "";
     }
@@ -72,11 +71,6 @@ public class TownBean {
     public void delete() throws SQLException {
         int id = Integer.parseInt(fetchParameter("id"));
         townDAO.deleteObject("town", id);
-    }
-
-    public void save(){
-        int id = Integer.parseInt(fetchParameter("idS"));
-        townDAO.save(id);
     }
 
     public String fetchParameter(String param) {

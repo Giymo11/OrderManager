@@ -31,9 +31,16 @@ public class LoginDAO extends JDBCDAO {
         try {
             connection = getConnection();
             stat = connection.createStatement();
-            res = stat.executeQuery("SELECT Hash from " + DATABASE_NAME + ".user where Email = '" + email + "';");
+            res = stat.executeQuery("SELECT Hash, verified, blocked from " + DATABASE_NAME + ".user where Email = '" + email + "';");
             if(res.next()){
                 String checkHash = res.getString(1);
+                boolean verified = res.getBoolean(2);
+                boolean blocked = res.getBoolean(3);
+                if(!verified)
+                    return "notVerified";
+
+                if(blocked)
+                    return "blocked";
 
                 if (checkHash.equals(hash(password.concat(email)))) {
                     wrongPassword = "";

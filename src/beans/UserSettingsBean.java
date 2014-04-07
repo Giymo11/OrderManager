@@ -1,6 +1,8 @@
 package beans;
 
-import dao.SettingsDAO;
+import dao.AddressDAO;
+import dao.UserSettingsDAO;
+import dto.Address;
 import dto.User;
 
 import javax.faces.application.FacesMessage;
@@ -12,25 +14,30 @@ import javax.servlet.http.HttpServletRequest;
  * Created by Sarah on 30.03.2014.
  */
 @ManagedBean
-public class SettingsBean {
+public class UserSettingsBean {
     private String newEmail;
     private String oldPass;
     private String newPass1;
     private String newPass2;
 
     private User user;
+    private Address address;
 
-    private SettingsDAO settingsDAO;
+    private UserSettingsDAO settingsDAO;
+    private String selectedTown;
 
-    public SettingsBean(){
-        newEmail = "";
-        oldPass = "";
-        newPass1 = "";
-        newPass2 = "";
-        settingsDAO = new SettingsDAO();
+    public UserSettingsBean(){
+        settingsDAO = new UserSettingsDAO();
 
         HttpServletRequest req = (HttpServletRequest) FacesContext.getCurrentInstance().getExternalContext().getRequest();
         user = settingsDAO.getUser(req.getSession().getAttribute("email").toString());
+        address = new AddressDAO().getAddressWithID(user.getAddressID());
+        newEmail = user.getEmail();
+        oldPass = null;
+        newPass1 = "";
+        newPass2 = "";
+
+        selectedTown = settingsDAO.getSelectedTown(user);
     }
 
     public String getNewEmail() {
@@ -93,5 +100,25 @@ public class SettingsBean {
 
     public void setUser(User user) {
         this.user = user;
+    }
+
+    public void saveUserData(){
+        settingsDAO.saveUserData(user, address, selectedTown);
+    }
+
+    public void setSelectedTown(String selectedTown) {
+        this.selectedTown = selectedTown;
+    }
+
+    public String getSelectedTown() {
+        return selectedTown;
+    }
+
+    public Address getAddress() {
+        return address;
+    }
+
+    public void setAddress(Address address) {
+        this.address = address;
     }
 }

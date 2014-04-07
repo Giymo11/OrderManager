@@ -1,5 +1,6 @@
 package dao;
 
+import dto.Address;
 import dto.User;
 
 import java.security.MessageDigest;
@@ -8,12 +9,13 @@ import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.Date;
 
 /**
  * Created by Sarah on 31.03.2014.
  */
-public class SettingsDAO extends JDBCDAO {
-    public SettingsDAO(){
+public class UserSettingsDAO extends JDBCDAO {
+    public UserSettingsDAO(){
         super();
     }
 
@@ -133,12 +135,77 @@ public class SettingsDAO extends JDBCDAO {
 
     private User getUserWithResultSet(ResultSet resultSet) throws SQLException {
         User user = new User(resultSet.getString("Email"),
-                                resultSet.getString("FirstName"),
-                                resultSet.getString("LastName"),
-                                resultSet.getString("hash"),
-                                resultSet.getString("telnr"),
-                                resultSet.getInt("addressid"));
+                resultSet.getString("FirstName"),
+                resultSet.getString("LastName"),
+                resultSet.getString("hash"),
+                resultSet.getString("telnr"),
+                resultSet.getDate("birthdate"),
+                resultSet.getInt("addressid"),
+                resultSet.getBoolean("verified"),
+                resultSet.getBoolean("blocked"));
         user.setId(resultSet.getInt("id"));
         return user;
+    }
+
+
+    public String getSelectedTown(User user) {
+        Connection connection = null;
+        Statement statement = null;
+        ResultSet resultSet = null;
+
+        try{
+            connection = getConnection();
+            statement = connection.createStatement();
+
+            resultSet = statement.executeQuery("SELECT name FROM " + DATABASE_NAME + ".town WHERE id = (SELECT townID FROM " +
+                    DATABASE_NAME + ".address WHERE id = " + user.getAddressID() + ");");
+
+            if(resultSet.next())
+                return resultSet.getString(1);
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        finally {
+            close(resultSet, statement, connection);
+        }
+
+        return null;
+    }
+
+    public void saveUserData(User user, Address address, String selectedTown) {
+        Connection connection = null;
+        Statement statement = null;
+
+        try {
+            connection = getConnection();
+            statement = connection.createStatement();
+
+            statement.executeUpdate("UPDATE " + DATABASE_NAME + ".user SET firstname = '" + user.getFirstName()
+                    + "', lastname = '" + user.getLastName() + "', telnr = '" + user.getTelNr() + "', birthdate = '"
+                    + getDateSQL(user.getBirthdate()) + "' WHERE id = " + user.getId() + ";");
+            statement.executeUpdate("UPDATE " + DATABASE_NAME + ".address SET townid = (SELECT id FROM " + DATABASE_NAME
+                    + ".town WHERE name = '" + selectedTown + "'), street = '" + address.getStreet()
+                    + "', houseNr = '" + address.getHouseNr() + "' WHERE id = " + address.getId() + ";");
+            statement.executeUpdate("COMMIT;");
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        finally {
+            close(null, statement, connection);
+        }
+    }
+
+    private String getDateSQL(Date date) {
+        if(date.getMonth()<10 && date.getDate()<10)
+            return (date.getYear()+1900) + "-0" + (1+date.getMonth()) + "-0" + date.getDate();
+        else
+        if(date.getMonth()<10)
+            return (date.getYear()+1900) + "-0" + (1+date.getMonth()) + "-" + date.getDate();
+        if(date.getDate()<10)
+            return (date.getYear()+1900) + "-" + (1+date.getMonth()) + "-0" + date.getDate();
+
+
+        return (date.getYear()+1900) + "-" + (1+date.getMonth()) + "-" + date.getDate();
     }
 }
