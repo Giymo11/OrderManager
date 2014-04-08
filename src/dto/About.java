@@ -13,10 +13,6 @@ public class About {
     private int pictureID;
     private String pictureName;
 
-    public String getSQLString() {
-        return id + ", '" + text + "', " + pictureID;
-    }
-
     public About(int id, String text, int pictureID) {
         setId(id);
         setText(text);

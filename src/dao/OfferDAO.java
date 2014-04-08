@@ -47,31 +47,25 @@ public class OfferDAO extends JDBCDAO{
 
             res = stat.executeQuery("SELECT * FROM " + DATABASE_NAME + ".offer");
 
-            if(res.next()){
-                while (true){
-                    stat = con.createStatement();
-                    offer = getOfferWithResultSet(res);
+            while (res.next()) {
+                stat = con.createStatement();
+                offer = getOfferWithResultSet(res);
 
-                    resPic = stat.executeQuery("SELECT name FROM " + DATABASE_NAME + ".picture WHERE pictureid = "
-                                        + res.getInt("pictureid") + ";");
-                    resPic.next();
-
+                resPic = stat.executeQuery("SELECT name FROM " + DATABASE_NAME + ".picture WHERE pictureid = "
+                                    + res.getInt("pictureid") + ";");
+                if(resPic.next()) {
                     offer.setPicture(resPic.getString(1));
-                    offerList.add(offer);
-
-                    close(resPic, null, null);
-
-                    if(res.isLast())
-                        break;
-                    else
-                        res.next();
                 }
+                offerList.add(offer);
+
+                close(resPic, null, null);
             }
         } catch (SQLException e) {
             e.printStackTrace();
         }
         finally {
             close(res, stat, con);
+            close(resPic, null, null);
         }
     }
 
