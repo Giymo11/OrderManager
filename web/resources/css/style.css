@@ -14,6 +14,29 @@ hr {
     margin: 0px;
 }
 
+input#image-button{
+    background: #ccc url('http://localhost:8080/faces/icon_add_large.png') no-repeat center ;
+    padding-left: 16px;
+    height: 36px;
+    width: 36px;
+    border-radius: 5px;
+    border: 1px solid #ccc;
+    box-shadow: 0 1px 2px rgba(0, 0, 0, .1);
+}
+
+.immage-button{
+    padding-left: 16px;
+    height: 36px;
+    width: 36px;
+    border-radius: 5px !important;
+    border: 1px solid #ccc !important;
+    box-shadow: 0 1px 2px rgba(0, 0, 0, .1) !important;
+}
+
+.add-button{
+    background: #ccc url('http://localhost:8080/faces/icon_add_large.png') no-repeat center !important;
+}
+
 p {
     font-size: 16pt;
 }
@@ -173,6 +196,17 @@ table {
     background-color: #f00;
 }
 
+.settings {
+    /* not used atm, implemented in another way */
+    text-align: center;
+    border: 1px solid green;
+    margin-left: 330px;
+    margin-top: 130px;
+    position: absolute;
+    margin-right: 10px;
+    box-shadow: 5px 5px 5px #BBB
+}
+
 .sidebar {
     text-align: left;
     background-color: #2b812b;
@@ -181,10 +215,10 @@ table {
     width: 320px;
     top: 0px;
     bottom: 0px;
-    /* border: 1px solid red;*/
     float: left;
     position: fixed;
     min-height: 600px;
+    box-shadow: 5px 5px 5px #BBB;
     /*overflow: scroll;*/
 }
 
