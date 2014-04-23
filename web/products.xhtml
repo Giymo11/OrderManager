@@ -22,18 +22,18 @@
                     position: absolute;">
             <h:selectOneMenu value="#{productBean.selectedCategory}"
                              valueChangeListener="#{productBean.getProductsByCategory}">
-                <f:selectItems value="#{categoryBean.names}"/>
+                <f:selectItems value="#{categoryService.names}"/>
             </h:selectOneMenu>
             <p:commandButton type="submit" value="Los!" action="#{productBean.getProductsByCategory}" update="@form"/>
             <p:dataGrid value="#{productBean.selectedCatProducts}" var="product"
                         style="max-width: 65%" columns="3">
                 <p:panel header="#{product.title}" style="text-align: center">
                     <h:panelGrid columns="1" style="width: 100%">
-                        <p:graphicImage value="#{product.picture}" style="max-height: 60%; width: 80%"/>
+                        <p:graphicImage value="#{product.picture}" style="max-height:200px; width: 250px"/>
                         <br/>
                         <p:outputLabel value="€ #{product.price}"/>
                         <br/>
-                        <p:inputText binding="#{quantity}" type="number"/>
+                        <p:inputText binding="#{quantity}" type="number" maxlength="2" size="2"/>
                         <p:commandButton value="Hinzufügen" action="#{orderBean.addOneOrderItem(quantity.value)}"
                                           ajax="true" update=":form:order">
                             <f:param value="#{product.id}" name="productID"/>

@@ -1,6 +1,7 @@
 package dao;
 
 import dto.Event;
+
 import javax.faces.bean.SessionScoped;
 import java.sql.Connection;
 import java.sql.ResultSet;
@@ -17,7 +18,7 @@ import java.util.List;
  * To change this template use File | Settings | File Templates.
  */
 @SessionScoped
-public class EventDAO extends JDBCDAO{
+public class EventDAO extends JdbcDao {
     List<Event> eventList;
 
     public EventDAO(){

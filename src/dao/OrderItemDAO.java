@@ -6,7 +6,9 @@ import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
 
 /**
  * Created with IntelliJ IDEA.
@@ -15,7 +17,7 @@ import java.util.*;
  * Time: 10:34
  * To change this template use File | Settings | File Templates.
  */
-public class OrderItemDAO extends JDBCDAO {
+public class OrderItemDAO extends JdbcDao {
     private List<OrderItem> orderItemList;
 
     public OrderItemDAO(){

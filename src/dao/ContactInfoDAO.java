@@ -12,7 +12,7 @@ import java.sql.Statement;
  * Time: 21:33
  * To change this template use File | Settings | File Templates.
  */
-public class ContactInfoDAO extends JDBCDAO{
+public class ContactInfoDAO extends JdbcDao {
     private String name;
     private String street;
     private String location;

@@ -20,7 +20,7 @@ import java.util.List;
  * Time: 14:38
  * To change this template use File | Settings | File Templates.
  */
-public class UploadDAO extends JDBCDAO {
+public class UploadDAO extends JdbcDao {
     private String folder = FacesContext.getCurrentInstance().getExternalContext().getRealPath("");
     private File fileToDelete;
 

@@ -19,7 +19,7 @@ import java.util.List;
  * Time: 16:20
  * To change this template use File | Settings | File Templates.
  */
-public class OrderDAO extends JDBCDAO {
+public class OrderDAO extends JdbcDao {
     private List<Order> orderList;
 
     public OrderDAO(){

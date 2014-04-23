@@ -18,7 +18,7 @@ import java.util.List;
  * To change this template use File | Settings | File Templates.
  */
 @SessionScoped
-public class OfferDAO extends JDBCDAO{
+public class OfferDAO extends JdbcDao {
     List<Offer> offerList;
 
     public OfferDAO(){

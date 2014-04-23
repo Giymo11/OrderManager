@@ -16,13 +16,13 @@ import java.sql.Statement;
  * Time: 15:42
  * To change this template use File | Settings | File Templates.
  */
-public class JDBCDAO {
+public class JdbcDao {
     private ConnectionManager connectionManager;
     protected final static String DATABASE_NAME = "pock_tc7";
     private final static String LAST_INSERT_ID = "SELECT max(id) as maxId FROM " + DATABASE_NAME + ".";
     private final static String LAST_INSERT_PIC_ID = "SELECT max(pictureid) as maxId FROM " + DATABASE_NAME + ".";
 
-    public JDBCDAO(){
+    public JdbcDao(){
         connectionManager = new ConnectionManager();
     }
 

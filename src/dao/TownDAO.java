@@ -16,7 +16,7 @@ import java.util.List;
  * Time: 14:39
  * To change this template use File | Settings | File Templates.
  */
-public class TownDAO extends JDBCDAO {
+public class TownDAO extends JdbcDao {
     private List<Town> towns;
 
     public TownDAO(){

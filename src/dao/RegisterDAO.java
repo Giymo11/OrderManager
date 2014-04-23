@@ -16,7 +16,7 @@ import java.util.Date;
  * Time: 20:39
  * To change this template use File | Settings | File Templates.
  */
-public class RegisterDAO extends JDBCDAO {
+public class RegisterDAO extends JdbcDao {
     public RegisterDAO(){
         super();
     }

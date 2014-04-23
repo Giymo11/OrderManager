@@ -12,7 +12,7 @@ import java.util.List;
 /**
  * Created by Sarah on 03.04.2014.
  */
-public class UserAdminDAO extends JDBCDAO{
+public class UserAdminDAO extends JdbcDao {
     private List<User> userList;
 
     public UserAdminDAO(){
@@ -37,7 +37,6 @@ public class UserAdminDAO extends JDBCDAO{
                 if(!u.getEmail().equalsIgnoreCase("baeckerei.pock@a1.net"))
                     userList.add(u);
             }
-
 
         } catch (SQLException e) {
             e.printStackTrace();

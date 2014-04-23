@@ -15,7 +15,7 @@ import java.sql.Statement;
  * Time: 20:27
  * To change this template use File | Settings | File Templates.
  */
-public class LoginDAO extends JDBCDAO {
+public class LoginDAO extends JdbcDao {
     private String email, wrongPassword;
     private String password;
     private String checkHash, checkSalt;

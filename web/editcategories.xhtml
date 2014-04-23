@@ -2,24 +2,24 @@
                 xmlns:ui="http://java.sun.com/jsf/facelets"
                 xmlns:p="http://primefaces.org/ui"
                 xmlns:f="http://java.sun.com/jsf/core"
-                xmlns:h="http://java.sun.com/jsf/html">
-        <p:dataTable var="item" value="#{categoryBean.categories}">
+        >
+        <p:dataTable var="item" value="#{categoryService.categories}">
             <p:column headerText="Name">
                 <p:inputText value="#{item.name}"/>
 
                 <f:facet name="footer">
-                    <p:inputText value="#{categoryBean.newName}"/>
+                    <p:inputText value="#{categoryService.newName}"/>
                 </f:facet>
             </p:column>
             <p:column>
-                <p:commandButton value="Löschen" action="#{categoryBean.delete}" update="@form" ajax="false">
+                <p:commandButton value="Löschen" action="#{categoryService.delete}" update="@form" ajax="false">
                     <f:param name="id" value="#{item.id}"/>
                 </p:commandButton>
-                <p:commandButton value="Speichern" action="#{categoryBean.save}" update="@form" ajax="false">
+                <p:commandButton value="Speichern" action="#{categoryService.save}" update="@form" ajax="false">
                     <f:param name="idS" value="#{item.id}"/>
                 </p:commandButton>
                 <f:facet name="footer">
-                    <p:commandButton value="Hinzufügen" action="#{categoryBean.addNewCategory}" update="@form"
+                    <p:commandButton value="Hinzufügen" action="#{categoryService.addNewCategory}" update="@form"
                                      ajax="false"/>
                 </f:facet>
             </p:column>
