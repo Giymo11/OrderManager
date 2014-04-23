@@ -15,8 +15,8 @@
 <body>
     <div class="registercontainer">
     <h:form>
-        <table class="Registrieren">
-            <caption class="Register registerlabel">Registrieren</caption>
+        <table>
+            <caption class="registerlabel">Registrieren</caption>
             <tbody>
             <tr>
                 <th>E-Mail:</th>
@@ -57,7 +57,7 @@
                 </td>
             </tr>
             <tr>
-                <th>Geburtsdatum</th>
+                <th>Geburtsdatum:</th>
                 <td>
                     <p:calendar value="#{registerBean.birthdate}" maxdate="#{registerBean.getMaxDate}" navigator="true" effect="slideDown"/>
                 </td>
