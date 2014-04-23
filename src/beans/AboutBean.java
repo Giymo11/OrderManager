@@ -22,15 +22,21 @@ public class AboutBean {
     }
 
     public About getFirst() {
-        return aboutDAO.getAboutList().get(0);
+        if(!aboutDAO.getAboutList().isEmpty())
+            return aboutDAO.getAboutList().get(0);
+        return new About(0, "", 0);
     }
 
     public About getSecond() {
-        return aboutDAO.getAboutList().get(1);
+        if(!aboutDAO.getAboutList().isEmpty())
+            return aboutDAO.getAboutList().get(1);
+        return new About(0, "", 0);
     }
 
     public About getThird() {
-        return aboutDAO.getAboutList().get(2);
+        if(!aboutDAO.getAboutList().isEmpty())
+            return aboutDAO.getAboutList().get(2);
+        return new About(0, "", 0);
     }
 
     public List<About> getAboutList(){
