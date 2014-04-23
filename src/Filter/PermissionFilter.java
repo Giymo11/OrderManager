@@ -30,11 +30,11 @@ public class PermissionFilter implements Filter {
         boolean adminLoggedIn = false;
 
         if (request.getSession().getAttribute("loggedIn") != null) {
-            loggedIn = (boolean) request.getSession().getAttribute("loggedIn");
+            loggedIn = (Boolean) request.getSession().getAttribute("loggedIn");
         }
 
         if(request.getSession().getAttribute("adminLoggedIn")!=null){
-            adminLoggedIn = (boolean) request.getSession().getAttribute("adminLoggedIn");
+            adminLoggedIn = (Boolean) request.getSession().getAttribute("adminLoggedIn");
         }
 
         if (request.getRequestURI().equals(request.getContextPath() + "/faces/login.xhtml")) {

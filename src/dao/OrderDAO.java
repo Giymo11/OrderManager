@@ -24,7 +24,7 @@ public class OrderDAO extends JdbcDao {
 
     public OrderDAO(){
         super();
-        orderList = new ArrayList<>();
+        orderList = new ArrayList();
         read();
     }
 
@@ -169,7 +169,7 @@ public class OrderDAO extends JdbcDao {
         Connection connection = null;
         Statement statement = null;
         ResultSet resultSet = null;
-        List<Order> orders = new ArrayList<>();
+        List<Order> orders = new ArrayList();
         try{
             connection = getConnection();
             statement = connection.createStatement();
@@ -211,7 +211,7 @@ public class OrderDAO extends JdbcDao {
         Statement statement2 = null;
         ResultSet resultSet = null;
         ResultSet resultSet2 = null;
-        List<Order> orders = new ArrayList<>();
+        List<Order> orders = new ArrayList();
 
         try{
             connection = getConnection();

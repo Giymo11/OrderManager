@@ -34,8 +34,8 @@ public class ProductBean {
     public ProductBean() {
         productDAO = new ProductDAO();
         selectedCategory = null;
-        selectedCatProducts = new ArrayList<>();
-        productNames = new ArrayList<>();
+        selectedCatProducts = new ArrayList();
+        productNames = new ArrayList();
     }
 
     public List<Product> getProducts() {

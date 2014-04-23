@@ -137,7 +137,7 @@ public class UploadDAO extends JdbcDao {
     }
 
     public List<String> getPictures(){
-        List<String> pics = new ArrayList<>();
+        List<String> pics = new ArrayList();
         for (File file : getUploadedPictures())
             pics.add(file.getName());
 

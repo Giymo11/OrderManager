@@ -47,16 +47,16 @@ public class OrderBean {
         orderItemDAO = new OrderItemDAO();
         orderDAO = new OrderDAO();
         tourDAO = new TourDAO();
-        newOrderItems = new ArrayList<>();
+        newOrderItems = new ArrayList();
         setDate(getNextDay());
-        allOrdered = new ArrayList<>();
-        newOrderItems = new ArrayList<>();
+        allOrdered = new ArrayList();
+        newOrderItems = new ArrayList();
         sumOrders();
-        ordersInDateRange = new ArrayList<>();
+        ordersInDateRange = new ArrayList();
         startDate = new Date();
         endDate = new Date();
         endDate.setDate(startDate.getDate()+1);
-        undeliveredOrders = new ArrayList<>();
+        undeliveredOrders = new ArrayList();
 
         productDAO = new ProductDAO();
     }
@@ -176,7 +176,7 @@ public class OrderBean {
     }
 
     private void sumOrders() {
-        orderItems = new ArrayList<>();
+        orderItems = new ArrayList();
         for(OrderItem orderItem : newOrderItems)
             orderItems.add(orderItem);
         if(!orderItemsForDate.isEmpty()){
@@ -219,7 +219,7 @@ public class OrderBean {
     }
 
     public List<OrderItem> getAllItemsWithIDForCurrentUser(int orderid){
-        List<OrderItem> orderItems = new ArrayList<>();
+        List<OrderItem> orderItems = new ArrayList();
 
         for(OrderItem orderItem : getAllOrdered())
             if(orderItem.getOrderid() == orderid)
@@ -287,7 +287,7 @@ public class OrderBean {
     }
 
     public List<OrderItem> getOrderItemSum(){
-        List<OrderItem> list = new ArrayList<>();
+        List<OrderItem> list = new ArrayList();
         int count = 0;
         if(undeliveredOrders.isEmpty())
             getUndeliveredOrders();

@@ -24,7 +24,7 @@ public class TourDAO extends JdbcDao {
 
     public TourDAO(){
         super();
-        tourList = new ArrayList<>();
+        tourList = new ArrayList();
         read();
     }
 
