@@ -15,8 +15,8 @@ import java.sql.Statement;
  * Time: 20:27
  * To change this template use File | Settings | File Templates.
  */
-public class LoginDAO extends JDBCDAO {
-    private String email, checkEmail, wrongPassword;
+public class LoginDAO extends JdbcDao {
+    private String email, wrongPassword;
     private String password;
     private String checkHash, checkSalt;
 
@@ -31,23 +31,26 @@ public class LoginDAO extends JDBCDAO {
         try {
             connection = getConnection();
             stat = connection.createStatement();
-            res = stat.executeQuery("SELECT Email, Hash, Salt from ordermanager.user where Email = '" + email + "';");
+            res = stat.executeQuery("SELECT Hash, verified, blocked from " + DATABASE_NAME + ".user where Email = '" + email + "';");
             if(res.next()){
-                checkEmail = res.getString(1);
-                checkHash = res.getString(2);
-                checkSalt = res.getString(3);
+                String checkHash = res.getString(1);
+                boolean verified = res.getBoolean(2);
+                boolean blocked = res.getBoolean(3);
+                if(!verified)
+                    return "notVerified";
 
-                if (email.equals(checkEmail) && checkHash.equals(hash(password+email)) && email.equals(checkSalt)) {
+                if(blocked)
+                    return "blocked";
+
+                if (checkHash.equals(hash(password.concat(email)))) {
                     wrongPassword = "";
 
                     req.getSession().setAttribute("email", this.email);
                     if(email.equals("baeckerei.pock@a1.net")){
                         req.getSession().setAttribute("adminLoggedIn", true);
-                        System.out.println("Admin eingeloggt");
                     }
                     else{
                         req.getSession().setAttribute("loggedIn", true);
-                        System.out.println("User eingeloggt");
                     }
 
                     return "/offers.xhtml?faces-redirect=true";
@@ -69,14 +72,14 @@ public class LoginDAO extends JDBCDAO {
         return "";
     }
 
-    public String hash(String password) {
+    public String hash(String saltedPass) {
         MessageDigest md = null;
         try {
             md = MessageDigest.getInstance("SHA-256");
         } catch (NoSuchAlgorithmException e) {
             e.printStackTrace();
         }
-        md.update(password.getBytes());
+        md.update(saltedPass.getBytes());
 
         byte byteData[] = md.digest();
 

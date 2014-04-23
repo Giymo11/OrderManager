@@ -26,6 +26,7 @@ public class ProductBean {
     private String newName;
     private float newPrice;
     private List<Product> selectedCatProducts;
+    private List<String> productNames;
 
     private String selectedCategory;
     private String selectedPicture;
@@ -34,6 +35,7 @@ public class ProductBean {
         productDAO = new ProductDAO();
         selectedCategory = null;
         selectedCatProducts = new ArrayList<>();
+        productNames = new ArrayList<>();
     }
 
     public List<Product> getProducts() {
@@ -135,5 +137,14 @@ public class ProductBean {
             if(p.getId() == id)
                 return p.getPrice();
         return 0;
+    }
+
+    public  List<String> getProductNames(){
+        if(productNames.isEmpty()){
+            for(Product p : productDAO.getProductList()){
+                productNames.add(p.getTitle());
+            }
+        }
+        return productNames;
     }
 }

@@ -17,26 +17,28 @@
                     border: 1px solid green;
                     margin-left: 330px;
                     margin-top: 130px;
-                    min-width: 600px;
-                    max-width: 51.5%;
+                    width: 72%;
                     position: absolute;">
             <h:selectOneMenu value="#{productBean.selectedCategory}"
                              valueChangeListener="#{productBean.getProductsByCategory}">
-                <f:selectItems value="#{categoryBean.names}"/>
+                <f:selectItems value="#{categoryService.names}"/>
             </h:selectOneMenu>
             <p:commandButton type="submit" value="Los!" action="#{productBean.getProductsByCategory}" update="@form"/>
             <p:dataGrid value="#{productBean.selectedCatProducts}" var="product"
-                        style="max-width: 65%" columns="3">
+                        style="max-width: 72%" columns="3">
                 <p:panel header="#{product.title}" style="text-align: center">
                     <h:panelGrid columns="1" style="width: 100%">
                         <table>
-                            <p:graphicImage value="#{product.picture}" style="max-height: 50%; max-width: 50%"/>
+                            <p:graphicImage value="#{product.picture}" style="max-height:200px; max-width: 250px"/>
                             <p:outputLabel value="€ #{product.price}"/>
                         </table>
                     </h:panelGrid>
                 </p:panel>
             </p:dataGrid>
         </p:panel>
+        <div class="topbar">
+            <h1>Unsere Produkte</h1>
+        </div>
         <ui:include src="menu.xhtml"/>
     </h:form>
 </h:body>

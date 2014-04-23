@@ -1,6 +1,7 @@
 package dao;
 
 import dto.Event;
+
 import javax.faces.bean.SessionScoped;
 import java.sql.Connection;
 import java.sql.ResultSet;
@@ -17,8 +18,7 @@ import java.util.List;
  * To change this template use File | Settings | File Templates.
  */
 @SessionScoped
-public class EventDAO extends JDBCDAO{
-
+public class EventDAO extends JdbcDao {
     List<Event> eventList;
 
     public EventDAO(){
@@ -45,14 +45,14 @@ public class EventDAO extends JDBCDAO{
             con = getConnection();
             stat = con.createStatement();
 
-            res = stat.executeQuery("SELECT * FROM ordermanager.event");
+            res = stat.executeQuery("SELECT * FROM " + DATABASE_NAME + ".event");
 
             if(res.next()){
                 while (true){
                     stat = con.createStatement();
                     event = getEventWithResultSet(res);
 
-                    resPic = stat.executeQuery("SELECT name FROM ordermanager.picture WHERE pictureid = "
+                    resPic = stat.executeQuery("SELECT name FROM " + DATABASE_NAME + ".picture WHERE pictureid = "
                             + res.getInt("pictureid") + ";");
                     resPic.next();
 
@@ -72,6 +72,7 @@ public class EventDAO extends JDBCDAO{
         }
         finally {
             close(res, stat, con);
+            close(resPic, null, null);
         }
     }
 
@@ -85,7 +86,7 @@ public class EventDAO extends JDBCDAO{
             connection = getConnection();
             stat = connection.createStatement();
 
-            stat.executeUpdate("UPDATE ordermanager.event SET " + event.getSQLSetString() +
+            stat.executeUpdate("UPDATE " + DATABASE_NAME + ".event SET " + event.getSQLSetString() +
                     " WHERE id = " + event.getId() + ";");
             stat.executeUpdate("COMMIT");
 
@@ -106,7 +107,7 @@ public class EventDAO extends JDBCDAO{
         try {
             con = getConnection();
             statement = con.createStatement();
-            res = statement.executeQuery("SELECT pictureid FROM ordermanager.picture WHERE name = '"
+            res = statement.executeQuery("SELECT pictureid FROM " + DATABASE_NAME + ".picture WHERE name = '"
                     + selectedPicture + "';");
             res.next();
 
@@ -166,7 +167,7 @@ public class EventDAO extends JDBCDAO{
             stat = connection.createStatement();
             for (Event event : eventList) {
                 if (event.getId() == id) {
-                    stat.executeUpdate("UPDATE ordermanager.event SET title = '" + event.getTitle() +
+                    stat.executeUpdate("UPDATE " + DATABASE_NAME + ".event SET title = '" + event.getTitle() +
                             "', description = '" + event.getDescription() + "' WHERE id = " + id + ";");
                     stat.executeUpdate("COMMIT;");
                 }

@@ -14,8 +14,7 @@ import java.sql.Statement;
  * Time: 14:40
  * To change this template use File | Settings | File Templates.
  */
-public class AddressDAO extends JDBCDAO {
-    private final static String DATABASE = "ordermanager";
+public class AddressDAO extends JdbcDao {
     public AddressDAO(){
         super();
     }
@@ -30,7 +29,7 @@ public class AddressDAO extends JDBCDAO {
         try{
             connection = getConnection();
             statement = connection.createStatement();
-            resultSet = statement.executeQuery("SELECT * FROM " + DATABASE + ".address WHERE id = " + id + ";");
+            resultSet = statement.executeQuery("SELECT * FROM " + DATABASE_NAME + ".address WHERE id = " + id + ";");
             resultSet.next();
             address = getAddressWithResultSet(resultSet);
         } catch (SQLException e) {

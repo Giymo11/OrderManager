@@ -4,7 +4,6 @@ import dto.Category;
 
 import javax.faces.application.FacesMessage;
 import javax.faces.context.FacesContext;
-import java.io.IOException;
 import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -19,27 +18,21 @@ import java.util.List;
  * Time: 13:43
  * To change this template use File | Settings | File Templates.
  */
-public class CategoryDAO extends JDBCDAO {
-    private List<Category> categories;
-
-    public CategoryDAO(){
+public class CategoryDao extends JdbcDao {
+    public CategoryDao(){
         super();
-        categories = new ArrayList<>();
-        try {
-            read();
-        } catch (IOException e) {
-            e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
-        }
     }
 
-    public void read() throws IOException {
+    public List<Category> getCategories() {
+        List<Category> categories = new ArrayList<>();
+
         Connection connection = null;
         Statement statement = null;
         ResultSet res = null;
         try {
             connection = getConnection();
             statement = connection.createStatement();
-            res = statement.executeQuery("SELECT * FROM ordermanager.category");
+            res = statement.executeQuery("SELECT * FROM " + DATABASE_NAME + ".category");
             Category cat;
 
             while (res.next()) {
@@ -54,16 +47,6 @@ public class CategoryDAO extends JDBCDAO {
         finally {
             close(res, statement, connection);
         }
-    }
-
-    public List<Category> getCategories() {
-        if (categories == null)
-            try {
-                read();
-            } catch (IOException e) {
-                e.printStackTrace();
-                FacesContext.getCurrentInstance().addMessage("Failure!", new FacesMessage("Failed to get offers from database"));
-            }
         return categories;
     }
 
@@ -72,11 +55,6 @@ public class CategoryDAO extends JDBCDAO {
     }
 
     public void addCategory(Category cat){
-        for(Category category : categories)
-            if(category.getName().equals(cat.getName())){
-                FacesContext.getCurrentInstance().addMessage("Failure", new FacesMessage("Achtung! Diese Kategorie existiert bereits!"));
-            }
-
         insertObject("category", cat);
 
         Connection connection = null;
@@ -86,12 +64,12 @@ public class CategoryDAO extends JDBCDAO {
             connection = getConnection();
             statement = connection.createStatement();
 
-            statement.executeUpdate("UPDATE ordermanager.category SET name = '" + cat.getName() + "' WHERE id = " + cat.getId() + ";");
+            statement.executeUpdate("UPDATE " + DATABASE_NAME + ".category SET name = '" + cat.getName() + "' WHERE id = " + cat.getId() + ";");
             statement.executeUpdate("COMMIT;");
 
-            categories.add(cat);
         } catch (SQLException e) {
             e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
+            FacesContext.getCurrentInstance().addMessage("Failure!", new FacesMessage("Datenbank-Fehler!"));
         }
         finally{
             close(null, statement, connection);
@@ -105,42 +83,29 @@ public class CategoryDAO extends JDBCDAO {
         try {
             con = getConnection();
             stat = con.createStatement();
-            res = stat.executeQuery("SELECT count(*) FROM ordermanager.product WHERE categoryid = " + id + ";");
+            res = stat.executeQuery("SELECT count(*) FROM " + DATABASE_NAME + ".product WHERE categoryid = " + id + ";");
             res.next();
             if (res.getInt(1) > 0) {
                 FacesContext.getCurrentInstance().addMessage("Failure!", new FacesMessage("Bitte löschen Sie zuerst alle Produkte aus dieser Kategorie!"));
                 return;
             }
-        } catch (SQLException e) {
-            e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
-        }
-        try {
-            for(int i=0; i<categories.size(); i++){
-                if(categories.get(i).getId() == id)
-                    categories.remove(i);
-            }
-
             deleteObject("category", id);
         } catch (SQLException e) {
             e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
-        }
-        finally {
+        } finally {
             close(res, stat, con);
         }
     }
 
-    public void save(int id){
+    public void save(Category cat){
         Connection connection = null;
         Statement stat = null;
         try {
             connection = getConnection();
             stat = connection.createStatement();
-            for (Category cat : categories) {
-                if (cat.getId() == id) {
-                    stat.executeUpdate("UPDATE ordermanager.category SET name = '" + cat.getName() + "' WHERE id = " + id + ";");
-                    stat.executeUpdate("COMMIT;");
-                }
-            }
+
+            stat.executeUpdate("UPDATE " + DATABASE_NAME + ".category SET name = '" + cat.getName() + "' WHERE id = " + cat.getId() + ";");
+            stat.executeUpdate("COMMIT;");
         } catch (SQLException e) {
             e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
         }

@@ -1,10 +1,10 @@
 package beans;
 
-import dao.CategoryDAO;
+import dao.CategoryDao;
 import dto.Category;
 
+import javax.faces.bean.ApplicationScoped;
 import javax.faces.bean.ManagedBean;
-import javax.faces.bean.SessionScoped;
 import javax.faces.context.FacesContext;
 import java.util.ArrayList;
 import java.util.List;
@@ -15,27 +15,41 @@ import java.util.Map;
  * User: Sarah
  * Date: 20.01.14
  * Time: 14:47
- * To change this template use File | Settings | File Templates.
+ * The Service class for Categories (General Data)
  */
 
 @ManagedBean
-@SessionScoped
-public class CategoryBean {
+@ApplicationScoped
+public class CategoryService {
     private String newName;
     private List<String> names;
-    private CategoryDAO categoryDAO;
+    private CategoryDao categoryDao;
+    private List<Category> categories;
 
-    public CategoryBean() {
-        categoryDAO = new CategoryDAO();
+    public CategoryService() {
+        categoryDao = new CategoryDao();
     }
 
     public List<Category> getCategories() {
-        return categoryDAO.getCategories();
+        if (categories == null) {
+            categories = categoryDao.getCategories();
+        }
+        return categories;
+    }
+
+    private Category getCategoryForId(int id){
+        for(Category cat : categories)
+            if(cat.getId() == id)
+                return cat;
+        return null;
     }
 
     public void delete() {
         int id = Integer.parseInt(fetchParameter("id"));
-        categoryDAO.delete(id);
+        Category cat = getCategoryForId(id);
+        names.remove(cat.getName());
+        categories.remove(cat);
+        categoryDao.delete(id);
     }
 
     public String fetchParameter(String param) {
@@ -50,21 +64,22 @@ public class CategoryBean {
     }
 
     public void addNewCategory() {
-        categoryDAO.addCategory(new Category(newName));
+        categoryDao.addCategory(new Category(newName));
+        names.add(newName);
         newName = "";
     }
 
     public void save() {
         int id = Integer.parseInt(fetchParameter("idS"));
-        categoryDAO.save(id);
+        categoryDao.save(getCategoryForId(id));
     }
 
     public List<String> getNames() {
-        names = new ArrayList<>();
-
-        for (Category category : categoryDAO.getCategories())
-            names.add(category.getName());
-
+        if (names == null) {
+            names = new ArrayList<>();
+            for(Category cat : categoryDao.getCategories())
+                names.add(cat.getName());
+        }
         return names;
     }
 

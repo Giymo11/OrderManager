@@ -6,7 +6,9 @@ import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
 
 /**
  * Created with IntelliJ IDEA.
@@ -15,8 +17,7 @@ import java.util.*;
  * Time: 10:34
  * To change this template use File | Settings | File Templates.
  */
-public class OrderItemDAO extends JDBCDAO {
-    private static final String DATABASE = "ordermanager";
+public class OrderItemDAO extends JdbcDao {
     private List<OrderItem> orderItemList;
 
     public OrderItemDAO(){
@@ -34,7 +35,7 @@ public class OrderItemDAO extends JDBCDAO {
         try{
             connection = getConnection();
             statement = connection.createStatement();
-            resultSet = statement.executeQuery("SELECT * FROM ordermanager.orderItem WHERE delivered=-1");
+            resultSet = statement.executeQuery("SELECT * FROM " + DATABASE_NAME + ".orderItem WHERE delivered=-1");
 
             while(resultSet.next()){
                 order = getOrderItemWithResultSet(resultSet);
@@ -93,7 +94,7 @@ public class OrderItemDAO extends JDBCDAO {
 
                 connection = getConnection();
                 statement = connection.createStatement();
-                statement.executeUpdate("UPDATE ordermanager.orderitem SET orderid = " + orderItem.getOrderid() +
+                statement.executeUpdate("UPDATE " + DATABASE_NAME + ".orderitem SET orderid = " + orderItem.getOrderid() +
                         ", productid = " + orderItem.getProductid() + ", ordered = " + orderItem.getOrdered() +
                         ", delivered = " + orderItem.getDelivered() + " WHERE id = " + orderItem.getId() + ";");
                 statement.executeUpdate("COMMIT;");
@@ -101,7 +102,7 @@ public class OrderItemDAO extends JDBCDAO {
             else{
                 connection = getConnection();
                 statement = connection.createStatement();
-                statement.executeUpdate("UPDATE ordermanager.orderitem SET ordered = ordered +" + orderItem.getOrdered() +
+                statement.executeUpdate("UPDATE " + DATABASE_NAME + ".orderitem SET ordered = ordered +" + orderItem.getOrdered() +
                         " WHERE id = " + id + ";");
                 statement.executeUpdate("COMMIT;");
             }
@@ -121,7 +122,7 @@ public class OrderItemDAO extends JDBCDAO {
         try{
             connection = getConnection();
             statement = connection.createStatement();
-            resultSet = statement.executeQuery("SELECT count(*), id FROM ordermanager.orderitem WHERE orderid = "
+            resultSet = statement.executeQuery("SELECT count(*), id FROM " + DATABASE_NAME + ".orderitem WHERE orderid = "
                     + orderItem.getOrderid() + " AND productid = " + orderItem.getProductid() + ";");
 
             resultSet.next();
@@ -147,9 +148,9 @@ public class OrderItemDAO extends JDBCDAO {
         try{
             connection = getConnection();
             statement = connection.createStatement();
-            resultSet = statement.executeQuery("SELECT * FROM ordermanager.orderitem WHERE orderid IN " +
-                    "(SELECT orderid from ordermanager.order WHERE addressid = " +
-                    "(SELECT addressid FROM ordermanager.user " +
+            resultSet = statement.executeQuery("SELECT * FROM " + DATABASE_NAME + ".orderitem WHERE orderid IN " +
+                    "(SELECT orderid from " + DATABASE_NAME +".order WHERE addressid = " +
+                    "(SELECT addressid FROM " + DATABASE_NAME + ".user " +
                     "WHERE email = '" + email + "')); ");
 
             while(resultSet.next()){
@@ -175,10 +176,10 @@ public class OrderItemDAO extends JDBCDAO {
             connection = getConnection();
             statement = connection.createStatement();
 
-            resultSet = statement.executeQuery("SELECT * FROM ordermanager.orderitem WHERE orderid = " +
-                    "(SELECT id FROM ordermanager.order WHERE tourid = " +
-                    "(SELECT id FROM ordermanager.tour WHERE date = '" + getDateSQL(date) + "')" +
-                        "AND addressid = (SELECT addressid FROM ordermanager.user " +
+            resultSet = statement.executeQuery("SELECT * FROM " + DATABASE_NAME + ".orderitem WHERE orderid = " +
+                    "(SELECT id FROM " + DATABASE_NAME + ".order WHERE tourid = " +
+                    "(SELECT id FROM " + DATABASE_NAME + ".tour WHERE date = '" + getDateSQL(date) + "')" +
+                        "AND addressid = (SELECT addressid FROM " + DATABASE_NAME + ".user " +
                             "WHERE email = '" + email + "'));");
 
             while(resultSet.next())

@@ -44,10 +44,6 @@ public class TownBean {
         return townDAO.getTowns();
     }
 
-    public void setTowns(List<Town> towns) {
-        townDAO.setTowns(towns);
-    }
-
     public int getPlz() {
         return plz;
     }
@@ -67,7 +63,7 @@ public class TownBean {
     public void addTown(){
         Town town = new Town(plz, name);
 
-        townDAO.writeTown(town);
+        townDAO.addTown(town);
         plz = 0;
         name = "";
     }

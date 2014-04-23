@@ -2,6 +2,8 @@ package dto;
 
 import interfaces.Identifiable;
 
+import java.util.Date;
+
 /**
  * Created with IntelliJ IDEA.
  * User: Markus
@@ -10,22 +12,21 @@ import interfaces.Identifiable;
  * To change this template use File | Settings | File Templates.
  */
 public class User implements Identifiable {
-    private String email, salt, firstName, lastName, hash, telNr;
-    private int id, adressID;
+    private String email, firstName, lastName, hash, telNr;
+    private int id, addressID;
+    private Date birthdate;
+    private boolean verified, blocked;
 
-    public User(String email, String salt, String firstName, String lastName, String hash, String telNr, int adressID) {
+    public User(String email, String firstName, String lastName, String hash, String telNr, Date birthdate, int addressID, boolean verified, boolean blocked) {
         this.email = email;
-        this.salt = salt;
         this.firstName = firstName;
         this.lastName = lastName;
         this.hash = hash;
         this.telNr = telNr;
-        this.adressID = adressID;
-    }
-
-    public String getSQLString() {
-        return id + ", '" + email + "', '" + salt + "', '" + hash + "', " +
-                "'" + firstName +  "', '" + lastName + "', '"+ telNr + "'," + adressID;
+        this.addressID = addressID;
+        setBirthdate(birthdate);
+        setVerified(verified);
+        setBlocked(blocked);
     }
 
     public String getEmail() {
@@ -34,15 +35,6 @@ public class User implements Identifiable {
 
     public void setEmail(String email) {
         this.email = email;
-    }
-
-
-    public String getSalt() {
-        return salt;
-    }
-
-    public void setSalt(String salt) {
-        this.salt = salt;
     }
 
     public String getFirstName() {
@@ -85,12 +77,35 @@ public class User implements Identifiable {
         this.telNr = telNr;
     }
 
-    public int getAdressID() {
-        return adressID;
+    public int getAddressID() {
+        return addressID;
     }
 
-    public void setAdressID(int adress) {
-        this.adressID = adress;
+    public void setAddressID(int adress) {
+        this.addressID = adress;
     }
 
+    public Date getBirthdate() {
+        return birthdate;
+    }
+
+    public void setBirthdate(Date birthdate) {
+        this.birthdate = birthdate;
+    }
+
+    public boolean getVerified() {
+        return verified;
+    }
+
+    public void setVerified(boolean verified) {
+        this.verified = verified;
+    }
+
+    public boolean isBlocked() {
+        return blocked;
+    }
+
+    public void setBlocked(boolean blocked) {
+        this.blocked = blocked;
+    }
 }

@@ -2,7 +2,6 @@ package beans;
 
 import dao.RegisterDAO;
 import dto.Address;
-import dto.Town;
 import dto.User;
 
 import javax.faces.application.FacesMessage;
@@ -10,7 +9,7 @@ import javax.faces.bean.ManagedBean;
 import javax.faces.context.FacesContext;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
-import java.util.List;
+import java.util.Date;
 
 /**
  * Created with IntelliJ IDEA.
@@ -23,22 +22,23 @@ import java.util.List;
 public class RegisterBean {
     private String email, password, passwordWdh, firstName, lastName, location, street, houseNr, telNr;
     private String selectedTown;
+    private Date birthdate;
     private Address address;
     private RegisterDAO registerDAO;
 
+
     public RegisterBean() {
         registerDAO = new RegisterDAO();
+        getGetMaxDate();
     }
 
     public void register() {
-        System.out.println("register");
         if (password.equals(passwordWdh)) {
-            String passwordForHash = password + email;
-            String hash = hash(passwordForHash);
+            String hash = hash(password.concat(email));
 
 
             address = new Address(street, houseNr);
-            User u = new User(email, email, firstName, lastName, hash, telNr, 1);
+            User u = new User(email, firstName, lastName, hash, telNr, birthdate, -1, false, false);
 
             registerDAO.register(u, address, selectedTown);
 
@@ -47,14 +47,14 @@ public class RegisterBean {
         }
     }
 
-    public String hash(String password) {
+    public String hash(String saltedPass) {
         MessageDigest md = null;
         try {
             md = MessageDigest.getInstance("SHA-256");
         } catch (NoSuchAlgorithmException e) {
             e.printStackTrace();
         }
-        md.update(password.getBytes());
+        md.update(saltedPass.getBytes());
 
         byte byteData[] = md.digest();
 
@@ -98,8 +98,6 @@ public class RegisterBean {
         this.houseNr = houseNr;
     }
 
-
-
     public String getEmail() {
         return email;
     }
@@ -140,7 +138,6 @@ public class RegisterBean {
         this.lastName = lastName;
     }
 
-
     public String getTelNr() {
         return telNr;
     }
@@ -155,6 +152,21 @@ public class RegisterBean {
 
     public void setSelectedTown(String selectedTown) {
         this.selectedTown = selectedTown;
+    }
+
+    public void setBirthdate(Date birthdate) {
+        this.birthdate = birthdate;
+    }
+
+    public Date getBirthdate(){
+        return birthdate;
+    }
+
+    public Date getGetMaxDate() {
+        Date date = new Date();
+        date.setYear(date.getYear()+1882);
+        birthdate = date;
+        return date;
     }
 }
 

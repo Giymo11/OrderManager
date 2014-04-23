@@ -11,7 +11,7 @@
     <h:outputStylesheet name="style.css" library="css"/>
 </head>
 <h:body>
-    <div class="content" style="min-width: 300px; max-width:73%">
+    <div class="content" style="min-width: 300px; width:72%">
         <table>
             <tr>
                 <td>
@@ -19,16 +19,25 @@
                     <p:outputLabel value="#{aboutBean.first.text}" style="margin:0; width: 50%"/>
                 </td>
                 <td>
-                    <h:graphicImage value="#{aboutBean.first.pictureName}" style="max-width: 45%; max-height: 45%;"/>
+                    <h:graphicImage value="#{aboutBean.first.pictureName}" style="max-height: 50%; width: 100%"/>
                 </td>
             </tr>
             <tr>
                 <td>
-                    <h:graphicImage value="#{aboutBean.second.pictureName}" style="max-width: 45%; max-height: 45%;"/>
+                    <h:graphicImage value="#{aboutBean.second.pictureName}" style="max-height: 50%; width: 100%"/>
                 </td>
                 <td>
                     <h3>Lokalität</h3>
                     <p:outputLabel value="#{aboutBean.second.text}"/>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <h3>Sonstiges</h3>
+                    <p:outputLabel value="#{aboutBean.third.text}" style="margin:0; width: 50%"/>
+                </td>
+                <td>
+                    <h:graphicImage value="#{aboutBean.third.pictureName}" style="max-height: 50%; width: 100%"/>
                 </td>
             </tr>
         </table>

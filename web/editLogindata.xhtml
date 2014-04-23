@@ -1,12 +1,41 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<!DOCTYPE html
-        PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
-        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
-<head>
-    <title></title>
-</head>
-<body>
-
-</body>
-</html>
+<ui:composition xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:ui="http://java.sun.com/jsf/facelets">
+    <h:form>
+        <h:head>
+            <p:growl showDetail="false"/>
+        </h:head>
+        <table>
+            <h:column>
+                <p:outputLabel value="Neue E-Mail "/>
+            </h:column>
+            <h:column>
+                <p:inputText value="#{userSettingsBean.newEmail}" type="text"/>
+            </h:column>
+            <br/>
+            <h:column>
+                <p:outputLabel value="Altes Passwort "/>
+            </h:column>
+            <h:column>
+                <p:inputText value="#{userSettingsBean.oldPass}" type="password"/>
+            </h:column>
+            <br/>
+            <h:column>
+                <p:outputLabel value="Neues Passwort "/>
+            </h:column>
+            <h:column>
+                <p:inputText value="#{userSettingsBean.newPass1}" type="password"/>
+            </h:column>
+            <br/>
+            <h:column>
+                <p:outputLabel value="Neues Passwort wiederholen"/>
+            </h:column>
+            <h:column>
+                <p:inputText value="#{userSettingsBean.newPass2}" type="password"/>
+            </h:column>
+        </table>
+        <div class="loginlower">
+            <p:commandButton value="Speichern" ajax="false" action="#{userSettingsBean.saveLogin}"/>
+        </div>
+    </h:form>
+</ui:composition>

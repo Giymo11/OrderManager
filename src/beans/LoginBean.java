@@ -8,6 +8,7 @@ package beans;
 import dao.LoginDAO;
 
 import javax.annotation.PreDestroy;
+import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.SessionScoped;
 import javax.faces.context.FacesContext;
@@ -60,6 +61,12 @@ public class LoginBean {
             req = (HttpServletRequest) FacesContext.getCurrentInstance().getExternalContext().getRequest();
         }
         String returnValue = loginDAO.check(req);
+        if(returnValue.equals("notVerified"))
+            FacesContext.getCurrentInstance().addMessage("Fail", new FacesMessage("Diese Addresse wurde noch nicht vom Administrator bestätigt. Bitte versuchen Sie es später erneut"));
+
+        if ( returnValue.equals("blocked") )
+            FacesContext.getCurrentInstance().addMessage("Fail", new FacesMessage("Diese Adresse wurde blockiert!"));
+
         if(returnValue.equals(""))
             status = "Anmelden";
         else

@@ -15,23 +15,29 @@ import java.util.List;
  */
 @ManagedBean
 public class AboutBean {
-    private List<About> aboutList;
     private AboutDAO aboutDAO;
 
     public AboutBean() {
         aboutDAO = new AboutDAO();
-        aboutList = aboutDAO.getAboutList();
     }
 
     public About getFirst() {
-        return aboutList.get(0);
+        return aboutDAO.getAboutList().get(0);
     }
 
     public About getSecond() {
-        return aboutList.get(1);
+        return aboutDAO.getAboutList().get(1);
     }
 
     public About getThird() {
-        return aboutList.get(2);
+        return aboutDAO.getAboutList().get(2);
+    }
+
+    public List<About> getAboutList(){
+        return aboutDAO.getAboutList();
+    }
+
+    public void save(){
+        aboutDAO.save();
     }
 }

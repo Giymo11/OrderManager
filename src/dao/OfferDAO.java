@@ -18,7 +18,7 @@ import java.util.List;
  * To change this template use File | Settings | File Templates.
  */
 @SessionScoped
-public class OfferDAO extends JDBCDAO{
+public class OfferDAO extends JdbcDao {
     List<Offer> offerList;
 
     public OfferDAO(){
@@ -45,33 +45,27 @@ public class OfferDAO extends JDBCDAO{
             con = getConnection();
             stat = con.createStatement();
 
-            res = stat.executeQuery("SELECT * FROM ordermanager.offer");
+            res = stat.executeQuery("SELECT * FROM " + DATABASE_NAME + ".offer");
 
-            if(res.next()){
-                while (true){
-                    stat = con.createStatement();
-                    offer = getOfferWithResultSet(res);
+            while (res.next()) {
+                stat = con.createStatement();
+                offer = getOfferWithResultSet(res);
 
-                    resPic = stat.executeQuery("SELECT name FROM ordermanager.picture WHERE pictureid = "
-                                        + res.getInt("pictureid") + ";");
-                    resPic.next();
-
+                resPic = stat.executeQuery("SELECT name FROM " + DATABASE_NAME + ".picture WHERE pictureid = "
+                                    + res.getInt("pictureid") + ";");
+                if(resPic.next()) {
                     offer.setPicture(resPic.getString(1));
-                    offerList.add(offer);
-
-                    close(resPic, null, null);
-
-                    if(res.isLast())
-                        break;
-                    else
-                        res.next();
                 }
+                offerList.add(offer);
+
+                close(resPic, null, null);
             }
         } catch (SQLException e) {
             e.printStackTrace();
         }
         finally {
             close(res, stat, con);
+            close(resPic, null, null);
         }
     }
 
@@ -85,7 +79,7 @@ public class OfferDAO extends JDBCDAO{
             connection = getConnection();
             stat = connection.createStatement();
 
-            stat.executeUpdate("UPDATE ordermanager.offer SET " + offer.getSQLSetString() +
+            stat.executeUpdate("UPDATE " + DATABASE_NAME + ".offer SET " + offer.getSQLSetString() +
                                     " WHERE id = " + offer.getId() + ";");
             stat.executeUpdate("COMMIT");
 
@@ -106,7 +100,7 @@ public class OfferDAO extends JDBCDAO{
         try {
             con = getConnection();
             statement = con.createStatement();
-            res = statement.executeQuery("SELECT pictureid FROM ordermanager.picture WHERE name = '"
+            res = statement.executeQuery("SELECT pictureid FROM " + DATABASE_NAME + ".picture WHERE name = '"
                                                 + selectedPicture + "';");
             res.next();
 
@@ -166,7 +160,7 @@ public class OfferDAO extends JDBCDAO{
             stat = connection.createStatement();
             for (Offer offer : offerList) {
                 if (offer.getId() == id) {
-                    stat.executeUpdate("UPDATE ordermanager.offer SET title = '" + offer.getTitle() +
+                    stat.executeUpdate("UPDATE " + DATABASE_NAME + ".offer SET title = '" + offer.getTitle() +
                             "', description = '" + offer.getDescription() + "' WHERE id = " + id + ";");
                     stat.executeUpdate("COMMIT;");
                 }

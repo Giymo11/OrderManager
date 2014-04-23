@@ -1,0 +1,38 @@
+<ui:composition
+        xmlns="http://www.w3.org/1999/xhtml"
+        xmlns:h="http://java.sun.com/jsf/html"
+        xmlns:p="http://primefaces.org/ui"
+        xmlns:f="http://java.sun.com/jsf/core"
+        xmlns:ui="http://java.sun.com/jsf/facelets">
+    <h:head>
+        <title>Einstellungen - User</title>
+    </h:head>
+
+    <h:body>
+        <p:dataTable value="#{userAdminBean.userList}" var="user">
+            <p:column headerText="Email">
+                <p:outputLabel value="#{user.email}"/>
+            </p:column>
+            <p:column headerText="Name und Adresse">
+                <p:outputLabel value="#{user.firstName}  #{user.lastName}"/>
+                <br/>
+                <p:outputLabel value="#{addressBean.getAddressWithID(user.addressID).street} #{addressBean.getAddressWithID(user.addressID).houseNr}"/>
+                <br/>
+                <p:outputLabel value="#{townBean.getPostalCodeWithID(addressBean.getAddressWithID(user.addressID).townid)}
+                                        #{townBean.getNameWithID(addressBean.getAddressWithID(user.addressID).townid)}"/>
+            </p:column>
+            <p:column headerText="Geburtsdatum">
+                <p:outputLabel value="#{user.birthdate}"/>
+            </p:column>
+            <p:column>
+                <p:selectBooleanCheckbox value="#{user.verified}" itemLabel="Bestätigt"/>
+                <p:selectBooleanCheckbox value="#{user.blocked}" itemLabel="Blockiert"/>
+            </p:column>
+            <p:column>
+                <p:commandButton value="Speichern" type="submit" ajax="false" update="@form" action="#{userAdminBean.save}">
+                    <f:param name="idU" value="#{user.id}"/>
+                </p:commandButton>
+            </p:column>
+        </p:dataTable>
+    </h:body>
+</ui:composition>

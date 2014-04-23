@@ -16,30 +16,54 @@ import java.util.List;
  * Time: 14:39
  * To change this template use File | Settings | File Templates.
  */
-public class TownDAO extends JDBCDAO {
-    private final static String DATABASE = "ordermanager";
+public class TownDAO extends JdbcDao {
     private List<Town> towns;
 
     public TownDAO(){
         super();
+        read();
     }
 
-    public void setTowns(List<Town> towns) {
-        this.towns = towns;
-    }
-
-    public void writeTown(Town town) {
+    private void read(){
+        towns = new ArrayList<>();
         Connection connection = null;
         Statement statement = null;
+        ResultSet resultSet = null;
+
+        try {
+            connection = getConnection();
+            statement = connection.createStatement();
+            resultSet = statement.executeQuery("SELECT * FROM " + DATABASE_NAME + ".town;");
+            while(resultSet.next()){
+                Town town = new Town(resultSet.getInt("PLZ"), resultSet.getString("Name"));
+                town.setId(resultSet.getInt("ID"));
+                towns.add(town);
+            }
+
+        } catch (SQLException e) {
+            e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
+        }
+        finally {
+            close(resultSet, statement, connection);
+        }
+    }
+
+    public void addTown(Town town) {
+        Connection connection = null;
+        Statement statement = null;
+
         try{
             insertObject("town", town);
 
             connection = getConnection();
             statement = connection.createStatement();
 
-            statement.executeUpdate("UPDATE ordermanager.town SET plz = " + town.getPlz() +
+            statement.executeUpdate("UPDATE " + DATABASE_NAME + ".town SET plz = " + town.getPlz() +
                     ", name = '" + town.getName() + "' WHERE id = " + town.getId() + ";");
             statement.executeUpdate("COMMIT;");
+
+            towns.add(town);
+
         } catch (SQLException e) {
             e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
         }
@@ -49,35 +73,9 @@ public class TownDAO extends JDBCDAO {
     }
 
     public List<Town> getTowns(){
-
-        towns = new ArrayList<>();
-
-        Connection connection = null;
-        Statement statement = null;
-        ResultSet resultSet = null;
-
-
-        try {
-            connection = getConnection();
-            statement = connection.createStatement();
-            resultSet = statement.executeQuery("SELECT * FROM " + DATABASE + ".town;");
-            while(resultSet.next()){
-                Town town = new Town(resultSet.getInt("PLZ"), resultSet.getString("Name"));
-                town.setId(resultSet.getInt("ID"));
-                towns.add(town);
-            }
-
-
-        } catch (SQLException e) {
-            e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
-        }
-
-        finally {
-            close(resultSet, statement, connection);
-        }
-
+        if( towns.isEmpty() )
+            read();
         return towns;
-
     }
 
     public Town getTownWithID(int id) {
@@ -89,7 +87,7 @@ public class TownDAO extends JDBCDAO {
         try{
             connection = getConnection();
             statement = connection.createStatement();
-            resultSet = statement.executeQuery("SELECT * FROM " + DATABASE + ".town WHERE id = " + id + ";");
+            resultSet = statement.executeQuery("SELECT * FROM " + DATABASE_NAME + ".town WHERE id = " + id + ";");
             resultSet.next();
             town = getTownWithResultSet(resultSet);
         } catch (SQLException e) {

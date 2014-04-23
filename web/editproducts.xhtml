@@ -1,17 +1,15 @@
 <ui:composition
         xmlns="http://www.w3.org/1999/xhtml"
-        xmlns:h="http://java.sun.com/jsf/html"
         xmlns:ui="http://java.sun.com/jsf/facelets"
         xmlns:f="http://java.sun.com/jsf/core"
         xmlns:p="http://primefaces.org/ui">
 
-    <h:form>
         <p:dataTable var="item" value="#{productBean.products}" cellpadding="5px" style="padding: 2px">
             <p:column headerText="Anzeige">
                 <p:selectBooleanCheckbox value="#{item.visible}"/>
             </p:column>
             <p:column headerText="Bild">
-                <p:graphicImage value="#{item.picture}" style="max-height: 50%; max-width: 50%"/>
+                <p:graphicImage value="#{item.picture}" style="max-height: 100px; max-width: 150px"/>
 
                 <f:facet name="footer">
                     <p:selectOneMenu value="#{productBean.selectedPicture}" effect="fade" style="width:160px"
@@ -42,7 +40,7 @@
 
                 <f:facet name="footer">
                     <p:selectOneMenu value="#{productBean.selectedCategory}">
-                        <f:selectItems value="#{categoryBean.names}"/>
+                        <f:selectItems value="#{categoryService.names}"/>
                     </p:selectOneMenu>
                 </f:facet>
             </p:column>
@@ -72,6 +70,4 @@
                 </f:facet>
             </p:column>
         </p:dataTable>
-    </h:form>
-
 </ui:composition>
