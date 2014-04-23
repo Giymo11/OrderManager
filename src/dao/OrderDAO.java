@@ -161,10 +161,6 @@ public class OrderDAO extends JdbcDao {
         return -1;
     }
 
-    public List<Order> getOrderList() {
-        return orderList;
-    }
-
     public List<Order> getOrdersInDateRange(Date start, Date end, String email) {
         Connection connection = null;
         Statement statement = null;
@@ -205,7 +201,7 @@ public class OrderDAO extends JdbcDao {
         return (date.getYear()+1900) + "-" + (1+date.getMonth()) + "-" + date.getDate();
     }
 
-    public List<Order> getOrdersByStatus(Date start, boolean status){
+    public List<Order> getOrdersByStatus(Date date, boolean status){
         Connection connection = null;
         Statement statement = null;
         Statement statement2 = null;
@@ -216,26 +212,24 @@ public class OrderDAO extends JdbcDao {
         try{
             connection = getConnection();
             statement = connection.createStatement();
-            resultSet = statement.executeQuery("SELECT * FROM " + DATABASE_NAME + ".order AS orderT JOIN " +
-                    "(SELECT id `TourID`, date FROM " + DATABASE_NAME + ".tour WHERE date = " +
-                    "'" + getDateSQL(start)+ "') AS tour JOIN (SELECT * FROM " + DATABASE_NAME + ".town) AS town " +
-                    "ON orderT.tourid = tour.TourID AND orderT.addressID = " +
-                    "(SELECT id FROM " + DATABASE_NAME + ".address WHERE townid = town.id) " +
-                    "AND orderT.delivered = " + status + " AND memoForPock <> '' " +
-                    "ORDER BY town.name;");
+            resultSet = statement.executeQuery("SELECT * FROM " + DATABASE_NAME + ".address JOIN (SELECT * FROM "
+                    + DATABASE_NAME + ".town) AS town JOIN " +
+                    "(SELECT * FROM " + DATABASE_NAME + ".order) AS oneorder " +
+                    "ON address.townid = town.id AND address.id = oneorder.addressid AND oneorder.tourid = " +
+                    "(SELECT id FROM " + DATABASE_NAME + ".tour WHERE date = '" + getDateSQL(date) + "') " +
+                    "AND oneorder.delivered = " + status + " AND oneorder.memoForPock <> '' ORDER BY town.name desc;");
 
             while(resultSet.next()){
                 orders.add(getOrderWithResultSet(resultSet));
             }
 
             statement2 = connection.createStatement();
-            resultSet2 = statement2.executeQuery("SELECT * FROM " + DATABASE_NAME + ".order AS orderT JOIN " +
-                    "(SELECT id `TourID`, date FROM " + DATABASE_NAME + ".tour WHERE date = " +
-                    "'" + getDateSQL(start)+ "') AS tour JOIN (SELECT * FROM " + DATABASE_NAME + ".town) AS town " +
-                    "ON orderT.tourid = tour.TourID AND orderT.addressID = " +
-                    "(SELECT id FROM " + DATABASE_NAME + ".address WHERE townid = town.id) " +
-                    "AND orderT.delivered = " + status + " AND memoForPock = '' " +
-                    "ORDER BY town.name;");
+            resultSet2 = statement2.executeQuery("SELECT * FROM " + DATABASE_NAME + ".address JOIN (SELECT * FROM "
+                    + DATABASE_NAME + ".town) AS town JOIN " +
+                    "(SELECT * FROM " + DATABASE_NAME + ".order) AS oneorder " +
+                    "ON address.townid = town.id AND address.id = oneorder.addressid AND oneorder.tourid = " +
+                    "(SELECT id FROM " + DATABASE_NAME + ".tour WHERE date = '" + getDateSQL(date) + "') " +
+                    "AND oneorder.delivered = " + status + " AND oneorder.memoForPock = '' ORDER BY town.name desc;");
 
             while(resultSet2.next())
                 orders.add(getOrderWithResultSet(resultSet2));

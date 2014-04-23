@@ -6,9 +6,7 @@ import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
+import java.util.*;
 
 /**
  * Created with IntelliJ IDEA.
@@ -59,26 +57,6 @@ public class OrderItemDAO extends JdbcDao {
         );
         order.setId(res.getInt("id"));
         return order;
-    }
-
-    public List<OrderItem> getDeliveredOrderItems(){
-        List<OrderItem> temp = new ArrayList();
-
-        for(OrderItem order : orderItemList)
-            if(order.getDelivered() != -1)
-                temp.add(order);
-
-        return temp;
-    }
-
-    public List<OrderItem> getUndeliveredOrderItems(){
-        List<OrderItem> temp = new ArrayList();
-
-        for(OrderItem order : orderItemList)
-            if(order.getDelivered() == -1)
-                temp.add(order);
-
-        return temp;
     }
 
     public void addOrderItem(OrderItem orderItem){
@@ -222,5 +200,33 @@ public class OrderItemDAO extends JdbcDao {
             if(item.getOrderid() == id)
                 temp.add(item);
         return temp;
+    }
+
+    public Map<Integer, Integer> getProductsForDate(Date date){
+        Connection connection = null;
+        Statement statement = null;
+        ResultSet resultSet = null;
+
+        Map<Integer, Integer> items = new HashMap();
+
+        try{
+            connection = getConnection();
+            statement = connection.createStatement();
+            resultSet = statement.executeQuery("SELECT productid, sum(ordered) FROM " + DATABASE_NAME + ".orderitem " +
+                    " WHERE orderid IN (SELECT id from " + DATABASE_NAME + ".order WHERE tourid = " +
+                    " (SELECT id FROM " + DATABASE_NAME + ".tour WHERE date = '" + getDateSQL(date) + "')" +
+                    " AND delivered = false) GROUP BY productid;");
+
+            while(resultSet.next()){
+                items.put(resultSet.getInt(1), resultSet.getInt(2));
+            }
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        finally{
+            close(resultSet, statement, connection);
+        }
+        return items;
     }
 }

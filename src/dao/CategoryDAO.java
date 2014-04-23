@@ -24,7 +24,7 @@ public class CategoryDao extends JdbcDao {
     }
 
     public List<Category> getCategories() {
-        List<Category> categories = new ArrayList<>();
+        List<Category> categories = new ArrayList();
 
         Connection connection = null;
         Statement statement = null;

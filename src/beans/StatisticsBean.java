@@ -22,11 +22,13 @@ public class StatisticsBean {
 
     public StatisticsBean(){
         statisticsDAO = new StatisticsDAO();
-        setSelectedProduct("");
+        setSelectedProduct("Brot");
         setSelectedCategory("Brote");
         setStartDate(new Date());
-        startDate.setDate(01);
+        startDate.setDate(1);
         setEndDate(new Date());
+        updateProd();
+        updateCat();
     }
 
     public CartesianChartModel getModelForCategory(){
@@ -39,6 +41,7 @@ public class StatisticsBean {
     public CartesianChartModel getModelForProduct(){
         if (modelProduct == null) {
             updateProd();
+
         }
         return modelProduct;
     }
@@ -75,11 +78,24 @@ public class StatisticsBean {
         this.endDate = endDate;
     }
 
-    public void updateCat(){
+    private void updateCat(){
         modelCategory = statisticsDAO.getModelForCategory(selectedCategory, startDate, endDate);
     }
 
-    public void updateProd(){
+    private void updateProd(){
         modelProduct = statisticsDAO.getModelForProduct(selectedProduct, startDate, endDate);
+    }
+
+    public void handleDateSelect(){
+        updateCat();
+        updateProd();
+    }
+
+    public void handleProductChange(String string){
+        updateProd();
+    }
+
+    public void handleCategoryChange(String category){
+        updateCat();
     }
 }

@@ -173,6 +173,7 @@ public class OrderBean {
     public void handleDateSelect(SelectEvent event){
         setDate((Date) event.getObject());
         sumOrders();
+
     }
 
     private void sumOrders() {
@@ -286,31 +287,9 @@ public class OrderBean {
         orderDAO.writeMemoWithID(id, memo);
     }
 
-    public List<OrderItem> getOrderItemSum(){
-        List<OrderItem> list = new ArrayList();
-        int count = 0;
-        if(undeliveredOrders.isEmpty())
-            getUndeliveredOrders();
-        for(Order order : undeliveredOrders)
-            for(OrderItem item : getItemsForOrderID(order.getId())) {
-                for(OrderItem listItem : list) {
-                    if (listItem.getProductid() == item.getProductid()) {
-                        listItem.setOrdered(listItem.getOrdered() + item.getOrdered());
-                        break;
-                    } else{
-                        ++count;
-                    }
-                }
-                if(count == list.size()) {
-                    list.add(item);
-                    count=0;
-                }
-            }
+    public List<Map.Entry<Integer, Integer>> getOrderItemSum(){
+        List<Map.Entry<Integer, Integer>> list = new ArrayList(orderItemDAO.getProductsForDate(startDate).entrySet());
         return list;
-    }
-
-    private List<OrderItem> getItemsForOrderID(int id) {
-        return orderItemDAO.getOrderItemsForOrderID(id);
     }
 
     public String sumUp(float price, int quantity){
@@ -325,11 +304,11 @@ public class OrderBean {
     }
 
     public String getSumAll(){
-        List<OrderItem> list = getOrderItemSum();
+        List<Map.Entry<Integer, Integer>> list = getOrderItemSum();
         float sum = 0.0f;
 
-        for(OrderItem item : list)
-            sum += getPrice(item.getProductid())*item.getOrdered();
+        for(Map.Entry<Integer, Integer> entry : list)
+            sum += getPrice(entry.getKey())*entry.getValue();
 
         String sumStr = sum + "";
         String string = sumStr.substring(sumStr.indexOf('.'));

@@ -21,22 +21,22 @@
         <h:form>
             <h3>Auslieferung</h3>
             <p:calendar value="#{orderBean.startDate}">
-                <p:ajax event="dateSelect" listener="#{orderBean.handleDateSelectStart}" update="@form"/>
+                <p:ajax event="dateSelect" update="items, orders"/>
             </p:calendar>
             <br/>
             <br/>
-            <p:dataTable value="#{orderBean.orderItemSum}" var="item" type="definition">
+            <p:dataTable value="#{orderBean.orderItemSum}" var="item" type="definition" id="items">
                 <p:column headerText="Anzahl">
-                    <p:outputLabel value="#{item.ordered}"/>
+                    <p:outputLabel value="#{item.value}"/>
                 </p:column>
                 <p:column headerText="Produkt">
-                    <p:outputLabel value="#{productBean.getName(item.productid)}"/>
+                    <p:outputLabel value="#{productBean.getName(item.key)}"/>
                 </p:column>
                 <p:column headerText="Preis">
-                    <p:outputLabel value="€ #{productBean.getPrice(item.productid)}"/>
+                    <p:outputLabel value="€ #{productBean.getPrice(item.key)}"/>
                 </p:column>
                 <p:column headerText="Summe">
-                    <p:outputLabel value="€ #{orderBean.sumUp(productBean.getPrice(item.productid), item.ordered)}"/>
+                    <p:outputLabel value="€ #{orderBean.sumUp(productBean.getPrice(item.key), item.value)}"/>
 
                     <f:facet name="footer">
                         <p:outputLabel value="€ #{orderBean.sumAll}"/>

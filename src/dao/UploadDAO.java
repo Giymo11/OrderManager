@@ -21,11 +21,12 @@ import java.util.List;
  * To change this template use File | Settings | File Templates.
  */
 public class UploadDAO extends JdbcDao {
-    private String folder = FacesContext.getCurrentInstance().getExternalContext().getRealPath("");
+    private static final String folder = FacesContext.getCurrentInstance().getExternalContext().getRealPath("");
     private File fileToDelete;
 
     public UploadDAO(){
         super();
+        System.out.println(folder);
     }
 
     public void upload(UploadedFile file){

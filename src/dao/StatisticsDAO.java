@@ -111,7 +111,7 @@ public class StatisticsDAO extends JdbcDao {
         }
         finally{
             close(resultSet, statement, connection);
-            close(resDate, statDate, connection);
+            close(resDate, statDate, null);
         }
 
         return model;
