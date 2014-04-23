@@ -1,0 +1,35 @@
+<ui:composition
+        xmlns="http://www.w3.org/1999/xhtml"
+        xmlns:h="http://java.sun.com/jsf/html"
+        xmlns:ui="http://java.sun.com/jsf/facelets"
+        xmlns:f="http://java.sun.com/jsf/core"
+        xmlns:p="http://primefaces.org/ui">
+    <h:head>
+        <title>Einstellungen-Statistiken</title>
+    </h:head>
+    <h:form>
+
+        <p:calendar value="#{statisticsBean.startDate}" maxdate="#{statisticsBean.endDate}">
+            <p:ajax event="dateSelect"  update="@form, category"/>
+        </p:calendar>
+        <p:calendar value="#{statisticsBean.endDate}" mindate="#{statisticsBean.startDate}">
+            <p:ajax event="dateSelect"  update="@form" />
+        </p:calendar>
+        <br/>
+        <p:selectOneMenu value="#{statisticsBean.selectedCategory}">
+            <f:selectItems value="#{categoryService.names}"/>
+        </p:selectOneMenu>
+        <p:commandButton type="submit" value="Los!" update="category, product" ajax="true" action="#{statisticsBean.updateCat}"/>
+        <p:barChart id="category" value="#{statisticsBean.modelForCategory}" legendPosition="se" style="height:300px"
+                title="Verkaufte Produkte" orientation="horizontal" min="0" animate="true" datatipFormat="%2$d"/>
+
+
+        <p:selectOneMenu value="#{statisticsBean.selectedProduct}">
+            <f:selectItems value="#{productBean.productNames}"/>
+        </p:selectOneMenu>
+        <p:commandButton type="submit" value="Los!" update="product" ajax="true" action="#{statisticsBean.updateProd}"/>
+        <p:barChart id="product" value="#{statisticsBean.modelForProduct}" legendPosition="se" style="height:300px"
+                    title="Verkaufte Produkte" orientation="horizontal" min="10" animate="true"/>
+
+    </h:form>
+</ui:composition>
