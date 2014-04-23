@@ -17,7 +17,7 @@ public class UserAdminDAO extends JdbcDao {
 
     public UserAdminDAO(){
         super();
-        userList = new ArrayList<>();
+        userList = new ArrayList();
         read();
     }
 

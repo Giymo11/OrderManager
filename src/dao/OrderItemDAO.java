@@ -22,7 +22,7 @@ public class OrderItemDAO extends JdbcDao {
 
     public OrderItemDAO(){
         super();
-        orderItemList = new ArrayList<>();
+        orderItemList = new ArrayList();
         read();
     }
 
@@ -62,7 +62,7 @@ public class OrderItemDAO extends JdbcDao {
     }
 
     public List<OrderItem> getDeliveredOrderItems(){
-        List<OrderItem> temp = new ArrayList<>();
+        List<OrderItem> temp = new ArrayList();
 
         for(OrderItem order : orderItemList)
             if(order.getDelivered() != -1)
@@ -72,7 +72,7 @@ public class OrderItemDAO extends JdbcDao {
     }
 
     public List<OrderItem> getUndeliveredOrderItems(){
-        List<OrderItem> temp = new ArrayList<>();
+        List<OrderItem> temp = new ArrayList();
 
         for(OrderItem order : orderItemList)
             if(order.getDelivered() == -1)
@@ -143,7 +143,7 @@ public class OrderItemDAO extends JdbcDao {
         Connection connection = null;
         Statement statement = null;
         ResultSet resultSet = null;
-        List<OrderItem> orderItems = new ArrayList<>();
+        List<OrderItem> orderItems = new ArrayList();
 
         try{
             connection = getConnection();
@@ -167,7 +167,7 @@ public class OrderItemDAO extends JdbcDao {
     }
 
     public List<OrderItem> getOrderItemsForDate(Date date, String email){
-        List<OrderItem> orderItems = new ArrayList<>();
+        List<OrderItem> orderItems = new ArrayList();
         Connection connection = null;
         Statement statement = null;
         ResultSet resultSet = null;
@@ -217,7 +217,7 @@ public class OrderItemDAO extends JdbcDao {
 
 
     public List<OrderItem> getOrderItemsForOrderID(int id) {
-        List<OrderItem> temp = new ArrayList<>();
+        List<OrderItem> temp = new ArrayList();
         for(OrderItem item : orderItemList)
             if(item.getOrderid() == id)
                 temp.add(item);

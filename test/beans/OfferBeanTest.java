@@ -26,7 +26,7 @@ public class OfferBeanTest {
         testDirectory = testFile.getParentFile();
         testDirectory.mkdir();
 
-        filelist = new LinkedList<>();
+        filelist = new LinkedList();
 
         filelist.add(new File(testDirectory, "1.jpg"));
         filelist.add(new File(testDirectory, "2.jpg"));

@@ -23,7 +23,7 @@ public class OfferDAO extends JdbcDao {
 
     public OfferDAO(){
         super();
-        offerList = new ArrayList<>();
+        offerList = new ArrayList();
     }
 
     public List<Offer> getOfferList(){

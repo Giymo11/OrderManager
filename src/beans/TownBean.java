@@ -37,7 +37,7 @@ public class TownBean {
 
     public TownBean(){
         this.townDAO = new TownDAO();
-        this.stringTowns = new ArrayList<>();
+        this.stringTowns = new ArrayList();
     }
 
     public List<Town> getTowns() {

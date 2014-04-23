@@ -74,7 +74,7 @@ public class UserSettingsBean {
         this.newPass2 = newPass2;
     }
 
-    public void saveLogin(){
+    public void saveLoginData(){
         HttpServletRequest req = (HttpServletRequest) FacesContext.getCurrentInstance().getExternalContext().getRequest();
         String email = req.getSession().getAttribute("email").toString();
 

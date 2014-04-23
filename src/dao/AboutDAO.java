@@ -20,7 +20,7 @@ public class AboutDAO extends JdbcDao {
     private List<About> aboutList;
 
     public AboutDAO() {
-        aboutList = new ArrayList<>();
+        aboutList = new ArrayList();
         read();
     }
 
@@ -56,9 +56,9 @@ public class AboutDAO extends JdbcDao {
             res = stat.executeQuery("SELECT * FROM " + DATABASE_NAME + ".about;");
             while (res.next()) {
                 res2 = stat2.executeQuery("SELECT name FROM " + DATABASE_NAME + ".picture WHERE pictureid = " + res.getInt(3) + ";");
-                res2.next();
 
                 about = getAboutWithResultSet(res);
+                if(res2.next())
                 about.setPictureName(res2.getString(1));
                 aboutList.add(about);
             }

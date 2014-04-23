@@ -30,7 +30,7 @@ public class UploadBean{
 
     public UploadBean() {
         uploadDAO = new UploadDAO();
-        pics = new ArrayList<>();
+        pics = new ArrayList();
     }
 
     public void upload(FileUploadEvent event) {

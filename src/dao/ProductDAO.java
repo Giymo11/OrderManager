@@ -23,7 +23,7 @@ public class ProductDAO extends JdbcDao {
 
     public ProductDAO(){
         super();
-        productList = new ArrayList<>();
+        productList = new ArrayList();
     }
 
     public List<Product> getProductList(){
@@ -178,7 +178,7 @@ public class ProductDAO extends JdbcDao {
     }
 
     public List<Product> getProductsByCategory(String category){
-        List<Product> products = new ArrayList<>();
+        List<Product> products = new ArrayList();
 
         if(category==null){
             try {

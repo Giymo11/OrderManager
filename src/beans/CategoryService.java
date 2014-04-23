@@ -76,7 +76,7 @@ public class CategoryService {
 
     public List<String> getNames() {
         if (names == null) {
-            names = new ArrayList<>();
+            names = new ArrayList();
             for(Category cat : categoryDao.getCategories())
                 names.add(cat.getName());
         }

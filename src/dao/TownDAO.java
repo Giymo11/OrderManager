@@ -25,7 +25,7 @@ public class TownDAO extends JdbcDao {
     }
 
     private void read(){
-        towns = new ArrayList<>();
+        towns = new ArrayList();
         Connection connection = null;
         Statement statement = null;
         ResultSet resultSet = null;

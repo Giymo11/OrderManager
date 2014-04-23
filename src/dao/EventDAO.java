@@ -23,7 +23,7 @@ public class EventDAO extends JdbcDao {
 
     public EventDAO(){
         super();
-        eventList = new ArrayList<>();
+        eventList = new ArrayList();
     }
 
     public List<Event> getEventList(){
