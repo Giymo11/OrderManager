@@ -4,6 +4,7 @@
                 xmlns:f="http://java.sun.com/jsf/core"
                 xmlns:h="http://java.sun.com/jsf/html">
     <div style="width: 100%;">
+        <h:form>
         Über uns
         <br/>
         <p:inputTextarea value="#{aboutBean.first.text}" cols="60"/>
@@ -28,6 +29,7 @@
             <f:selectItems value="#{uploadBean.pics}"/>
         </p:selectOneMenu>
         <br/>
-        <p:commandButton value="Speichern" type="submit" action="#{aboutBean.save}" update="@form" ajax="false"/>
+        <p:commandButton id="commandAbout" value="Speichern" type="submit" action="#{aboutBean.save}" update="@form" ajax="false"/>
+        </h:form>
     </div>
 </ui:composition>

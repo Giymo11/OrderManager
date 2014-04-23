@@ -28,13 +28,13 @@ public class AboutBean {
     }
 
     public About getSecond() {
-        if(!aboutDAO.getAboutList().isEmpty())
+        if(aboutDAO.getAboutList().size()>1)
             return aboutDAO.getAboutList().get(1);
         return new About(0, "", 0);
     }
 
     public About getThird() {
-        if(!aboutDAO.getAboutList().isEmpty())
+        if(aboutDAO.getAboutList().size()>2)
             return aboutDAO.getAboutList().get(2);
         return new About(0, "", 0);
     }

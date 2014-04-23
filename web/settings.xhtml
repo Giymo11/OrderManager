@@ -20,6 +20,7 @@ and open the template in the editor.
                 position: absolute;
                 margin-right: 10px;
                 box-shadow: 5px 5px 5px #BBB">
+        <h:form>
         <p:tabView>
             <p:tab title="Produkte">
                 <ui:include src="editproducts.xhtml"/>
@@ -42,7 +43,17 @@ and open the template in the editor.
             <p:tab title = "Ortschaften">
                 <ui:include src="editTowns.xhtml"/>
             </p:tab>
+            <p:tab title="Kunden">
+                <ui:include src="userAdministration.xhtml"/>
+            </p:tab>
+            <p:tab title="Über uns">
+                <ui:include src="editAbout.xhtml"/>
+            </p:tab>
+            <p:tab title="Statistiken">
+                <ui:include src="statistics.xhtml"/>
+            </p:tab>
         </p:tabView>
+        </h:form>
     </div>
     <div class="topbar">
         <h1>Einstellungen</h1>

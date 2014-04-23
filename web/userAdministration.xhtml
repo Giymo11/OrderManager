@@ -29,7 +29,7 @@
                 <p:selectBooleanCheckbox value="#{user.blocked}" itemLabel="Blockiert"/>
             </p:column>
             <p:column>
-                <p:commandButton value="Speichern" type="submit" ajax="false" update="@form" action="#{userAdminBean.save}">
+                <p:commandButton id="commandUserAdmin" value="Speichern" type="submit" ajax="false" update="@form" action="#{userAdminBean.save}">
                     <f:param name="idU" value="#{user.id}"/>
                 </p:commandButton>
             </p:column>
