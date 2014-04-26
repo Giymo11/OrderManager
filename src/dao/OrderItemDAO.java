@@ -64,11 +64,13 @@ public class OrderItemDAO extends JdbcDao {
         Statement statement = null;
 
         int id = getExistingID(orderItem);
-
+        System.out.println("Existing id = " + id);
         try{
             if(id==-1){
                 insertObject("orderitem", orderItem);
                 orderItemList.add(orderItem);
+
+                System.out.println("Orderid = " + orderItem.getOrderid());
 
                 connection = getConnection();
                 statement = connection.createStatement();
@@ -80,7 +82,7 @@ public class OrderItemDAO extends JdbcDao {
             else{
                 connection = getConnection();
                 statement = connection.createStatement();
-                statement.executeUpdate("UPDATE " + DATABASE_NAME + ".orderitem SET ordered = ordered +" + orderItem.getOrdered() +
+                statement.executeUpdate("UPDATE " + DATABASE_NAME + ".orderitem SET ordered = ordered + " + orderItem.getOrdered() +
                         " WHERE id = " + id + ";");
                 statement.executeUpdate("COMMIT;");
             }

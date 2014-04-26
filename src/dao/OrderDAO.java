@@ -19,20 +19,17 @@ import java.util.List;
  * Time: 16:20
  * To change this template use File | Settings | File Templates.
  */
-public class OrderDAO extends JdbcDao {
-    private List<Order> orderList;
-
-    public OrderDAO(){
+public class OrderDao extends JdbcDao {
+    public OrderDao(){
         super();
-        orderList = new ArrayList();
-        read();
     }
 
-    private void read(){
+    public List<Order> getOrderList(){
         Connection connection = null;
         Statement statement = null;
         ResultSet resultSet = null;
         Order order;
+        List<Order> orderList = new ArrayList();
 
         try{
             connection = getConnection();
@@ -51,6 +48,8 @@ public class OrderDAO extends JdbcDao {
         finally {
             close(resultSet, statement, connection);
         }
+
+        return orderList;
     }
 
     private Order getOrderWithResultSet(ResultSet resultSet) throws SQLException {
@@ -64,7 +63,7 @@ public class OrderDAO extends JdbcDao {
     }
 
     public void addOrder(int tourID, String email, String memo){
-        int addressid = getAddressID(email);
+        int addressid = getAddressIDForEmail(email);
         Order order =  new Order(tourID, addressid, "", memo, false);
 
         Connection connection = null;
@@ -75,8 +74,6 @@ public class OrderDAO extends JdbcDao {
         try{
             if(id == -1){
                 insertObject("Order", order);
-
-                orderList.add(order);
 
                 connection = getConnection();
                 statement = connection.createStatement();
@@ -119,7 +116,7 @@ public class OrderDAO extends JdbcDao {
         return -1;
     }
 
-    private int getAddressID(String email) {
+    public int getAddressIDForEmail(String email) {
         Connection connection = null;
         Statement statement = null;
         ResultSet resultSet = null;
@@ -140,25 +137,6 @@ public class OrderDAO extends JdbcDao {
         }
 
         return id;
-    }
-
-    public int getOrderID(int tourID, String email) {
-        int addressID = getAddressID(email);
-
-        for(Order order : orderList){
-            if(order.getTourid() == tourID && order.getAddressid() == addressID)
-                return order.getId();
-        }
-
-        return -1;
-    }
-
-    public int getTourIDWithID(int orderid) {
-        for(Order order : orderList){
-            if(order.getId() == orderid)
-                return order.getTourid();
-        }
-        return -1;
     }
 
     public List<Order> getOrdersInDateRange(Date start, Date end, String email) {

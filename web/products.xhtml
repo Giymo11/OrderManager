@@ -17,8 +17,7 @@
                     border: 1px solid green;
                     margin-left: 330px;
                     margin-top: 130px;
-                    min-width: 600px;
-                    max-width: 51.5%;
+                    width: 550px;
                     position: absolute;">
             <h:selectOneMenu value="#{productBean.selectedCategory}"
                              valueChangeListener="#{productBean.getProductsByCategory}">
@@ -26,15 +25,14 @@
             </h:selectOneMenu>
             <p:commandButton type="submit" value="Los!" action="#{productBean.getProductsByCategory}" update="@form"/>
             <p:dataGrid value="#{productBean.selectedCatProducts}" var="product"
-                        style="max-width: 65%" columns="3">
-                <p:panel header="#{product.title}" style="text-align: center">
-                    <h:panelGrid columns="1" style="width: 100%">
-                        <p:graphicImage value="#{product.picture}" style="max-height:200px; width: 250px"/>
-                        <br/>
+                        style="max-width: 65%" columns="2">
+                <p:panel header="#{product.title}" style="text-align: center; font-size: 11pt">
+                    <h:panelGrid columns="1" style="height: 300px">
+                        <p:graphicImage value="#{product.picture}" style="height:150px; max-width: 200px"/>
+                        <p:outputLabel value="#{product.description}" style="margin-top: 5px"/>
                         <p:outputLabel value="€ #{product.price}"/>
-                        <br/>
-                        <p:inputText binding="#{quantity}" type="number" maxlength="2" size="2"/>
-                        <p:commandButton value="Hinzufügen" action="#{orderBean.addOneOrderItem(quantity.value)}"
+                        <p:inputText binding="#{quantity}" type="number" maxlength="2" size="2" style="width: 30px"/>
+                        <p:commandButton value="+" action="#{orderService.addOneOrderItem(quantity.value)}"
                                           ajax="true" update=":form:order">
                             <f:param value="#{product.id}" name="productID"/>
                         </p:commandButton>
@@ -45,16 +43,54 @@
         <div class="topbar">
             <h1>Unsere Produkte</h1>
         </div>
-        <p:panel style="margin-top: 130px; margin-right: 5px; float: right; max-width: 20%">
-            <p:dataList value="#{orderBean.orderItems}" var="item" id="order" itemType="none" emptyMessage="Keine Daten vorhanden">
-                <p:outputLabel value="#{item.ordered}  "/>
-                <p:outputLabel value="#{productBean.getName(item.productid)}   "/>
-                <p:outputLabel value="€  #{productBean.getPrice(item.productid)}"/>
-            </p:dataList>
-            <p:calendar value="#{orderBean.date}" mindate="#{orderBean.minDate}">
-                <p:ajax event="dateSelect" listener="#{orderBean.handleDateSelect}" update="order" />
+        <p:panel style="margin-top: 130px;
+                        margin-right: 5px;
+                        float: right;
+                        width: 280px;
+                        position: fixed;
+                        margin-left: 900px;
+                        border: 1px solid green;
+                        font-size: 10pt;">
+            <p:dataTable value="#{orderService.newOrderItems}" var="item" id="order"
+                         emptyMessage="Keine Produkte hinzugefügt" >
+                <p:column>
+                    <p:outputLabel value="#{item.ordered}x"/>
+                </p:column>
+                <p:column headerText="Produkt">
+                    <p:outputLabel value="#{productBean.getName(item.productid)}"/>
+                </p:column>
+                <p:column headerText="Preis">
+                    <p:outputLabel value="€  #{productBean.getPrice(item.productid)}"/>
+                </p:column>
+                <p:column headerText="Gesamt">
+                    <p:outputLabel value="€  #{orderService.sumUp(productBean.getPrice(item.productid), item.ordered)}"/>
+                </p:column>
+                <p:column>
+                    <p:commandButton type="submit" action="#{orderService.deleteOneOrderItem}" value="X" update="order">
+                        <f:param name="orderItemID" value="#{item.id}"/>
+                    </p:commandButton>
+                </p:column>
+            </p:dataTable>
+            <br/>
+            <p:dataTable value="#{orderService.orderItemsForDate}" var="item" id="items"
+                         emptyMessage="Keine Bestellung für diesen Tag">
+                <p:column>
+                    <p:outputLabel value="#{item.ordered}x"/>
+                </p:column>
+                <p:column headerText="Produkt">
+                    <p:outputLabel value="#{productBean.getName(item.productid)}"/>
+                </p:column>
+                <p:column headerText="Preis">
+                    <p:outputLabel value="€  #{productBean.getPrice(item.productid)}"/>
+                </p:column>
+                <p:column headerText="Gesamt">
+                    <p:outputLabel value="€  #{orderService.sumUp(productBean.getPrice(item.productid), item.ordered)}"/>
+                </p:column>
+            </p:dataTable>
+            <p:calendar value="#{orderService.date}" mindate="#{orderService.minDate}">
+                <p:ajax event="dateSelect" listener="#{orderService.handleDateSelect}" update="items" />
             </p:calendar>
-            <p:commandButton action="#{orderBean.redirectToOrders}" value="Abschicken" update="@form" ajax="false"/>
+            <p:commandButton action="#{orderService.redirectToOrders}" value="Abschicken" update="@form" ajax="false"/>
         </p:panel>
         <ui:include src="menu.xhtml"/>
     </h:form>

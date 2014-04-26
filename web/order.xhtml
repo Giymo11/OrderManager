@@ -7,10 +7,10 @@
       xmlns:h="http://java.sun.com/jsf/html"
       xmlns:ui="http://java.sun.com/jsf/facelets"
       xmlns:f="http://java.sun.com/jsf/core">
-<head>
+<h:head>
     <title>Bestellungen</title>
     <p:growl showDetail="false"/>
-</head>
+</h:head>
 <body>
     <h:form>
     <p:panel style="text-align: center;
@@ -21,16 +21,16 @@
                     max-width: 51.5%;
                     position: absolute;">
         <p:outputLabel value="Bitte überprüfen Sie ihre Eingaben"/>
-        <p:dataList value="#{orderBean.orderItems}" var="item" id="order" itemType="none" style="text-align: left" emptyMessage="Keine Daten vorhanden">
+        <p:dataList value="#{orderService.newOrderItems}" var="item" id="order" itemType="none" style="text-align: left" emptyMessage="Keine Daten vorhanden">
             <p:outputLabel value="#{item.ordered}  "/>
             <p:outputLabel value="#{productBean.getName(item.productid)}   "/>
             <p:outputLabel value="€  #{productBean.getPrice(item.productid)}"/>
-            <p:commandButton value="Löschen" action="#{orderBean.deleteOneOrderItem}" update="@form" ajax="false">
+            <p:commandButton value="Löschen" action="#{orderService.deleteOneOrderItem}" update="@form" ajax="false">
                 <f:param value="#{item.id}" name="orderItemID"/>
             </p:commandButton>
         </p:dataList>
-        <p:inputText value="#{orderBean.memo}"/>
-        <p:commandButton value="Bestellung abschicken!" action="#{orderBean.addOrder}" onclick="PF('dlg1').show();"/>
+        <p:inputText value="#{orderService.memo}"/>
+        <p:commandButton value="Bestellung abschicken!" action="#{orderService.addOrder}"/>
         <p:dialog id="basicDialog" header="Dankeschön!" widgetVar="dlg1">
             <h:outputText value="Ihre Bestellung wurde abgeschickt. Um alle ihre bisherigen Bestellungen anzusehen klicken Sie bitte auf 'Bestellungen'"/>
         </p:dialog>

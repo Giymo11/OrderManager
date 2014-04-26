@@ -12,8 +12,8 @@ import java.util.Date;
 /**
  * Created by Sarah on 08.04.2014.
  */
-public class StatisticsDAO extends JdbcDao {
-    public StatisticsDAO(){
+public class StatisticsDao extends JdbcDao {
+    public StatisticsDao(){
         super();
     }
 

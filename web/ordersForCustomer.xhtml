@@ -9,6 +9,7 @@
       >
 <h:head>
     <title>Bestellungen</title>
+    <p:growl showDetail="false"/>
 </h:head>
 <body>
 
@@ -16,21 +17,22 @@
                 border: 1px solid green;
                 margin-left: 330px;
                 margin-top: 130px;
-                width: 72%;
+                width: 860px;
                 position: absolute;">
         <h:form>
-        <p:calendar value="#{orderBean.startDate}" maxdate="#{orderBean.endDate}">
-            <p:ajax event="dateSelect" listener="#{orderBean.handleDateSelectStart}" update="@form" />
+        <p:calendar value="#{orderService.startDate}" maxdate="#{orderService.endDate}">
+            <p:ajax event="dateSelect" listener="#{orderService.handleDateSelectStart}" update="@form" />
         </p:calendar>
-        <p:calendar value="#{orderBean.endDate}" mindate="#{orderBean.startDate}">
-            <p:ajax event="dateSelect" listener="#{orderBean.handleDateSelectEnd}" update="@form" />
+        <p:calendar value="#{orderService.endDate}" mindate="#{orderService.startDate}">
+            <p:ajax event="dateSelect" listener="#{orderService.handleDateSelectEnd}" update="@form" />
         </p:calendar>
         <br/>
         <p:panel id="orders">
-            <p:dataTable value="#{orderBean.ordersInDateRange}" var="order">
+            <p:dataTable value="#{orderService.ordersInDateRange}" var="order"
+                         emptyMessage="Keine Bestellungen in diesem Zeitraum">
                 <p:column headerText="Bestellungen">
-                    <p:outputLabel value="#{orderBean.getDateWithOrderID(order.id)}"/><br/>
-                    <p:dataTable value="#{orderBean.getAllItemsWithIDForCurrentUser(order.id)}" var="item"
+                    <p:outputLabel value="#{orderService.getDateWithOrderID(order.id)}"/><br/>
+                    <p:dataTable value="#{orderService.getAllItemsWithIDForCurrentUser(order.id)}" var="item"
                                  emptyMessage="Noch keine aufgegebenen Bestellungen">
                         <p:column headerText="Menge">
                             <p:outputLabel value="#{item.ordered}"/>

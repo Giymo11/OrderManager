@@ -1,6 +1,7 @@
 package beans;
 
-import dao.StatisticsDAO;
+import dao.StatisticsDao;
+import org.primefaces.event.SelectEvent;
 import org.primefaces.model.chart.CartesianChartModel;
 
 import javax.faces.bean.ManagedBean;
@@ -10,18 +11,18 @@ import java.util.Date;
  * Created by Sarah on 08.04.2014.
  */
 @ManagedBean
-public class StatisticsBean {
+public class StatisticsService {
     private String selectedProduct;
     private String selectedCategory;
     private Date startDate;
     private Date endDate;
-    private StatisticsDAO statisticsDAO;
+    private StatisticsDao statisticsDAO;
 
     private CartesianChartModel modelCategory;
     private CartesianChartModel modelProduct;
 
-    public StatisticsBean(){
-        statisticsDAO = new StatisticsDAO();
+    public StatisticsService(){
+        statisticsDAO = new StatisticsDao();
         setSelectedProduct("Brot");
         setSelectedCategory("Brote");
         setStartDate(new Date());
@@ -67,6 +68,7 @@ public class StatisticsBean {
     }
 
     public void setStartDate(Date startDate) {
+        System.out.println("SetStartDate called");
         this.startDate = startDate;
     }
 
@@ -75,6 +77,7 @@ public class StatisticsBean {
     }
 
     public void setEndDate(Date endDate) {
+        System.out.println("SetEndDate called");
         this.endDate = endDate;
     }
 
@@ -86,7 +89,14 @@ public class StatisticsBean {
         modelProduct = statisticsDAO.getModelForProduct(selectedProduct, startDate, endDate);
     }
 
-    public void handleDateSelect(){
+    public void handleDateSelectStart(SelectEvent event){
+        startDate = (Date) event.getObject();
+        updateCat();
+        updateProd();
+    }
+
+    public void handleDateSelectEnd(SelectEvent event){
+        endDate = (Date) event.getObject();
         updateCat();
         updateProd();
     }
