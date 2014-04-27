@@ -2,7 +2,6 @@ package dao;
 
 import dto.Offer;
 
-import javax.faces.bean.SessionScoped;
 import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -17,29 +16,19 @@ import java.util.List;
  * Time: 20:08
  * To change this template use File | Settings | File Templates.
  */
-@SessionScoped
-public class OfferDAO extends JdbcDao {
-    List<Offer> offerList;
-
-    public OfferDAO(){
+public class OfferDao extends JdbcDao {
+    public OfferDao(){
         super();
-        offerList = new ArrayList();
     }
 
     public List<Offer> getOfferList(){
-        if(offerList.isEmpty())
-            read();
-
-        return offerList;
-    }
-
-    private void read(){
         Connection con = null;
         Statement stat = null;
         ResultSet res = null;
         ResultSet resPic = null;
 
         Offer offer;
+        List<Offer> offerList = new ArrayList();
 
         try {
             con = getConnection();
@@ -67,6 +56,7 @@ public class OfferDAO extends JdbcDao {
             close(res, stat, con);
             close(resPic, null, null);
         }
+        return offerList;
     }
 
     private void insertOffer(Offer offer){
@@ -91,52 +81,44 @@ public class OfferDAO extends JdbcDao {
         }
     }
 
-    public void addNewOffer(String newName, String text, String selectedPicture){
+    public Offer addNewOffer(String newName, String text, String selectedPicture){
         Connection con = null;
         Statement statement = null;
         ResultSet res = null;
+        Statement statement1 = null;
+        ResultSet resultSet = null;
+
         Offer offer = null;
 
         try {
             con = getConnection();
             statement = con.createStatement();
+            statement1 = con.createStatement();
             res = statement.executeQuery("SELECT pictureid FROM " + DATABASE_NAME + ".picture WHERE name = '"
                                                 + selectedPicture + "';");
             res.next();
 
-            offer = new Offer(0, newName, text, res.getInt(1), getNewPriority());
-            offer.setPicture(selectedPicture);
+            resultSet = statement1.executeQuery("SELECT max(priority) FROM " + DATABASE_NAME + ".offer;");
+            resultSet.next();
 
-            offerList.add(offer);
+            offer = new Offer(0, newName, text, res.getInt(1), resultSet.getInt(1)+10);
+            offer.setPicture(selectedPicture);
         } catch (SQLException e) {
             e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
         }
         finally {
             close(res, statement, con);
+            close(resultSet, statement1, null);
             if(offer!=null)
                 insertOffer(offer);
         }
-    }
 
-    private int getNewPriority() {
-        int priority = 10;
-
-        if (!offerList.isEmpty())
-            for (Offer offer : offerList) {
-                if (offer.getPriority() >= priority)
-                    priority = offer.getPriority() + 10;
-            }
-
-        return priority;
+        return offer;
     }
 
     public void delete(int id){
         try {
-            for(int i=0; i<offerList.size(); i++)
-                if(offerList.get(i).getId() == id)
-                    offerList.remove(i);
-
-            super.deleteObject("offer", id);
+            deleteObject("offer", id);
         } catch (SQLException e) {
             e.printStackTrace();
         }
@@ -152,7 +134,7 @@ public class OfferDAO extends JdbcDao {
         return null;
     }
 
-    public void save(int id){
+    public void save(int id, List<Offer> offerList){
         Connection connection = null;
         Statement stat = null;
         try {

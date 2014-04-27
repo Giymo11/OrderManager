@@ -1,12 +1,12 @@
 package beans;
 
-import dao.UploadDAO;
+import dao.UploadDao;
 import org.primefaces.event.FileUploadEvent;
 import org.primefaces.model.UploadedFile;
 
 import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
-import javax.faces.bean.SessionScoped;
+import javax.faces.bean.RequestScoped;
 import javax.faces.context.FacesContext;
 import java.util.ArrayList;
 import java.util.List;
@@ -20,16 +20,15 @@ import java.util.Map;
  * Time: 14:04
  */
 @ManagedBean
-@SessionScoped
-public class UploadBean{
-
+@RequestScoped
+public class UploadService {
     private UploadedFile file;
 
     private List<String> pics;
-    private UploadDAO uploadDAO;
+    private UploadDao uploadDAO;
 
-    public UploadBean() {
-        uploadDAO = new UploadDAO();
+    public UploadService() {
+        uploadDAO = new UploadDao();
         pics = new ArrayList();
     }
 

@@ -1,8 +1,9 @@
 package beans;
 
-import dao.TownDAO;
+import dao.TownDao;
 import dto.Town;
 
+import javax.faces.bean.ApplicationScoped;
 import javax.faces.bean.ManagedBean;
 import javax.faces.context.FacesContext;
 import java.sql.SQLException;
@@ -18,30 +19,24 @@ import java.util.Map;
  * To change this template use File | Settings | File Templates.
  */
 @ManagedBean
-public class TownBean {
+@ApplicationScoped
+public class TownService {
     private int plz;
     private String name;
-    private String selectedTown;
-    private TownDAO townDAO;
+    private TownDao townDao;
     private List<String> stringTowns;
+    private List<Town> towns;
 
-
-
-    public String getSelectedTown() {
-        return selectedTown;
-    }
-
-    public void setSelectedTown(String selectedTown) {
-        this.selectedTown = selectedTown;
-    }
-
-    public TownBean(){
-        this.townDAO = new TownDAO();
-        this.stringTowns = new ArrayList();
+    public TownService(){
+        townDao = new TownDao();
+        stringTowns = new ArrayList();
     }
 
     public List<Town> getTowns() {
-        return townDAO.getTowns();
+        if (towns == null) {
+            towns = townDao.getTowns();
+        }
+        return towns;
     }
 
     public int getPlz() {
@@ -62,15 +57,15 @@ public class TownBean {
 
     public void addTown(){
         Town town = new Town(plz, name);
-
-        townDAO.addTown(town);
+        townDao.addTown(town);
+        towns.add(town);
         plz = 0;
         name = "";
     }
 
     public void delete() throws SQLException {
         int id = Integer.parseInt(fetchParameter("id"));
-        townDAO.deleteObject("town", id);
+        townDao.deleteObject("town", id);
     }
 
     public String fetchParameter(String param) {
@@ -98,10 +93,10 @@ public class TownBean {
     }
 
     public String getNameWithID(int id){
-        return townDAO.getTownWithID(id).getName();
+        return townDao.getTownWithID(id).getName();
     }
 
     public int getPostalCodeWithID(int id){
-        return townDAO.getTownWithID(id).getPlz();
+        return townDao.getTownWithID(id).getPlz();
     }
 }

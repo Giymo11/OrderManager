@@ -1,10 +1,10 @@
 package beans;
 
+import dao.EventDao;
 import dto.Event;
-import dao.EventDAO;
 
+import javax.faces.bean.ApplicationScoped;
 import javax.faces.bean.ManagedBean;
-import javax.faces.bean.SessionScoped;
 import javax.faces.context.FacesContext;
 import java.util.List;
 import java.util.Map;
@@ -18,25 +18,29 @@ import java.util.Map;
  * To change this template use File | Settings | File Templates.
  */
 @ManagedBean
-@SessionScoped
-public class EventBean {
-
-    private EventDAO eventDAO;
+@ApplicationScoped
+public class EventService {
+    private EventDao eventDAO;
 
     private String newText;
     private String newName;
     private String selectedPicture;
 
-    public EventBean() {
-        eventDAO = new EventDAO();
+    private List<Event> events;
+
+    public EventService() {
+        eventDAO = new EventDao();
     }
 
     public List<Event> getEvents() {
-        return eventDAO.getEventList();
+        if (events == null) {
+            events = eventDAO.getEventList();
+        }
+        return events;
     }
 
     public void addNewEvent() {
-        eventDAO.addNewEvent(newName, newText, selectedPicture);
+        events.add(eventDAO.addNewEvent(newName, newText, selectedPicture));
 
         newName = "";
         newText = "";
@@ -44,6 +48,9 @@ public class EventBean {
 
     public void delete() {
         int id = Integer.parseInt(fetchParameter("id"));
+        for(Event event : events)
+            if (event.getId() == id)
+                events.remove(event);
         eventDAO.delete(id);
     }
 

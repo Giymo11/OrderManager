@@ -18,7 +18,6 @@ import java.sql.Statement;
 public class LoginDAO extends JdbcDao {
     private String email, wrongPassword;
     private String password;
-    private String checkHash, checkSalt;
 
     public LoginDAO(){
         super();

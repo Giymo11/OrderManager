@@ -4,41 +4,22 @@
  */
 package beans;
 
-import dao.ContactInfoDAO;
+import dao.ContactInfoDao;
 
+import javax.faces.bean.ApplicationScoped;
 import javax.faces.bean.ManagedBean;
-import javax.faces.bean.SessionScoped;
 
 /**
  * @author Sarah
  */
 
 @ManagedBean
-@SessionScoped
+@ApplicationScoped
 public class ContactInfoBean {
-    private String name;
-    private String street;
-    private String location;
-    private String telephone;
-    private String mail;
-
-    private String mondayAM;
-    private String mondayPM;
-    private String tuesdayAM;
-    private String tuesdayPM;
-    private String wednesdayAM;
-    private String wednesdayPM;
-    private String thursdayAM;
-    private String thursdayPM;
-    private String fridayAM;
-    private String fridayPM;
-    private String saturdayAM;
-    private String saturdayPM;
-
-    private ContactInfoDAO contactInfoDAO;
+    private ContactInfoDao contactInfoDAO;
 
     public ContactInfoBean() {
-        contactInfoDAO = new ContactInfoDAO();
+        contactInfoDAO = new ContactInfoDao();
     }
 
     public String getName() {
@@ -67,7 +48,6 @@ public class ContactInfoBean {
 
     public String getTelephone() {
         return contactInfoDAO.getTelephone();
-
     }
 
     public void setTelephone(String telephone) {

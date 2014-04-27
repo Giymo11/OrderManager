@@ -1,18 +1,17 @@
 <ui:composition
         xmlns="http://www.w3.org/1999/xhtml"
-        xmlns:h="http://java.sun.com/jsf/html"
         xmlns:ui="http://java.sun.com/jsf/facelets"
         xmlns:f="http://java.sun.com/jsf/core"
         xmlns:p="http://primefaces.org/ui">
 
-        <p:dataTable var="item" value="#{eventBean.events}" cellpadding="15px">
+        <p:dataTable var="item" value="#{eventService.events}" cellpadding="15px">
             <p:column headerText="Bild">
                 <p:graphicImage value="#{item.picture}" style="width: 100px; height: 70px"/>
 
                 <f:facet name="footer">
-                    <p:selectOneMenu value="#{eventBean.selectedPicture}" effect="fade" style="width:160px"
+                    <p:selectOneMenu value="#{eventService.selectedPicture}" effect="fade" style="width:160px"
                                      panelStyle="width:150px" filter="true" filterMatchMode="startsWith">
-                        <f:selectItems value="#{uploadBean.pics}"/>
+                        <f:selectItems value="#{uploadService.pics}"/>
                     </p:selectOneMenu>
                 </f:facet>
             </p:column>
@@ -21,7 +20,7 @@
                 <p:inputText value="#{item.title}"/>
 
                 <f:facet name="footer">
-                    <p:inputText value="#{eventBean.newName}"/>
+                    <p:inputText value="#{eventService.newName}"/>
                 </f:facet>
             </p:column>
 
@@ -29,21 +28,21 @@
                 <p:inputTextarea value="#{item.description}"/>
 
                 <f:facet name="footer">
-                    <p:inputTextarea value="#{eventBean.newText}"/>
+                    <p:inputTextarea value="#{eventService.newText}"/>
                 </f:facet>
             </p:column>
 
             <p:column>
-                <p:commandButton type="submit" value="Löschen" action="#{eventBean.delete}" ajax="false" update="@form">
+                <p:commandButton type="submit" value="Löschen" action="#{eventService.delete}" ajax="false" update="@form">
                     <f:param value="#{item.id}" name="id"/>
                 </p:commandButton>
 
-                <p:commandButton type="submit" action="#{eventBean.save}" value="Speichern" ajax="false" update="@form">
+                <p:commandButton type="submit" action="#{eventService.save}" value="Speichern" ajax="false" update="@form">
                     <f:param value="#{item.id}" name="ids"/>
                 </p:commandButton>
 
                 <f:facet name="footer">
-                    <p:commandButton type="submit" action="#{eventBean.addNewEvent}" value="Hinzufügen" ajax="false"
+                    <p:commandButton type="submit" action="#{eventService.addNewEvent}" value="Hinzufügen" ajax="false"
                                      update="@form"/>
                 </f:facet>
             </p:column>

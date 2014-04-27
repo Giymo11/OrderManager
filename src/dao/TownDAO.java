@@ -16,16 +16,13 @@ import java.util.List;
  * Time: 14:39
  * To change this template use File | Settings | File Templates.
  */
-public class TownDAO extends JdbcDao {
-    private List<Town> towns;
-
-    public TownDAO(){
+public class TownDao extends JdbcDao {
+    public TownDao(){
         super();
-        read();
     }
 
-    private void read(){
-        towns = new ArrayList();
+    public List<Town> getTowns(){
+        List<Town> towns = new ArrayList();
         Connection connection = null;
         Statement statement = null;
         ResultSet resultSet = null;
@@ -46,6 +43,7 @@ public class TownDAO extends JdbcDao {
         finally {
             close(resultSet, statement, connection);
         }
+        return towns;
     }
 
     public void addTown(Town town) {
@@ -62,20 +60,12 @@ public class TownDAO extends JdbcDao {
                     ", name = '" + town.getName() + "' WHERE id = " + town.getId() + ";");
             statement.executeUpdate("COMMIT;");
 
-            towns.add(town);
-
         } catch (SQLException e) {
             e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
         }
         finally {
             close(null, statement, connection);
         }
-    }
-
-    public List<Town> getTowns(){
-        if( towns.isEmpty() )
-            read();
-        return towns;
     }
 
     public Town getTownWithID(int id) {

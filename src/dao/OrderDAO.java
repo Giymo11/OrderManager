@@ -62,7 +62,7 @@ public class OrderDao extends JdbcDao {
         return order;
     }
 
-    public void addOrder(int tourID, String email, String memo){
+    public Order addOrder(int tourID, String email, String memo){
         int addressid = getAddressIDForEmail(email);
         Order order =  new Order(tourID, addressid, "", memo, false);
 
@@ -92,6 +92,8 @@ public class OrderDao extends JdbcDao {
         finally {
             close(null, statement, connection);
         }
+
+        return order;
     }
 
     private int getExistingOrder(int tourID, int addressid) {

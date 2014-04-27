@@ -16,17 +16,14 @@ import java.util.List;
  * Time: 15:34
  * To change this template use File | Settings | File Templates.
  */
-public class AboutDAO extends JdbcDao {
-    private List<About> aboutList;
-
-    public AboutDAO() {
-        aboutList = new ArrayList();
-        read();
+public class AboutDao extends JdbcDao {
+    public AboutDao() {
+        super();
     }
 
-    private void read(){
+    public List<About> getAboutList(){
         About about;
-
+        List<About> aboutList = new ArrayList();
         ResultSet res = null;
         ResultSet res2 = null;
         ResultSet resCount = null;
@@ -71,20 +68,15 @@ public class AboutDAO extends JdbcDao {
             close(resCount, stat3, null);
             close(null, stat4, null);
         }
+        return aboutList;
     }
 
     private About getAboutWithResultSet(ResultSet res) throws SQLException {
         return new About(res.getInt(1), res.getString(2), res.getInt(3));
     }
 
-    public List<About> getAboutList(){
-        if(aboutList.isEmpty())
-            read();
-        return aboutList;
-    }
-
-    public void save() {
-        setPictureIDs();
+    public void save(List<About> aboutList) {
+        setPictureIDs(aboutList);
 
         Connection connection = null;
         Statement statement = null;
@@ -107,7 +99,7 @@ public class AboutDAO extends JdbcDao {
         }
     }
 
-    private void setPictureIDs() {
+    private void setPictureIDs(List<About> aboutList) {
         Connection connection = null;
         Statement statement = null;
         ResultSet resultSet = null;

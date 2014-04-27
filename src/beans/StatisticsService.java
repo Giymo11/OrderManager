@@ -68,7 +68,6 @@ public class StatisticsService {
     }
 
     public void setStartDate(Date startDate) {
-        System.out.println("SetStartDate called");
         this.startDate = startDate;
     }
 
@@ -77,7 +76,6 @@ public class StatisticsService {
     }
 
     public void setEndDate(Date endDate) {
-        System.out.println("SetEndDate called");
         this.endDate = endDate;
     }
 

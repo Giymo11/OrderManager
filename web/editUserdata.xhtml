@@ -48,7 +48,7 @@
                     <th>Ort:</th>
                     <td>
                         <h:selectOneMenu value="#{userSettingsBean.selectedTown}" >
-                            <f:selectItems value="#{townBean.stringTowns}"/>
+                            <f:selectItems value="#{townService.stringTowns}"/>
                         </h:selectOneMenu>
                     </td>
                 </tr>

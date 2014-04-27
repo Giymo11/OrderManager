@@ -1,10 +1,10 @@
 package beans;
 
-import dao.ProductDAO;
+import dao.ProductDao;
 import dto.Product;
 
+import javax.faces.bean.ApplicationScoped;
 import javax.faces.bean.ManagedBean;
-import javax.faces.bean.ViewScoped;
 import javax.faces.context.FacesContext;
 import java.util.ArrayList;
 import java.util.List;
@@ -18,33 +18,41 @@ import java.util.Map;
  */
 
 @ManagedBean
-@ViewScoped
-public class ProductBean {
-    private ProductDAO productDAO;
+@ApplicationScoped
+public class ProductService {
+    private ProductDao productDao;
 
     private String newText;
     private String newName;
     private float newPrice;
     private List<Product> selectedCatProducts;
     private List<String> productNames;
+    private List<Product> productList;
 
     private String selectedCategory;
     private String selectedPicture;
 
-    public ProductBean() {
-        productDAO = new ProductDAO();
+    public ProductService() {
+        productDao = new ProductDao();
         selectedCategory = null;
         selectedCatProducts = new ArrayList();
         productNames = new ArrayList();
     }
 
     public List<Product> getProducts() {
-        return productDAO.getProductList();
+        if (productList == null) {
+            productList = productDao.getProductList();
+        }
+        return productList;
     }
 
     public void delete() {
         int id = Integer.parseInt(fetchParameter("id"));
-        productDAO.delete(id);
+        productDao.delete(id);
+
+        for(int i=0; i<productList.size(); i++)
+            if(productList.get(i).getId() == id)
+                productList.remove(i);
     }
 
     public String fetchParameter(String param) {
@@ -59,7 +67,7 @@ public class ProductBean {
     }
 
     public void addNewProduct() {
-        productDAO.addNewProduct(selectedCategory, newName, newText, newPrice, selectedPicture);
+        productList.add(productDao.addNewProduct(selectedCategory, newName, newText, newPrice, selectedPicture));
 
         newName = "";
         newText = "";
@@ -68,11 +76,11 @@ public class ProductBean {
 
     public void save(){
         int id = Integer.parseInt(fetchParameter("idS"));
-        productDAO.save(id);
+        productDao.save(id, productList);
     }
 
     public void getProductsByCategory() {
-        selectedCatProducts = productDAO.getProductsByCategory(selectedCategory);
+        selectedCatProducts = productDao.getProductsForCategory(selectedCategory);
     }
 
     public String getSelectedCategory() {
@@ -126,25 +134,49 @@ public class ProductBean {
     }
 
     public String getName(int id){
-        for(Product p : productDAO.getProductList())
+        if(productList == null)
+            productList = productDao.getProductList();
+
+        for(Product p : productList)
             if(p.getId() == id)
                 return p.getTitle();
         return null;
     }
 
     public float getPrice(int id){
-        for(Product p : productDAO.getProductList())
+        if(productList == null)
+            productList = productDao.getProductList();
+
+        for(Product p : productList)
             if(p.getId() == id)
                 return p.getPrice();
         return 0;
     }
 
     public  List<String> getProductNames(){
+        if(productList == null)
+            productList = productDao.getProductList();
+
         if(productNames.isEmpty()){
-            for(Product p : productDAO.getProductList()){
+            for(Product p : productList){
                 productNames.add(p.getTitle());
             }
         }
         return productNames;
+    }
+
+    public String getFormatedPrice(float price){
+        String temp = price+"";
+        String formated;
+        String str = temp.substring(temp.indexOf('.'));
+
+        if (str.length()==2)
+            formated = temp + "0";
+        else
+            formated = temp;
+
+        formated = formated.replace('.', ',');
+
+        return formated;
     }
 }

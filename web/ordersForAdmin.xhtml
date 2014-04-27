@@ -20,37 +20,37 @@
                 position: absolute;">
         <h:form>
             <h3>Auslieferung</h3>
-            <p:calendar value="#{orderBean.startDate}">
+            <p:calendar value="#{orderService.startDate}">
                 <p:ajax event="dateSelect" update="items, orders"/>
             </p:calendar>
             <br/>
             <br/>
-            <p:dataTable value="#{orderBean.orderItemSum}" var="item" type="definition" id="items">
+            <p:dataTable value="#{orderService.allItemsForDate}" var="item" type="definition" id="items" emptyMessage="Keine Bestellung für diesen Tag">
                 <p:column headerText="Anzahl">
-                    <p:outputLabel value="#{item.value}"/>
+                    <p:outputLabel value="#{item.ordered}"/>
                 </p:column>
                 <p:column headerText="Produkt">
-                    <p:outputLabel value="#{productBean.getName(item.key)}"/>
+                    <p:outputLabel value="#{productService.getName(item.productid)}"/>
                 </p:column>
                 <p:column headerText="Preis">
-                    <p:outputLabel value="€ #{productBean.getPrice(item.key)}"/>
+                    <p:outputLabel value="€ #{productService.getFormatedPrice(productService.getPrice(item.productid))}"/>
                 </p:column>
                 <p:column headerText="Summe">
-                    <p:outputLabel value="€ #{orderBean.sumUp(productBean.getPrice(item.key), item.value)}"/>
+                    <p:outputLabel value="€ #{productService.getFormatedPrice(orderService.sumUp(productService.getPrice(item.productid), item.ordered))}"/>
 
                     <f:facet name="footer">
-                        <p:outputLabel value="€ #{orderBean.sumAll}"/>
+                        <p:outputLabel value="€ #{productService.getFormatedPrice(orderService.getSumAll(orderService.allItemsForDate))}"/>
                     </f:facet>
                 </p:column>
             </p:dataTable>
             <br/>
             <p:panel id="orders">
-                <p:dataTable value="#{orderBean.undeliveredOrders}" var="order" emptyMessage="Keine Bestellungen für diesen Tag">
+                <p:dataTable value="#{orderService.ordersForDate}" var="order" emptyMessage="Keine Bestellungen für diesen Tag">
                     <p:column headerText="Adresse">
-                        <p:dataList value="#{addressBean.getAddressWithID(order.addressid)}" var="address"
+                        <p:dataList value="#{addressService.getAddressWithID(order.addressid)}" var="address"
                                     type="definition">
-                            <p:outputLabel value="#{townBean.getPostalCodeWithID(address.townid)} "/>
-                            <p:outputLabel value="#{townBean.getNameWithID(address.townid)},     "/>
+                            <p:outputLabel value="#{townService.getPostalCodeWithID(address.townid)} "/>
+                            <p:outputLabel value="#{townService.getNameWithID(address.townid)},     "/>
                             <p:outputLabel value="#{address.street} #{address.houseNr}"/>
                         </p:dataList>
                     </p:column>
@@ -60,7 +60,7 @@
                     <p:column headerText="Notiz an den Kunden">
                         <p:inputTextarea binding="#{memoForCustomer}" placeholder="#{order.memoForCustomer}"/>
                         <p:commandButton type="submit" value="Senden"
-                                         action="#{orderBean.writeMemo(memoForCustomer.value)}" ajax="false">
+                                         action="#{orderService.writeMemo(memoForCustomer.value)}" ajax="false">
                             <f:param value="#{order.id}" name="orderMemo"/>
                         </p:commandButton>
                     </p:column>

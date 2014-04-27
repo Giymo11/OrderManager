@@ -16,10 +16,10 @@
             <p:column headerText="Name und Adresse">
                 <p:outputLabel value="#{user.firstName}  #{user.lastName}"/>
                 <br/>
-                <p:outputLabel value="#{addressBean.getAddressWithID(user.addressID).street} #{addressBean.getAddressWithID(user.addressID).houseNr}"/>
+                <p:outputLabel value="#{addressService.getAddressWithID(user.addressID).street} #{addressService.getAddressWithID(user.addressID).houseNr}"/>
                 <br/>
-                <p:outputLabel value="#{townBean.getPostalCodeWithID(addressBean.getAddressWithID(user.addressID).townid)}
-                                        #{townBean.getNameWithID(addressBean.getAddressWithID(user.addressID).townid)}"/>
+                <p:outputLabel value="#{townService.getPostalCodeWithID(addressService.getAddressWithID(user.addressID).townid)}
+                                        #{townService.getNameWithID(addressService.getAddressWithID(user.addressID).townid)}"/>
             </p:column>
             <p:column headerText="Geburtsdatum">
                 <p:outputLabel value="#{user.birthdate}"/>

@@ -1,13 +1,13 @@
 package beans;
 
-import dao.AddressDAO;
+import dao.AddressDao;
 import dao.UserSettingsDAO;
 import dto.Address;
 import dto.User;
 
 import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
-import javax.faces.bean.SessionScoped;
+import javax.faces.bean.RequestScoped;
 import javax.faces.context.FacesContext;
 import javax.servlet.http.HttpServletRequest;
 
@@ -15,7 +15,7 @@ import javax.servlet.http.HttpServletRequest;
  * Created by Sarah on 30.03.2014.
  */
 @ManagedBean
-@SessionScoped
+@RequestScoped
 public class UserSettingsBean {
     private String newEmail;
     private String oldPass;
@@ -33,7 +33,7 @@ public class UserSettingsBean {
 
         HttpServletRequest req = (HttpServletRequest) FacesContext.getCurrentInstance().getExternalContext().getRequest();
         user = settingsDAO.getUser(req.getSession().getAttribute("email").toString());
-        address = new AddressDAO().getAddressWithID(user.getAddressID());
+        address = new AddressDao().getAddressWithID(user.getAddressID());
         newEmail = user.getEmail();
         oldPass = null;
         newPass1 = "";

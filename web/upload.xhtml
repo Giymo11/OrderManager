@@ -11,17 +11,17 @@
 
             <p:growl id="messages" showDetail="false"/>
             <br/>
-            <p:fileUpload fileUploadListener="#{uploadBean.upload}" mode="advanced"
+            <p:fileUpload fileUploadListener="#{uploadService.upload}" mode="advanced"
                           allowTypes="/(\.|\/)(gif|jpe?g|png)$/" dragDropSupport="false"
                           fileLimit="3" invalidFileMessage="Falsches Bildformat" update="@form"/>
             <br/>
 
-            <p:dataTable value="#{uploadBean.pics}" var="picture">
+            <p:dataTable value="#{uploadService.pics}" var="picture">
                 <p:column>
                     <p:graphicImage value="#{picture}" style="max-width: 250px; max-height: 200px"/>
                 </p:column>
                 <p:column>
-                    <p:commandButton value="Löschen" action="#{uploadBean.delete}" ajax="false" update="@form">
+                    <p:commandButton value="Löschen" action="#{uploadService.delete}" ajax="false" update="@form">
                         <f:param value="#{picture}" name="name"/>
                     </p:commandButton>
                 </p:column>

@@ -7,29 +7,29 @@
         <h:form>
         Über uns
         <br/>
-        <p:inputTextarea value="#{aboutBean.first.text}" cols="60"/>
-        <p:selectOneMenu value="#{aboutBean.first.pictureName}" effect="fade" style="width:160px"
+        <p:inputTextarea value="#{aboutService.first.text}" cols="60"/>
+        <p:selectOneMenu value="#{aboutService.first.pictureName}" effect="fade" style="width:160px"
                          panelStyle="width:150px" filter="true" filterMatchMode="startsWith">
-            <f:selectItems value="#{uploadBean.pics}"/>
+            <f:selectItems value="#{uploadService.pics}"/>
         </p:selectOneMenu>
         <br/>
         Lokalität
         <br/>
-        <p:inputTextarea value="#{aboutBean.second.text}" cols="60"/>
-        <p:selectOneMenu value="#{aboutBean.second.pictureName}" effect="fade" style="width:160px"
+        <p:inputTextarea value="#{aboutService.second.text}" cols="60"/>
+        <p:selectOneMenu value="#{aboutService.second.pictureName}" effect="fade" style="width:160px"
                          panelStyle="width:150px" filter="true" filterMatchMode="startsWith">
-            <f:selectItems value="#{uploadBean.pics}"/>
+            <f:selectItems value="#{uploadService.pics}"/>
         </p:selectOneMenu>
         <br/>
         Sonstiges
         <br/>
-        <p:inputTextarea value="#{aboutBean.third.text}" cols="60"/>
-        <p:selectOneMenu value="#{aboutBean.third.pictureName}" effect="fade" style="width:160px"
+        <p:inputTextarea value="#{aboutService.third.text}" cols="60"/>
+        <p:selectOneMenu value="#{aboutService.third.pictureName}" effect="fade" style="width:160px"
                          panelStyle="width:150px" filter="true" filterMatchMode="startsWith">
-            <f:selectItems value="#{uploadBean.pics}"/>
+            <f:selectItems value="#{uploadService.pics}"/>
         </p:selectOneMenu>
         <br/>
-        <p:commandButton id="commandAbout" value="Speichern" type="submit" action="#{aboutBean.save}" update="@form" ajax="false"/>
+        <p:commandButton id="commandAbout" value="Speichern" type="submit" action="#{aboutService.save}" update="@form" ajax="false"/>
         </h:form>
     </div>
 </ui:composition>

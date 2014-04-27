@@ -38,10 +38,10 @@
                             <p:outputLabel value="#{item.ordered}"/>
                         </p:column>
                         <p:column headerText="Produkt">
-                            <p:outputLabel value="#{productBean.getName(item.productid)}"/>
+                            <p:outputLabel value="#{productService.getName(item.productid)}"/>
                         </p:column>
                         <p:column headerText="Preis">
-                            <p:outputLabel value="€  #{productBean.getPrice(item.productid)}"/>
+                            <p:outputLabel value="€  #{productService.getFormatedPrice(productService.getPrice(item.productid))}"/>
                         </p:column>
                     </p:dataTable>
                 </p:column>

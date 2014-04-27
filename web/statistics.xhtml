@@ -34,7 +34,7 @@
             </p:calendar>
             <br/>
             <p:selectOneMenu value="#{statisticsService.selectedProduct}">
-                <f:selectItems value="#{productBean.productNames}"/>
+                <f:selectItems value="#{productService.productNames}"/>
                 <p:ajax event="change" listener="#{statisticsService.handleProductChange(statisticsService.selectedProduct)}" update="product"/>
             </p:selectOneMenu>
             <p:lineChart id="product" value="#{statisticsService.modelForProduct}" legendPosition="se" style="height:300px"

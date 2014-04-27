@@ -6,6 +6,7 @@ import dto.User;
 
 import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
+import javax.faces.bean.RequestScoped;
 import javax.faces.context.FacesContext;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
@@ -19,13 +20,13 @@ import java.util.Date;
  * To change this template use File | Settings | File Templates.
  */
 @ManagedBean
+@RequestScoped
 public class RegisterBean {
     private String email, password, passwordWdh, firstName, lastName, location, street, houseNr, telNr;
     private String selectedTown;
     private Date birthdate;
     private Address address;
     private RegisterDAO registerDAO;
-
 
     public RegisterBean() {
         registerDAO = new RegisterDAO();

@@ -6,7 +6,9 @@ import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
 
 /**
  * Created with IntelliJ IDEA.
@@ -15,37 +17,9 @@ import java.util.*;
  * Time: 10:34
  * To change this template use File | Settings | File Templates.
  */
-public class OrderItemDAO extends JdbcDao {
-    private List<OrderItem> orderItemList;
-
-    public OrderItemDAO(){
+public class OrderItemDao extends JdbcDao {
+    public OrderItemDao(){
         super();
-        orderItemList = new ArrayList();
-        read();
-    }
-
-    private void read(){
-        Connection connection = null;
-        Statement statement = null;
-        ResultSet resultSet = null;
-        OrderItem order;
-
-        try{
-            connection = getConnection();
-            statement = connection.createStatement();
-            resultSet = statement.executeQuery("SELECT * FROM " + DATABASE_NAME + ".orderItem WHERE delivered=-1");
-
-            while(resultSet.next()){
-                order = getOrderItemWithResultSet(resultSet);
-                if(order != null)
-                    orderItemList.add(order);
-            }
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-        finally {
-            close(resultSet, statement, connection);
-        }
     }
 
     private OrderItem getOrderItemWithResultSet(ResultSet res) throws SQLException {
@@ -64,13 +38,9 @@ public class OrderItemDAO extends JdbcDao {
         Statement statement = null;
 
         int id = getExistingID(orderItem);
-        System.out.println("Existing id = " + id);
         try{
             if(id==-1){
                 insertObject("orderitem", orderItem);
-                orderItemList.add(orderItem);
-
-                System.out.println("Orderid = " + orderItem.getOrderid());
 
                 connection = getConnection();
                 statement = connection.createStatement();
@@ -119,7 +89,7 @@ public class OrderItemDAO extends JdbcDao {
         return -1;
     }
 
-    public List<OrderItem> getOrderForUser(String email) {
+    public List<OrderItem> getAllOrderItemsForUser(String email) {
         Connection connection = null;
         Statement statement = null;
         ResultSet resultSet = null;
@@ -195,38 +165,28 @@ public class OrderItemDAO extends JdbcDao {
         }
     }
 
-
-    public List<OrderItem> getOrderItemsForOrderID(int id) {
-        List<OrderItem> temp = new ArrayList();
-        for(OrderItem item : orderItemList)
-            if(item.getOrderid() == id)
-                temp.add(item);
-        return temp;
-    }
-
-    public Map<Integer, Integer> getProductsForDate(Date date){
+    public List<OrderItem> getAllItemsForDate(Date startDate) {
         Connection connection = null;
         Statement statement = null;
         ResultSet resultSet = null;
 
-        Map<Integer, Integer> items = new HashMap();
+        List<OrderItem> items = new ArrayList();
 
         try{
             connection = getConnection();
             statement = connection.createStatement();
-            resultSet = statement.executeQuery("SELECT productid, sum(ordered) FROM " + DATABASE_NAME + ".orderitem " +
-                    " WHERE orderid IN (SELECT id from " + DATABASE_NAME + ".order WHERE tourid = " +
-                    " (SELECT id FROM " + DATABASE_NAME + ".tour WHERE date = '" + getDateSQL(date) + "')" +
-                    " AND delivered = false) GROUP BY productid;");
+            resultSet = statement.executeQuery("SELECT * FROM " + DATABASE_NAME + ".orderitem WHERE orderid = " +
+                "(SELECT id FROM " + DATABASE_NAME + ".order WHERE tourid = (SELECT id FROM " + DATABASE_NAME + ".tour" +
+                    " WHERE date = '" + getDateSQL(startDate) + "'));");
 
             while(resultSet.next()){
-                items.put(resultSet.getInt(1), resultSet.getInt(2));
+                items.add(getOrderItemWithResultSet(resultSet));
             }
 
         } catch (SQLException e) {
             e.printStackTrace();
         }
-        finally{
+        finally {
             close(resultSet, statement, connection);
         }
         return items;

@@ -17,21 +17,21 @@
                     border: 1px solid green;
                     margin-left: 330px;
                     margin-top: 130px;
-                    width: 72%;
+                    width: 860px;
                     position: absolute;">
-            <h:selectOneMenu value="#{productBean.selectedCategory}"
-                             valueChangeListener="#{productBean.getProductsByCategory}">
+            <h:selectOneMenu value="#{productService.selectedCategory}"
+                             valueChangeListener="#{productService.getProductsByCategory}">
                 <f:selectItems value="#{categoryService.names}"/>
             </h:selectOneMenu>
-            <p:commandButton type="submit" value="Los!" action="#{productBean.getProductsByCategory}" update="@form"/>
-            <p:dataGrid value="#{productBean.selectedCatProducts}" var="product"
-                        style="max-width: 72%" columns="3">
-                <p:panel header="#{product.title}" style="text-align: center">
-                    <h:panelGrid columns="1" style="width: 100%">
-                        <table>
-                            <p:graphicImage value="#{product.picture}" style="max-height:200px; max-width: 250px"/>
-                            <p:outputLabel value="€ #{product.price}"/>
-                        </table>
+            <p:commandButton type="submit" value="Los!" action="#{productService.getProductsByCategory}" update="@form"/>
+            <p:dataGrid value="#{productService.selectedCatProducts}" var="product"
+                        style="max-width: 860px" columns="3">
+                <p:panel header="#{product.title}" style="text-align: center; height: 350px; width: 250px">
+                    <h:panelGrid columns="1">
+                        <p:graphicImage value="#{product.picture}" style="max-height:170px; max-width: 220px"/>
+                        <p:outputLabel value="#{product.description}" style="margin-top: 5px"/>
+                        <br/>
+                        <p:outputLabel value="€ #{productService.getFormatedPrice(product.price)}"/>
                     </h:panelGrid>
                 </p:panel>
             </p:dataGrid>

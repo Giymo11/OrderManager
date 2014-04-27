@@ -10,12 +10,12 @@
     <h:outputStylesheet name="style.css" library="css"/>
 </h:head>
 <h:body>
-    <div class="content" style="margin-top: 130px; width: 72%;">
+    <div class="content" style="margin-top: 130px; width: 860px;">
         <p:messages showDetail="false"/>
-        <p:dataList var="item" value="#{eventBean.events}" itemType="none" style="border: 0;">
+        <p:dataList var="item" value="#{eventService.events}" itemType="none" style="border: 0;">
             <p:column style="border: 0">
                 <div style="border-bottom: 3px solid green; margin-top: 10px; margin-right: 40px;">
-                    <p:graphicImage value="#{item.picture}" style="max-width: 70%; max-height: 70%"/>
+                    <p:graphicImage value="#{item.picture}" style="max-width: 700px; max-height: 700px"/>
                     <br/>
                     <p:outputLabel value="#{item.description}"/>
                 </div>

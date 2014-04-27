@@ -4,6 +4,7 @@ import dao.UserAdminDAO;
 import dto.User;
 
 import javax.faces.bean.ManagedBean;
+import javax.faces.bean.RequestScoped;
 import javax.faces.context.FacesContext;
 import java.util.List;
 import java.util.Map;
@@ -12,6 +13,7 @@ import java.util.Map;
  * Created by Sarah on 03.04.2014.
  */
 @ManagedBean
+@RequestScoped
 public class UserAdminBean {
     private UserAdminDAO userAdminDAO;
 

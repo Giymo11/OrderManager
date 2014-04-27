@@ -16,7 +16,7 @@ import java.util.List;
  */
 public class OfferBeanTest {
 
-    private OfferBean bean;
+    private OfferService bean;
     private List<File> filelist;
     private File testFile, testDirectory;
 
@@ -38,7 +38,7 @@ public class OfferBeanTest {
         for (File file : filelist)
             file.createNewFile();
 
-        bean = new OfferBean();
+        bean = new OfferService();
     }
 
     @After

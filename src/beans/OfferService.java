@@ -1,8 +1,9 @@
 package beans;
 
-import dao.OfferDAO;
+import dao.OfferDao;
 import dto.Offer;
 
+import javax.faces.bean.ApplicationScoped;
 import javax.faces.bean.ManagedBean;
 import javax.faces.context.FacesContext;
 import java.util.List;
@@ -16,23 +17,29 @@ import java.util.Map;
  * Represents the backing-bean of the offers.xhtml site.
  */
 @ManagedBean
-public class OfferBean {
-    private OfferDAO offerDAO;
+@ApplicationScoped
+public class OfferService {
+    private OfferDao offerDao;
 
     private String newText;
     private String newName;
     private String selectedPicture;
 
-    public OfferBean() {
-        offerDAO = new OfferDAO();
+    private List<Offer> offerList;
+
+    public OfferService() {
+        offerDao = new OfferDao();
     }
 
     public List<Offer> getOffers() {
-        return offerDAO.getOfferList();
+        if (offerList == null) {
+            offerList = offerDao.getOfferList();
+        }
+        return offerList;
     }
 
     public void addNewOffer() {
-       offerDAO.addNewOffer(newName, newText, selectedPicture);
+       offerList.add(offerDao.addNewOffer(newName, newText, selectedPicture));
 
        newName = "";
        newText = "";
@@ -40,12 +47,12 @@ public class OfferBean {
 
     public void delete() {
         int id = Integer.parseInt(fetchParameter("id"));
-        offerDAO.delete(id);
+        offerDao.delete(id);
     }
 
     public void save(){
         int id = Integer.parseInt(fetchParameter("ids"));
-        offerDAO.save(id);
+        offerDao.save(id, offerList);
     }
 
     public String fetchParameter(String param) {

@@ -1,19 +1,24 @@
 package beans;
 
 import dao.OrderDao;
-import dao.OrderItemDAO;
-import dao.ProductDAO;
+import dao.OrderItemDao;
+import dao.ProductDao;
 import dao.TourDAO;
 import dto.Order;
 import dto.OrderItem;
 import dto.Product;
+import dto.Tour;
 import org.primefaces.event.SelectEvent;
 
+import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.SessionScoped;
 import javax.faces.context.FacesContext;
 import javax.servlet.http.HttpServletRequest;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
+import java.util.Map;
 
 /**
  * Created with IntelliJ IDEA.
@@ -25,7 +30,7 @@ import java.util.*;
 @ManagedBean
 @SessionScoped
 public class OrderService {
-    private OrderItemDAO orderItemDAO;
+    private OrderItemDao orderItemDAO;
     private List<OrderItem> newOrderItems;
     private TourDAO tourDAO;
     private OrderDao orderDao;
@@ -38,10 +43,12 @@ public class OrderService {
     private List<OrderItem> orderItemsForDate;
     private List<Order> ordersInDateRange;
     private List<Order> orderList;
-    private ProductDAO productDAO;
+    private ProductDao productDAO;
+    private List<Tour> tourList;
+    private List<OrderItem> allItemsForDate;
 
     public OrderService(){
-        orderItemDAO = new OrderItemDAO();
+        orderItemDAO = new OrderItemDao();
         orderDao = new OrderDao();
         tourDAO = new TourDAO();
         orderList = orderDao.getOrderList();
@@ -50,6 +57,7 @@ public class OrderService {
         allOrdered = new ArrayList();
         newOrderItems = new ArrayList();
         orderItemsForDate = new ArrayList();
+        tourList = tourDAO.getTourList();
 
         setDate(getNextDay());
 
@@ -57,7 +65,7 @@ public class OrderService {
         endDate = new Date();
         endDate.setDate(startDate.getDate()+1);
 
-        productDAO = new ProductDAO();
+        productDAO = new ProductDao();
     }
 
     private Date getNextDay() {
@@ -73,19 +81,22 @@ public class OrderService {
         HttpServletRequest req = (HttpServletRequest) FacesContext.getCurrentInstance().getExternalContext().getRequest();
         String email = (String) req.getSession().getAttribute("email");
 
-        int tourID = tourDAO.getTourIDWithDate(date);
+        int tourID = getTourIDWithDate(date);
 
         if(tourID==-1){
             tourDAO.addTour(date);
-            tourID = tourDAO.getTourIDWithDate(date);
-            orderDao.addOrder(tourID, email, memo);
+            tourID = getTourIDWithDate(date);
         }
 
         currentOrderid = getOrderID(tourID, email);
 
-        if(currentOrderid != -1){
-            addOrderIDToItems(currentOrderid);
+        if(currentOrderid == -1){
+            Order order = orderDao.addOrder(tourID, email, memo);
+            orderList.add(order);
+            currentOrderid = order.getId();
         }
+
+        addOrderIDToItems(currentOrderid);
 
         for(OrderItem item : newOrderItems)
             orderItemDAO.addOrderItem(item);
@@ -93,6 +104,16 @@ public class OrderService {
         newOrderItems = new ArrayList();
 
         return "/ordersForCustomer.xhtml?faces-redirect=true";
+    }
+
+    private int getTourIDWithDate(Date date){
+        if(!tourList.isEmpty())
+            for(Tour tour : tourList)
+                if(tour.getDate().equals(date))
+                    return tour.getId();
+
+        FacesContext.getCurrentInstance().addMessage("Failure", new FacesMessage("Achtung! Für diesen Tag gibt es noch keine eingetragene Tour"));
+        return -1;
     }
 
     private void addOrderIDToItems(int orderid) {
@@ -112,8 +133,17 @@ public class OrderService {
                 }
             }
             OrderItem orderItem = new OrderItem(productID, quantity, -1);
+            orderItem.setId(getNextId(newOrderItems));
             newOrderItems.add(orderItem);
         }
+    }
+
+    private int getNextId(List<OrderItem> orderItems) {
+        int id = 1;
+        for(OrderItem item : orderItems)
+            if(item.getId() >= id)
+                id=item.getId()+1;
+        return id;
     }
 
     public String fetchParameter(String param) {
@@ -150,8 +180,7 @@ public class OrderService {
     public List<OrderItem> getAllOrdered(){
         HttpServletRequest req = (HttpServletRequest) FacesContext.getCurrentInstance().getExternalContext().getRequest();
         String email = (String) req.getSession().getAttribute("email");
-
-        allOrdered = orderItemDAO.getOrderForUser(email);
+        allOrdered = orderItemDAO.getAllOrderItemsForUser(email);
 
         return allOrdered;
     }
@@ -166,7 +195,6 @@ public class OrderService {
 
     public void deleteOneOrderItem(){
         int id = Integer.parseInt(fetchParameter("orderItemID"));
-
         for(int i=0; i< newOrderItems.size(); i++){
             if(newOrderItems.get(i).getId()==id) {
                 newOrderItems.remove(i);
@@ -181,9 +209,16 @@ public class OrderService {
 
         int tourID = getTourIDWithID(orderid);
         if(tourID != -1)
-            date = tourDAO.getDateWithID(tourID);
+            date = getDateWithID(tourID);
 
         return (date.getYear()+1900) + "-" + (date.getMonth()+1) + "-" + date.getDate();
+    }
+
+    private Date getDateWithID(int tourID) {
+        for(Tour tour : tourList)
+            if(tour.getId() == tourID)
+                return tour.getDate();
+        return null;
     }
 
     public List<OrderItem> getAllItemsWithIDForCurrentUser(int orderid){
@@ -244,11 +279,6 @@ public class OrderService {
         ordersInDateRange = orderDao.getOrdersInDateRange(startDate, endDate, email);
     }
 
-    public void writeMemo(String memo){
-        int id = Integer.parseInt(fetchParameter("orderMemo"));
-        orderDao.writeMemoWithID(id, memo);
-    }
-
     public String sumUp(float price, int quantity){
         float sum = (float) Math.round(price*quantity * 100) / 100;
         String sumStr = sum + "";
@@ -261,29 +291,17 @@ public class OrderService {
     }
 
     public String getSumAll(List<OrderItem> items){
-        System.out.println("getSumAll called");
-        List<Map.Entry<Integer, Integer>> list = new ArrayList();
-
-        for ( OrderItem item : items )
-            list.add( new AbstractMap.SimpleEntry( item.getOrdered(), getPrice(item.getProductid()) ) );
-
         float sum = 0.0f;
-
-        System.out.println("Sum = " + sum + ", " + list.size());
-
-        for ( Map.Entry<Integer, Integer> entry : list ) {
-            System.out.println(entry.getKey() + ", " + entry.getValue());
-            sum += entry.getKey() * entry.getValue();
+        for (OrderItem item : items ) {
+            sum += item.getOrdered() * getPrice(item.getProductid());
         }
-
-        System.out.println("After second for " + sum);
 
         String sumStr = sum + "";
         String string = sumStr.substring(sumStr.indexOf('.'));
 
         if(string.length()<=2)
             sumStr += "0";
-        System.out.println(sumStr);
+
         return sumStr;
     }
 
@@ -319,5 +337,23 @@ public class OrderService {
 
     public List<OrderItem> getNewOrderItems() {
         return newOrderItems;
+    }
+
+    public String getOrderDate() {
+        return startDate.getDate() + "." + (startDate.getMonth()+1) + "." + (startDate.getYear()+1900);
+    }
+
+    public List<Order> getOrdersForDate() {
+        return orderDao.getOrdersByStatus(startDate, false);
+    }
+
+    public void writeMemo(String memo) {
+        int id = Integer.parseInt(fetchParameter("orderMemo"));
+        orderDao.writeMemoWithID(id, memo);
+    }
+
+    public List<OrderItem> getAllItemsForDate(){
+        allItemsForDate = orderItemDAO.getAllItemsForDate(startDate);
+        return allItemsForDate;
     }
 }

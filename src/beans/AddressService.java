@@ -1,9 +1,10 @@
 package beans;
 
-import dao.AddressDAO;
+import dao.AddressDao;
 import dto.Address;
 
 import javax.faces.bean.ManagedBean;
+import javax.faces.bean.RequestScoped;
 
 /**
  * Created with IntelliJ IDEA.
@@ -13,13 +14,14 @@ import javax.faces.bean.ManagedBean;
  * To change this template use File | Settings | File Templates.
  */
 @ManagedBean
-public class AddressBean {
-    private AddressDAO addressDAO;
-    public AddressBean(){
-        addressDAO = new AddressDAO();
+@RequestScoped
+public class AddressService {
+    private AddressDao addressDao;
+    public AddressService(){
+        addressDao = new AddressDao();
     }
 
     public Address getAddressWithID(int id){
-        return addressDAO.getAddressWithID(id);
+        return addressDao.getAddressWithID(id);
     }
 }

@@ -19,18 +19,18 @@
                     margin-top: 130px;
                     width: 550px;
                     position: absolute;">
-            <h:selectOneMenu value="#{productBean.selectedCategory}"
-                             valueChangeListener="#{productBean.getProductsByCategory}">
+            <h:selectOneMenu value="#{productService.selectedCategory}"
+                             valueChangeListener="#{productService.getProductsByCategory}">
                 <f:selectItems value="#{categoryService.names}"/>
             </h:selectOneMenu>
-            <p:commandButton type="submit" value="Los!" action="#{productBean.getProductsByCategory}" update="@form"/>
-            <p:dataGrid value="#{productBean.selectedCatProducts}" var="product"
-                        style="max-width: 65%" columns="2">
+            <p:commandButton type="submit" value="Los!" action="#{productService.getProductsByCategory}" update="@form"/>
+            <p:dataGrid value="#{productService.selectedCatProducts}" var="product"
+                        columns="2">
                 <p:panel header="#{product.title}" style="text-align: center; font-size: 11pt">
-                    <h:panelGrid columns="1" style="height: 300px">
+                    <h:panelGrid columns="1" style="height: 350px">
                         <p:graphicImage value="#{product.picture}" style="height:150px; max-width: 200px"/>
                         <p:outputLabel value="#{product.description}" style="margin-top: 5px"/>
-                        <p:outputLabel value="€ #{product.price}"/>
+                        <p:outputLabel value="€ #{productService.getFormatedPrice(product.price)}"/>
                         <p:inputText binding="#{quantity}" type="number" maxlength="2" size="2" style="width: 30px"/>
                         <p:commandButton value="+" action="#{orderService.addOneOrderItem(quantity.value)}"
                                           ajax="true" update=":form:order">
@@ -57,13 +57,16 @@
                     <p:outputLabel value="#{item.ordered}x"/>
                 </p:column>
                 <p:column headerText="Produkt">
-                    <p:outputLabel value="#{productBean.getName(item.productid)}"/>
+                    <p:outputLabel value="#{productService.getName(item.productid)}"/>
                 </p:column>
                 <p:column headerText="Preis">
-                    <p:outputLabel value="€  #{productBean.getPrice(item.productid)}"/>
+                    <p:outputLabel value="€  #{productService.getFormatedPrice(productService.getPrice(item.productid))}"/>
                 </p:column>
                 <p:column headerText="Gesamt">
-                    <p:outputLabel value="€  #{orderService.sumUp(productBean.getPrice(item.productid), item.ordered)}"/>
+                    <p:outputLabel value="€  #{productService.getFormatedPrice(orderService.sumUp(productService.getPrice(item.productid), item.ordered))}"/>
+                    <f:facet name="footer">
+                        <p:outputLabel value="€ #{productService.getFormatedPrice(orderService.getSumAll(orderService.newOrderItems))}"/>
+                    </f:facet>
                 </p:column>
                 <p:column>
                     <p:commandButton type="submit" action="#{orderService.deleteOneOrderItem}" value="X" update="order">
@@ -78,15 +81,19 @@
                     <p:outputLabel value="#{item.ordered}x"/>
                 </p:column>
                 <p:column headerText="Produkt">
-                    <p:outputLabel value="#{productBean.getName(item.productid)}"/>
+                    <p:outputLabel value="#{productService.getName(item.productid)}"/>
                 </p:column>
                 <p:column headerText="Preis">
-                    <p:outputLabel value="€  #{productBean.getPrice(item.productid)}"/>
+                    <p:outputLabel value="€  #{productService.getFormatedPrice(productService.getPrice(item.productid))}"/>
                 </p:column>
                 <p:column headerText="Gesamt">
-                    <p:outputLabel value="€  #{orderService.sumUp(productBean.getPrice(item.productid), item.ordered)}"/>
+                    <p:outputLabel value="€  #{productService.getFormatedPrice(orderService.sumUp(productService.getPrice(item.productid), item.ordered))}"/>
+                    <f:facet name="footer">
+                        <p:outputLabel value="€ #{productService.getFormatedPrice(orderService.getSumAll(orderService.orderItemsForDate))}"/>
+                    </f:facet>
                 </p:column>
             </p:dataTable>
+
             <p:calendar value="#{orderService.date}" mindate="#{orderService.minDate}">
                 <p:ajax event="dateSelect" listener="#{orderService.handleDateSelect}" update="items" />
             </p:calendar>

@@ -4,17 +4,17 @@
         xmlns:f="http://java.sun.com/jsf/core"
         xmlns:p="http://primefaces.org/ui">
 
-        <p:dataTable var="item" value="#{productBean.products}" cellpadding="5px" style="padding: 2px">
+        <p:dataTable var="item" value="#{productService.products}" cellpadding="5px" style="padding: 2px">
             <p:column headerText="Anzeige">
                 <p:selectBooleanCheckbox value="#{item.visible}"/>
             </p:column>
             <p:column headerText="Bild">
-                <p:graphicImage value="#{item.picture}" style="max-height: 100px; max-width: 150px"/>
+                <p:graphicImage value="#{item.picture}" style="max-height: 70px; max-width: 100px"/>
 
                 <f:facet name="footer">
-                    <p:selectOneMenu value="#{productBean.selectedPicture}" effect="fade" style="width:160px"
+                    <p:selectOneMenu value="#{productService.selectedPicture}" effect="fade" style="width:160px"
                                      panelStyle="width:150px" filter="true" filterMatchMode="startsWith">
-                        <f:selectItems value="#{uploadBean.pics}"/>
+                        <f:selectItems value="#{uploadService.pics}"/>
                     </p:selectOneMenu>
                 </f:facet>
             </p:column>
@@ -23,7 +23,7 @@
                 <p:inputText value="#{item.title}" maxlength="45" size="15"/>
 
                 <f:facet name="footer">
-                    <p:inputText value="#{productBean.newName}" size="12"/>
+                    <p:inputText value="#{productService.newName}" size="12"/>
                 </f:facet>
             </p:column>
 
@@ -31,7 +31,7 @@
                 <p:inputTextarea value="#{item.description}"/>
 
                 <f:facet name="footer">
-                    <p:inputTextarea value="#{productBean.newText}"/>
+                    <p:inputTextarea value="#{productService.newText}"/>
                 </f:facet>
             </p:column>
 
@@ -39,7 +39,7 @@
                 <p:outputLabel value="#{item.categoryName}"/>
 
                 <f:facet name="footer">
-                    <p:selectOneMenu value="#{productBean.selectedCategory}">
+                    <p:selectOneMenu value="#{productService.selectedCategory}" required="true">
                         <f:selectItems value="#{categoryService.names}"/>
                     </p:selectOneMenu>
                 </f:facet>
@@ -50,22 +50,22 @@
 
                 <f:facet name="footer">
                     <p:outputLabel value="Bitte mit . trennen"/>
-                    <p:inputText value="#{productBean.newPrice}" size="5"/>
+                    <p:inputText value="#{productService.newPrice}" size="5" required="true"/>
                 </f:facet>
             </p:column>
             <p:column>
-                <p:commandButton type="submit" value="Löschen" action="#{productBean.delete}" ajax="false"
+                <p:commandButton type="submit" value="Löschen" action="#{productService.delete}" ajax="false"
                                  update="@form">
                     <f:param value="#{item.id}" name="id"/>
                 </p:commandButton>
-                <p:commandButton type="submit" value="Speichern" action="#{productBean.save}" ajax="false"
+                <p:commandButton type="submit" value="Speichern" action="#{productService.save}" ajax="false"
                                  update="@form">
                     <f:param value="#{item.id}" name="idS"/>
                 </p:commandButton>
 
 
                 <f:facet name="footer">
-                    <p:commandButton type="submit" action="#{productBean.addNewProduct}" value="Hinzufügen" ajax="false"
+                    <p:commandButton type="submit" action="#{productService.addNewProduct}" value="Hinzufügen" ajax="false"
                                      update="@form"/>
                 </f:facet>
             </p:column>

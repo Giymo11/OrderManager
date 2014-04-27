@@ -14,8 +14,8 @@ import java.sql.Statement;
  * Time: 14:40
  * To change this template use File | Settings | File Templates.
  */
-public class AddressDAO extends JdbcDao {
-    public AddressDAO(){
+public class AddressDao extends JdbcDao {
+    public AddressDao(){
         super();
     }
 

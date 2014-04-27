@@ -11,33 +11,33 @@
     <h:outputStylesheet name="style.css" library="css"/>
 </head>
 <h:body>
-    <div class="content" style="min-width: 300px; width:72%">
+    <div class="content" style="width: 860px">
         <table>
             <tr>
                 <td>
                     <h3>Über uns</h3>
-                    <p:outputLabel value="#{aboutBean.first.text}" style="margin:0; width: 50%"/>
+                    <p:outputLabel value="#{aboutService.first.text}" style="margin:0; width: 50%"/>
                 </td>
                 <td>
-                    <h:graphicImage value="#{aboutBean.first.pictureName}" style="max-height: 50%; width: 100%"/>
+                    <h:graphicImage value="#{aboutService.first.pictureName}" style="max-height: 50%; width: 430px"/>
                 </td>
             </tr>
             <tr>
                 <td>
-                    <h:graphicImage value="#{aboutBean.second.pictureName}" style="max-height: 50%; width: 100%"/>
+                    <h:graphicImage value="#{aboutService.second.pictureName}" style="max-height: 50%; width: 430px"/>
                 </td>
                 <td>
                     <h3>Lokalität</h3>
-                    <p:outputLabel value="#{aboutBean.second.text}"/>
+                    <p:outputLabel value="#{aboutService.second.text}"/>
                 </td>
             </tr>
             <tr>
                 <td>
                     <h3>Sonstiges</h3>
-                    <p:outputLabel value="#{aboutBean.third.text}" style="margin:0; width: 50%"/>
+                    <p:outputLabel value="#{aboutService.third.text}" style="margin:0; width: 50%"/>
                 </td>
                 <td>
-                    <h:graphicImage value="#{aboutBean.third.pictureName}" style="max-height: 50%; width: 100%"/>
+                    <h:graphicImage value="#{aboutService.third.pictureName}" style="max-height: 50%; width: 430px"/>
                 </td>
             </tr>
         </table>
