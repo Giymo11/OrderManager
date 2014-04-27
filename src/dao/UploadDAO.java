@@ -20,13 +20,57 @@ import java.util.List;
  * Time: 14:38
  * To change this template use File | Settings | File Templates.
  */
-public class UploadDAO extends JdbcDao {
+public class UploadDao extends JdbcDao {
     private static final String folder = FacesContext.getCurrentInstance().getExternalContext().getRealPath("");
     private File fileToDelete;
 
-    public UploadDAO(){
+    public UploadDao(){
         super();
-        System.out.println(folder);
+        insertMissingFiles();
+    }
+
+    private void insertMissingFiles() {
+        File[] files = getUploadedPictures();
+        Connection connection = null;
+        Statement statement = null;
+
+        try{
+            connection = getConnection();
+
+            statement = connection.createStatement();
+
+            for(File file : files) {
+                if (!exists(file.getName(), connection)) {
+                    System.out.println(file.getName());
+                    Picture picture = new Picture(file.getName());
+                    insertObject("picture", picture);
+                    statement.executeUpdate("UPDATE " + DATABASE_NAME + ".picture SET name = '" + picture.getName() +
+                            "' WHERE pictureid = " + picture.getId() + ";");
+                    statement.executeUpdate("COMMIT;");
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        finally {
+            close(null, statement, connection);
+        }
+    }
+
+    private boolean exists(String name, Connection connection) throws SQLException {
+        Statement statement = connection.createStatement();
+        ResultSet resultSet = statement.executeQuery("SELECT count(*) FROM " + DATABASE_NAME +
+                ".picture WHERE name = '" + name + "';");
+
+        boolean returnValue = false;
+        resultSet.next();
+
+        if(resultSet.getInt(1)==1)
+            returnValue = true;
+
+        close(resultSet, statement, null);
+
+        return returnValue;
     }
 
     public void upload(UploadedFile file){
@@ -91,7 +135,7 @@ public class UploadDAO extends JdbcDao {
                 con = getConnection();
                 s = con.createStatement();
                 s2 = con.createStatement();
-                System.out.println("before initialisation of res&res2");
+
                 res = s.executeQuery("SELECT count(*) FROM " + DATABASE_NAME + ".product " +
                         "WHERE id = (SELECT pictureid FROM " + DATABASE_NAME + ".picture WHERE name = '" + filename + "');");
                 res.next();
@@ -141,26 +185,6 @@ public class UploadDAO extends JdbcDao {
         List<String> pics = new ArrayList();
         for (File file : getUploadedPictures())
             pics.add(file.getName());
-
-        Connection con = null;
-        Statement stat = null;
-        ResultSet res = null;
-
-        try {
-            con = getConnection();
-            stat = con.createStatement();
-            res = stat.executeQuery("SELECT count(*) FROM " + DATABASE_NAME + ".picture");
-            res.next();
-            if(res.getInt(1)!=pics.size())
-                FacesContext.getCurrentInstance().addMessage("Picture", new FacesMessage(
-                        "Fehler! Die Anzahl der Bilder auf dem Server " +
-                                "entspricht nicht der Anzahl der Bilder in der Datenbank!"));
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-        finally {
-            close(res, stat, con);
-        }
 
         return pics;
     }

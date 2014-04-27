@@ -33,16 +33,16 @@
             </p:column>
 
             <p:column>
-                <p:commandButton type="submit" value="Löschen" action="#{eventService.delete}" ajax="false" update="@form">
+                <p:commandButton type="submit" value="Löschen" action="#{eventService.delete}" ajax="true" update="@form">
                     <f:param value="#{item.id}" name="id"/>
                 </p:commandButton>
 
-                <p:commandButton type="submit" action="#{eventService.save}" value="Speichern" ajax="false" update="@form">
+                <p:commandButton type="submit" action="#{eventService.save}" value="Speichern" ajax="true" update="@form">
                     <f:param value="#{item.id}" name="ids"/>
                 </p:commandButton>
 
                 <f:facet name="footer">
-                    <p:commandButton type="submit" action="#{eventService.addNewEvent}" value="Hinzufügen" ajax="false"
+                    <p:commandButton type="submit" action="#{eventService.addNewEvent}" value="Hinzufügen" ajax="true"
                                      update="@form"/>
                 </f:facet>
             </p:column>

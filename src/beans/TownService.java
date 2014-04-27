@@ -66,6 +66,9 @@ public class TownService {
     public void delete() throws SQLException {
         int id = Integer.parseInt(fetchParameter("id"));
         townDao.deleteObject("town", id);
+        for(int i = 0; i<towns.size(); i++)
+            if(towns.get(i).getId() == id)
+                towns.remove(i);
     }
 
     public String fetchParameter(String param) {
@@ -98,5 +101,10 @@ public class TownService {
 
     public int getPostalCodeWithID(int id){
         return townDao.getTownWithID(id).getPlz();
+    }
+
+    public void save(){
+        int id = Integer.parseInt(fetchParameter("idS"));
+        townDao.save(towns, id);
     }
 }

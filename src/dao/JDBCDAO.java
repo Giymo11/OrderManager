@@ -23,7 +23,8 @@ public class JdbcDao {
     private final static String LAST_INSERT_PIC_ID = "SELECT max(pictureid) as maxId FROM " + DATABASE_NAME + ".";
 
     public JdbcDao(){
-        connectionManager = new ConnectionManager();
+        if(connectionManager==null)
+            connectionManager = new ConnectionManager();
     }
 
     protected Connection getConnection() throws SQLException {

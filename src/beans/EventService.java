@@ -48,9 +48,9 @@ public class EventService {
 
     public void delete() {
         int id = Integer.parseInt(fetchParameter("id"));
-        for(Event event : events)
-            if (event.getId() == id)
-                events.remove(event);
+        for(int i = 0; i<events.size(); i++)
+            if(events.get(i).getId() == id)
+                events.remove(i);
         eventDAO.delete(id);
     }
 

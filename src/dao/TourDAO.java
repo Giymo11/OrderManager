@@ -48,7 +48,7 @@ public class TourDAO extends JdbcDao {
         return tourList;
     }
 
-    public void addTour(Date date){
+    public Tour addTour(Date date){
         Connection connection = null;
         Statement statement = null;
         Tour newTour = new Tour(date);
@@ -66,6 +66,7 @@ public class TourDAO extends JdbcDao {
         finally {
             close(null, statement, connection);
         }
+        return newTour;
     }
 
 

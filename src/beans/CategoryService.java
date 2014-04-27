@@ -65,6 +65,7 @@ public class CategoryService {
 
     public void addNewCategory() {
         categoryDao.addCategory(new Category(newName));
+        categories.add(new Category(newName));
         names.add(newName);
         newName = "";
     }

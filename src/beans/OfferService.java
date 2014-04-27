@@ -47,6 +47,9 @@ public class OfferService {
 
     public void delete() {
         int id = Integer.parseInt(fetchParameter("id"));
+        for(int i = 0; i<offerList.size(); i++)
+            if(offerList.get(i).getId() == id)
+                offerList.remove(i);
         offerDao.delete(id);
     }
 

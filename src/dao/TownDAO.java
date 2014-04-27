@@ -95,4 +95,25 @@ public class TownDao extends JdbcDao {
         town.setId(resultSet.getInt("id"));
         return town;
     }
+
+    public void save(List<Town> towns, int id){
+        Connection connection = null;
+        Statement statement = null;
+
+        try{
+            connection = getConnection();
+            statement = connection.createStatement();
+            for(Town town : towns)
+            if(town.getId() == id) {
+                statement.executeUpdate("UPDATE " + DATABASE_NAME + ".town SET name = '" + town.getName() +
+                        "', plz = " + town.getPlz() + " WHERE id = " + id + ";");
+                statement.executeUpdate("COMMIT;");
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
+        }
+        finally {
+            close(null, statement, connection);
+        }
+    }
 }

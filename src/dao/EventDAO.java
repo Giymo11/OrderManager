@@ -2,7 +2,6 @@ package dao;
 
 import dto.Event;
 
-import javax.faces.bean.SessionScoped;
 import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -17,29 +16,19 @@ import java.util.List;
  * Time: 15:24
  * To change this template use File | Settings | File Templates.
  */
-@SessionScoped
-public class EventDAO extends JdbcDao {
-    List<Event> eventList;
-
-    public EventDAO(){
+public class EventDao extends JdbcDao {
+    public EventDao(){
         super();
-        eventList = new ArrayList();
     }
 
     public List<Event> getEventList(){
-        if(eventList.isEmpty())
-            read();
-
-        return eventList;
-    }
-
-    private void read(){
         Connection con = null;
         Statement stat = null;
         ResultSet res = null;
         ResultSet resPic = null;
 
         Event event;
+        List<Event> eventList = new ArrayList();
 
         try {
             con = getConnection();
@@ -74,6 +63,7 @@ public class EventDAO extends JdbcDao {
             close(res, stat, con);
             close(resPic, null, null);
         }
+        return eventList;
     }
 
     private void insertEvent(Event event){
@@ -98,52 +88,44 @@ public class EventDAO extends JdbcDao {
         }
     }
 
-    public void addNewEvent(String newName, String text, String selectedPicture){
+    public Event addNewEvent(String newName, String text, String selectedPicture){
         Connection con = null;
         Statement statement = null;
         ResultSet res = null;
+        Statement statement1 = null;
+        ResultSet resultSet = null;
+
         Event event = null;
 
         try {
             con = getConnection();
             statement = con.createStatement();
+            statement1 = con.createStatement();
             res = statement.executeQuery("SELECT pictureid FROM " + DATABASE_NAME + ".picture WHERE name = '"
                     + selectedPicture + "';");
             res.next();
 
-            event = new Event(0, newName, text, res.getInt(1), getNewPriority());
+            resultSet = statement1.executeQuery("SELECT max(priority) FROM " + DATABASE_NAME + ".event;");
+            resultSet.next();
+
+            event = new Event(0, newName, text, res.getInt(1), resultSet.getInt(1));
             event.setPicture(selectedPicture);
 
-            eventList.add(event);
         } catch (SQLException e) {
-            e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
+            e.printStackTrace();
         }
         finally {
             close(res, statement, con);
+            close(resultSet, statement1, null);
             if(event!=null)
                 insertEvent(event);
         }
-    }
-
-    private int getNewPriority() {
-        int priority = 10;
-
-        if (!eventList.isEmpty())
-            for (Event event : eventList) {
-                if (event.getPriority() >= priority)
-                    priority = event.getPriority() + 10;
-            }
-
-        return priority;
+        return event;
     }
 
     public void delete(int id){
         try {
-            for(int i=0; i<eventList.size(); i++)
-                if(eventList.get(i).getId() == id)
-                    eventList.remove(i);
-
-            super.deleteObject("event", id);
+            deleteObject("event", id);
         } catch (SQLException e) {
             e.printStackTrace();
         }
@@ -165,7 +147,7 @@ public class EventDAO extends JdbcDao {
         try {
             connection = getConnection();
             stat = connection.createStatement();
-            for (Event event : eventList) {
+            for (Event event : getEventList()) {
                 if (event.getId() == id) {
                     stat.executeUpdate("UPDATE " + DATABASE_NAME + ".event SET title = '" + event.getTitle() +
                             "', description = '" + event.getDescription() + "' WHERE id = " + id + ";");
@@ -173,7 +155,7 @@ public class EventDAO extends JdbcDao {
                 }
             }
         } catch (SQLException e) {
-            e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
+            e.printStackTrace();
         }
         finally{
             close(null, stat, connection);

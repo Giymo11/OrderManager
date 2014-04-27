@@ -28,8 +28,6 @@ public class StatisticsService {
         setStartDate(new Date());
         startDate.setDate(1);
         setEndDate(new Date());
-        updateProd();
-        updateCat();
     }
 
     public CartesianChartModel getModelForCategory(){

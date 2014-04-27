@@ -84,17 +84,21 @@ public class OrderService {
         int tourID = getTourIDWithDate(date);
 
         if(tourID==-1){
-            tourDAO.addTour(date);
+            tourList.add(tourDAO.addTour(date));
             tourID = getTourIDWithDate(date);
         }
 
         currentOrderid = getOrderID(tourID, email);
 
         if(currentOrderid == -1){
+            System.out.println(memo);
             Order order = orderDao.addOrder(tourID, email, memo);
             orderList.add(order);
             currentOrderid = order.getId();
         }
+        else
+            if(!memo.equals(""))
+                orderDao.writeMemoWithID(currentOrderid, memo, "Pock");
 
         addOrderIDToItems(currentOrderid);
 
@@ -349,7 +353,7 @@ public class OrderService {
 
     public void writeMemo(String memo) {
         int id = Integer.parseInt(fetchParameter("orderMemo"));
-        orderDao.writeMemoWithID(id, memo);
+        orderDao.writeMemoWithID(id, memo, "Customer");
     }
 
     public List<OrderItem> getAllItemsForDate(){

@@ -39,7 +39,7 @@
                 <p:outputLabel value="#{item.categoryName}"/>
 
                 <f:facet name="footer">
-                    <p:selectOneMenu value="#{productService.selectedCategory}" required="true">
+                    <p:selectOneMenu value="#{productService.selectedCategory}">
                         <f:selectItems value="#{categoryService.names}"/>
                     </p:selectOneMenu>
                 </f:facet>
@@ -50,7 +50,7 @@
 
                 <f:facet name="footer">
                     <p:outputLabel value="Bitte mit . trennen"/>
-                    <p:inputText value="#{productService.newPrice}" size="5" required="true"/>
+                    <p:inputText value="#{productService.newPrice}" size="5"/>
                 </f:facet>
             </p:column>
             <p:column>

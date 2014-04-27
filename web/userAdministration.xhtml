@@ -9,7 +9,7 @@
     </h:head>
 
     <h:body>
-        <p:dataTable value="#{userAdminBean.userList}" var="user">
+        <p:dataTable value="#{adminSettingsService.userList}" var="user" id="userList">
             <p:column headerText="Email">
                 <p:outputLabel value="#{user.email}"/>
             </p:column>
@@ -29,7 +29,12 @@
                 <p:selectBooleanCheckbox value="#{user.blocked}" itemLabel="Blockiert"/>
             </p:column>
             <p:column>
-                <p:commandButton id="commandUserAdmin" value="Speichern" type="submit" ajax="false" update="@form" action="#{userAdminBean.save}">
+                <p:commandButton id="addAsAdmin" value="+Admin" type="submit" ajax="false" update="userList" action="#{adminSettingsService.addAsAdmin}">
+                    <f:param name="idAdmin" value="#{user.id}"/>
+                </p:commandButton>
+            </p:column>
+            <p:column>
+                <p:commandButton id="commandUserAdmin" value="Speichern" type="submit" ajax="true" update="userList" action="#{adminSettingsService.save}">
                     <f:param name="idU" value="#{user.id}"/>
                 </p:commandButton>
             </p:column>

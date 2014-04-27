@@ -13,18 +13,15 @@ import java.util.List;
  * Created by Sarah on 03.04.2014.
  */
 public class UserAdminDAO extends JdbcDao {
-    private List<User> userList;
-
     public UserAdminDAO(){
         super();
-        userList = new ArrayList();
-        read();
     }
 
-    private void read() {
+    public List<User> getUserList() {
         Connection connection = null;
         Statement statement = null;
         ResultSet resultSet = null;
+        List<User> userList = new ArrayList();
 
         try{
             connection = getConnection();
@@ -34,7 +31,7 @@ public class UserAdminDAO extends JdbcDao {
 
             while(resultSet.next()){
                 User u = getUserWithResultSet(resultSet);
-                if(!u.getEmail().equalsIgnoreCase("baeckerei.pock@a1.net"))
+                if(!checkAdminRights(u.getId(), connection))
                     userList.add(u);
             }
 
@@ -44,6 +41,20 @@ public class UserAdminDAO extends JdbcDao {
         finally{
             close(resultSet, statement, connection);
         }
+        return userList;
+    }
+
+    private boolean checkAdminRights(int id, Connection connection) throws SQLException {
+        Statement statement = connection.createStatement();
+        ResultSet res = statement.executeQuery("SELECT count(*) FROM " + DATABASE_NAME + ".admin WHERE userid = " + id + ";");
+        res.next();
+
+        boolean returnValue = false;
+
+        if(res.getInt(1)==1)
+            returnValue = true;
+
+        return returnValue;
     }
 
     private User getUserWithResultSet(ResultSet resultSet) throws SQLException {
@@ -60,11 +71,7 @@ public class UserAdminDAO extends JdbcDao {
         return user;
     }
 
-    public List<User> getUserList() {
-        return userList;
-    }
-
-    public void save(int id) {
+    public void save(int id, List<User> userList) {
         Connection connection = null;
         Statement statement = null;
 

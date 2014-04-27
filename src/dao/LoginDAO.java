@@ -30,45 +30,60 @@ public class LoginDAO extends JdbcDao {
         try {
             connection = getConnection();
             stat = connection.createStatement();
-            res = stat.executeQuery("SELECT Hash, verified, blocked from " + DATABASE_NAME + ".user where Email = '" + email + "';");
-            if(res.next()){
+            res = stat.executeQuery("SELECT Hash, verified, blocked, id from " + DATABASE_NAME + ".user where Email = '" + email + "';");
+
+            if(res.next()) {
                 String checkHash = res.getString(1);
                 boolean verified = res.getBoolean(2);
                 boolean blocked = res.getBoolean(3);
-                if(!verified)
-                    return "notVerified";
-
-                if(blocked)
-                    return "blocked";
 
                 if (checkHash.equals(hash(password.concat(email)))) {
-                    wrongPassword = "";
-
-                    req.getSession().setAttribute("email", this.email);
-                    if(email.equals("baeckerei.pock@a1.net")){
+                    if (checkAdminRights(connection, res.getInt("id"))) {
                         req.getSession().setAttribute("adminLoggedIn", true);
-                    }
-                    else{
+                        req.getSession().setAttribute("email", this.email);
+                        return "/ordersForAdmin.xhtml?faces-redirect=true";
+                    } else {
+                        if (!verified)
+                            return "notVerified";
+                        if (blocked)
+                            return "blocked";
+
+                        req.getSession().setAttribute("email", this.email);
+
                         req.getSession().setAttribute("loggedIn", true);
+
+                        return "/offers.xhtml?faces-redirect=true";
                     }
 
-                    return "/offers.xhtml?faces-redirect=true";
-                } else {
-                    wrongPassword = "Falsches Passwort!";
                 }
-            }
-            else{
+                else
+                    wrongPassword = "Falsches Passwort!";
+            } else
                wrongPassword = "Falsche Email Adresse";
-            }
 
         } catch (SQLException e) {
-            e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
+            e.printStackTrace();
         }
         finally {
             close(res, stat, connection);
         }
 
         return "";
+    }
+
+    private boolean checkAdminRights(Connection connection, int id) throws SQLException {
+        Statement statement = connection.createStatement();
+        ResultSet resultSet = statement.executeQuery("SELECT count(*) FROM " + DATABASE_NAME + ".admin WHERE userid = " + id + ";");
+        resultSet.next();
+
+        boolean returnValue = false;
+
+        if(resultSet.getInt(1)==1)
+            returnValue = true;
+
+        close(resultSet, statement, null);
+
+        return returnValue;
     }
 
     public String hash(String saltedPass) {
