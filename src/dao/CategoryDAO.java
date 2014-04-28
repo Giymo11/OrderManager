@@ -54,7 +54,12 @@ public class CategoryDao extends JdbcDao {
         return new Category(res.getInt(1), res.getString(2));
     }
 
-    public void addCategory(Category cat){
+    public boolean addCategory(Category cat){
+        if(exists(cat)){
+            FacesContext.getCurrentInstance().addMessage("Failure", new FacesMessage("Diese Kategorie existiert bereits!"));
+            return false;
+        }
+
         insertObject("category", cat);
 
         Connection connection = null;
@@ -68,12 +73,37 @@ public class CategoryDao extends JdbcDao {
             statement.executeUpdate("COMMIT;");
 
         } catch (SQLException e) {
-            e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
+            e.printStackTrace();
             FacesContext.getCurrentInstance().addMessage("Failure!", new FacesMessage("Datenbank-Fehler!"));
         }
         finally{
             close(null, statement, connection);
         }
+        return true;
+    }
+
+    private boolean exists(Category cat) {
+        Connection connection = null;
+        Statement statement = null;
+        ResultSet resultSet = null;
+
+        try{
+            connection = getConnection();
+            statement = connection.createStatement();
+            resultSet = statement.executeQuery("SELECT count(*) FROM " + DATABASE_NAME +
+                        ".category WHERE name = '" + cat.getName() + "';");
+            resultSet.next();
+
+            if(resultSet.getInt(1)>0)
+                return true;
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        finally {
+            close(resultSet, statement, connection);
+        }
+        return false;
     }
 
     public void delete(int id){

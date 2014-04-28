@@ -15,51 +15,71 @@ import javax.faces.bean.ManagedBean;
 
 @ManagedBean
 @ApplicationScoped
-public class ContactInfoBean {
+public class ContactInfoService {
     private ContactInfoDao contactInfoDAO;
+    private String name;
+    private String street;
+    private String location;
+    private String telephone;
+    private String mail;
 
-    public ContactInfoBean() {
+    public ContactInfoService() {
         contactInfoDAO = new ContactInfoDao();
     }
 
     public String getName() {
-        return contactInfoDAO.getName();
+        if(name == null)
+            name = contactInfoDAO.getName();
+        return name;
     }
 
     public void setName(String name) {
         contactInfoDAO.setName(name);
+        this.name = name;
     }
 
     public String getStreet() {
-        return contactInfoDAO.getStreet();
+        if(street == null)
+            street = contactInfoDAO.getStreet();
+        return street;
     }
 
     public void setStreet(String street) {
         contactInfoDAO.setStreet(street);
+        this.street = street;
     }
 
     public String getLocation() {
-        return contactInfoDAO.getLocation();
+        if(location == null)
+            location = contactInfoDAO.getLocation();
+        return location;
     }
 
     public void setLocation(String location) {
         contactInfoDAO.setLocation(location);
+        this.location = location;
     }
 
     public String getTelephone() {
-        return contactInfoDAO.getTelephone();
+        if(telephone == null)
+            telephone = contactInfoDAO.getTelephone();
+        return telephone;
     }
 
     public void setTelephone(String telephone) {
         contactInfoDAO.setTelephone(telephone);
+        this.telephone = telephone;
     }
 
     public String getMail() {
-        return contactInfoDAO.getMail();
+        if(mail == null)
+            mail = contactInfoDAO.getMail();
+        return mail;
     }
 
     public void setMail(String mail) {
         contactInfoDAO.setMail(mail);
+        this.mail = mail;
     }
 
     public String getMondayAM() {
