@@ -224,7 +224,7 @@ public class OrderDao extends JdbcDao {
         return orders;
     }
 
-    public void writeMemoWithID(int id, String memo) {
+    public void writeMemoWithID(int id, String memo, String forWhom) {
         Connection connection = null;
         Statement statement = null;
 
@@ -232,7 +232,7 @@ public class OrderDao extends JdbcDao {
             connection = getConnection();
             statement = connection.createStatement();
 
-            statement.executeUpdate("UPDATE " + DATABASE_NAME + ".order SET memoForCustomer = '" + memo + "' WHERE id = " + id + ";");
+            statement.executeUpdate("UPDATE " + DATABASE_NAME + ".order SET memoFor" + forWhom + " = '" + memo + "' WHERE id = " + id + ";");
             statement.executeUpdate("COMMIT;");
         } catch (SQLException e) {
             e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
@@ -240,5 +240,87 @@ public class OrderDao extends JdbcDao {
         finally {
             close(null, statement, connection);
         }
+    }
+
+    public List<Order> getOrdersByAddress(int addressID){
+        Connection connection = null;
+        Statement statement = null;
+        ResultSet resultSet = null;
+        Order order;
+        List<Order> orderList = new ArrayList();
+
+        try{
+            connection = getConnection();
+            statement = connection.createStatement();
+            resultSet = statement.executeQuery("SELECT * FROM " + DATABASE_NAME + ".order where AddressID = " +addressID+ ";");
+
+            while(resultSet.next()){
+                order = getOrderWithResultSet(resultSet);
+                order.setId(resultSet.getInt("id"));
+
+                orderList.add(order);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        finally {
+            close(resultSet, statement, connection);
+        }
+
+        return orderList;
+    }
+
+    public int addOrderWithAddressID(int addressID, Date date){
+        int id = 0;
+        Connection connection = null;
+        Statement statement = null;
+        Statement statement2 = null;
+        ResultSet resultSet = null;
+
+        try{
+            connection = getConnection();
+            statement = connection.createStatement();
+            statement2 = connection.createStatement();
+            resultSet = statement.executeQuery("SELECT id from " + DATABASE_NAME + ".tour WHERE date = '" +getDateSQL(date)+"';");
+            resultSet.next();
+
+            Order order = new Order(resultSet.getInt(1), addressID, "", "", true);
+            insertObject("order", order);
+            id = order.getId();
+            statement2.executeQuery("UPDATE " + DATABASE_NAME + ".order SET addressid = "+addressID+", tourid = "+order.getTourid()+", delivered = true;");
+        }catch(SQLException e){
+            e.printStackTrace();
+        }
+        finally {
+            close(resultSet,statement,connection);
+            close(null,statement2,null);
+        }
+        return id;
+
+    }
+
+    public void writeMemoWithAddressID(int addressID, Date date, String memo){
+        int orderID;
+        Connection connection = null;
+        Statement statement = null;
+        ResultSet resultSet = null;
+
+        try{
+            connection = getConnection();
+            statement = connection.createStatement();
+            resultSet = statement.executeQuery("SELECT id FROM " + DATABASE_NAME + ".order WHERE addressid = "+addressID+" AND date = '"+getDateSQL(date)+"';");
+            resultSet.next();
+            orderID = resultSet.getInt(1);
+
+            writeMemoWithID(orderID, memo, "Customer");
+
+
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        finally{
+               close(resultSet,statement,connection);
+            }
     }
 }

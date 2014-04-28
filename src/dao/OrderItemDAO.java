@@ -191,4 +191,69 @@ public class OrderItemDao extends JdbcDao {
         }
         return items;
     }
+
+
+    public List<OrderItem> getAllItemsForOrder(int orderID) {
+        Connection connection = null;
+        Statement statement = null;
+        ResultSet resultSet = null;
+
+        List<OrderItem> items = new ArrayList();
+
+        try{
+            connection = getConnection();
+            statement = connection.createStatement();
+            resultSet = statement.executeQuery("SELECT * FROM " + DATABASE_NAME + ".orderitem WHERE orderid = "+orderID+";");
+
+            while(resultSet.next()){
+                items.add(getOrderItemWithResultSet(resultSet));
+            }
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        finally {
+            close(resultSet, statement, connection);
+        }
+        return items;
+    }
+
+    public void update(OrderItem item){
+        Connection connection = null;
+        Statement statement = null;
+
+        try{
+            connection=getConnection();
+            statement=connection.createStatement();
+            statement.executeUpdate("UPDATE " + DATABASE_NAME + ".orderitem set delivered = " + item.getDelivered()+";");
+        }
+        catch(SQLException e){
+            e.printStackTrace();
+        }
+        finally{
+            close(null, statement, connection);
+        }
+    }
+
+    public void insertItem(OrderItem item, int addressID){
+        Connection connection = null;
+        Statement statement = null;
+        ResultSet resultSet = null;
+
+        try{
+            connection = getConnection();
+            statement = connection.createStatement();
+            resultSet = statement.executeQuery("SELECT id FROM " + DATABASE_NAME + ".order WHERE addressID = "+addressID+" AND tourid = " +
+                    "(SELECT id FROM "+DATABASE_NAME+".tour WHERE date = '"+getDateSQL(new Date())+"');");
+            resultSet.next();
+            item.setOrderid(resultSet.getInt(1));
+            addOrderItem(item);
+        }
+        catch (SQLException e){
+            e.printStackTrace();
+        }
+        finally {
+            close(resultSet,statement,connection);
+        }
+    }
 }

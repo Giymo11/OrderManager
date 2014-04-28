@@ -2,6 +2,8 @@ package dto;
 
 import interfaces.Identifiable;
 
+import javax.xml.bind.annotation.XmlRootElement;
+
 /**
  * Created with IntelliJ IDEA.
  * User: Sarah
@@ -9,6 +11,7 @@ import interfaces.Identifiable;
  * Time: 12:20
  * To change this template use File | Settings | File Templates.
  */
+@XmlRootElement
 public class Town implements Identifiable {
     private int id;
     private int plz;

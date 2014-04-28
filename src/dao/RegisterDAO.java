@@ -17,15 +17,18 @@ import java.util.Date;
  * To change this template use File | Settings | File Templates.
  */
 public class RegisterDAO extends JdbcDao {
+    private AddressDao addressDao;
     public RegisterDAO(){
+
         super();
+        addressDao = new AddressDao();
     }
 
     public void register(User user, Address address,String selectedTown){
         int id = getTownID(selectedTown);
         address.setTownid(id);
         if(checkAddressDuplicate(address)) {
-            writeAddress(address);
+            addressDao.writeAddress(address);
         }
         if(user.getEmail().equals("baeckerei.pock@a1.net"))
             user.setVerified(true);
@@ -92,27 +95,7 @@ public class RegisterDAO extends JdbcDao {
         return (date.getYear()+1900) + "-" + (1+date.getMonth()) + "-" + date.getDate();
     }
 
-    private void writeAddress(Address address) {
-        Connection connection = null;
-        Statement statement = null;
 
-        try{
-            insertObject("address", address);
-
-            connection = getConnection();
-            statement = connection.createStatement();
-
-            statement.executeUpdate("UPDATE " + DATABASE_NAME + ".address SET street = '" + address.getStreet() +
-                    "', HouseNr = '" + address.getHouseNr() + "', townid = " + address.getTownid() +
-                    " WHERE id = " + address.getId() + ";");
-            statement.executeUpdate("COMMIT;");
-        } catch (SQLException e) {
-            e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
-        }
-        finally {
-            close(null, statement, connection);
-        }
-    }
 
     private boolean checkAddressDuplicate(Address address) {
         Connection connection = null;
