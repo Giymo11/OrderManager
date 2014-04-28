@@ -172,6 +172,8 @@ public class ProductService {
 
         if (str.length()==2)
             formated = temp + "0";
+        else if (str.length()>3)
+            formated = temp.substring(0, temp.indexOf('.')) + str.substring(0,3);
         else
             formated = temp;
 

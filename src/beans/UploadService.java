@@ -8,7 +8,6 @@ import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.RequestScoped;
 import javax.faces.context.FacesContext;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -25,11 +24,10 @@ public class UploadService {
     private UploadedFile file;
 
     private List<String> pics;
-    private UploadDao uploadDAO;
+    private UploadDao uploadDao;
 
     public UploadService() {
-        uploadDAO = new UploadDao();
-        pics = new ArrayList();
+        uploadDao = new UploadDao();
     }
 
     public void upload(FileUploadEvent event) {
@@ -39,7 +37,8 @@ public class UploadService {
             return;
         }
         if (!file.getFileName().equals("")) {
-            uploadDAO.upload(file);
+            uploadDao.upload(file);
+            pics.add(file.getFileName());
         } else
             System.out.println("shit went full retard..");
 
@@ -48,7 +47,10 @@ public class UploadService {
 
     public void delete() {
         String filename = fetchParameter("name");
-        uploadDAO.delete(filename);
+        uploadDao.delete(filename);
+        for(int i = 0; i<pics.size(); i++)
+            if(pics.get(i).equals(filename))
+                pics.remove(i);
     }
 
     public String fetchParameter(String param) {
@@ -63,7 +65,8 @@ public class UploadService {
     }
 
     public List<String> getPics() {
-        pics = uploadDAO.getPictures();
+        if(pics == null)
+            pics = uploadDao.getPictures();
         return pics;
     }
 

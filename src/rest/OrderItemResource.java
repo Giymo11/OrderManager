@@ -20,17 +20,15 @@ import java.util.List;
  */
 @Path("/orderitems")
 @Produces("application/json")
-
 public class OrderItemResource {
     private OrderItemDao orderItemDao;
     private AddressDao addressDao;
     private OrderDao orderDao;
 
-
     public OrderItemResource(){
         orderItemDao=new OrderItemDao();
-        addressDao=new AddressDao();
-        orderDao=new OrderDao();
+        addressDao =new AddressDao();
+        orderDao =new OrderDao();
     }
 
     @POST

@@ -9,36 +9,27 @@
         <p:growl showDetail="false"/>
     </h:head>
 
-    <p:tabView id="tabs">
-        <p:tab title="Kategorie">
-            <p:calendar value="#{statisticsService.startDate}">
-                <p:ajax event="dateSelect" update="category" listener="#{statisticsService.handleDateSelectStart}"/>
-            </p:calendar>
-            <p:calendar value="#{statisticsService.endDate}">
-                <p:ajax event="dateSelect" update="category" listener="#{statisticsService.handleDateSelectEnd}"/>
-            </p:calendar>
-            <br/>
-            <p:selectOneMenu value="#{statisticsService.selectedCategory}">
-                <f:selectItems value="#{categoryService.names}"/>
-                <p:ajax event="change" listener="#{statisticsService.handleCategoryChange(statisticsService.selectedCategory)}" update="category"/>
-            </p:selectOneMenu>
-            <p:barChart id="category" value="#{statisticsService.modelForCategory}" legendPosition="se" style="height:300px"
-                        title="Verkaufte Produkte" orientation="horizontal" minX="0" animate="true" xaxisLabel="Anzahl"/>
-        </p:tab>
-        <p:tab title="Produkt">
-            <p:calendar value="#{statisticsService.startDate}">
-                <p:ajax event="dateSelect" update="product" listener="#{statisticsService.handleDateSelectStart}"/>
-            </p:calendar>
-            <p:calendar value="#{statisticsService.endDate}">
-                <p:ajax event="dateSelect" update="product" listener="#{statisticsService.handleDateSelectEnd}"/>
-            </p:calendar>
-            <br/>
-            <p:selectOneMenu value="#{statisticsService.selectedProduct}">
-                <f:selectItems value="#{productService.productNames}"/>
-                <p:ajax event="change" listener="#{statisticsService.handleProductChange(statisticsService.selectedProduct)}" update="product"/>
-            </p:selectOneMenu>
-            <p:lineChart id="product" value="#{statisticsService.modelForProduct}" legendPosition="se" style="height:300px"
-                        title="Verkaufte Produkte" orientation="horizontal" minY="0" animate="true" xaxisLabel="Datum" yaxisLabel="Anzahl"/>
-        </p:tab>
-    </p:tabView>
+    <h3>Kategorie</h3>
+    <p:calendar value="#{statisticsService.startDate}">
+
+    </p:calendar>
+    <p:calendar value="#{statisticsService.endDate}"/>
+    <br/>
+    <p:selectOneMenu value="#{statisticsService.selectedCategory}">
+        <f:selectItems value="#{categoryService.names}"/>
+    </p:selectOneMenu>
+    <p:commandButton value="Los!" action="#{statisticsService.update}" update="category" ajax="true" type="submit"/>
+    <p:barChart id="category" value="#{statisticsService.modelForCategory}" legendPosition="se" style="height:300px"
+                title="Verkaufte Produkte" orientation="horizontal" minX="0" animate="true" xaxisLabel="Anzahl"/>
+
+    <h3>Produkte</h3>
+    <p:calendar value="#{statisticsService.startDate}"/>
+    <p:calendar value="#{statisticsService.endDate}"/>
+    <br/>
+    <p:selectOneMenu value="#{statisticsService.selectedProduct}">
+        <f:selectItems value="#{productService.productNames}"/>
+    </p:selectOneMenu>
+    <p:commandButton value="Los!" action="#{statisticsService.update}" update="product" ajax="true" type="submit"/>
+    <p:lineChart id="product" value="#{statisticsService.modelForProduct}" legendPosition="se" style="height:300px"
+                 title="Verkaufte Produkte" orientation="horizontal" minY="0" animate="true" xaxisLabel="Datum" yaxisLabel="Anzahl"/>
 </ui:composition>

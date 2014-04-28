@@ -51,8 +51,9 @@
                         margin-left: 900px;
                         border: 1px solid green;
                         font-size: 10pt;">
+
             <p:dataTable value="#{orderService.newOrderItems}" var="item" id="order"
-                         emptyMessage="Keine Produkte hinzugefügt" >
+                         emptyMessage="Keine Produkte hinzugefügt">
                 <p:column>
                     <p:outputLabel value="#{item.ordered}x"/>
                 </p:column>
@@ -75,6 +76,7 @@
                 </p:column>
             </p:dataTable>
             <br/>
+            Bereits bestellt:
             <p:dataTable value="#{orderService.orderItemsForDate}" var="item" id="items"
                          emptyMessage="Keine Bestellung für diesen Tag">
                 <p:column>

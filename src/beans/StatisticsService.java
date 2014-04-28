@@ -1,33 +1,33 @@
 package beans;
 
 import dao.StatisticsDao;
-import org.primefaces.event.SelectEvent;
 import org.primefaces.model.chart.CartesianChartModel;
 
 import javax.faces.bean.ManagedBean;
+import javax.faces.bean.SessionScoped;
 import java.util.Date;
 
 /**
  * Created by Sarah on 08.04.2014.
  */
 @ManagedBean
+@SessionScoped
 public class StatisticsService {
     private String selectedProduct;
     private String selectedCategory;
     private Date startDate;
     private Date endDate;
-    private StatisticsDao statisticsDAO;
+    private StatisticsDao statisticsDao;
 
     private CartesianChartModel modelCategory;
     private CartesianChartModel modelProduct;
 
     public StatisticsService(){
-        statisticsDAO = new StatisticsDao();
-        setSelectedProduct("Brot");
-        setSelectedCategory("Brote");
+        statisticsDao = new StatisticsDao();
         setStartDate(new Date());
         startDate.setDate(1);
         setEndDate(new Date());
+        endDate.setDate(30);
     }
 
     public CartesianChartModel getModelForCategory(){
@@ -40,7 +40,6 @@ public class StatisticsService {
     public CartesianChartModel getModelForProduct(){
         if (modelProduct == null) {
             updateProd();
-
         }
         return modelProduct;
     }
@@ -78,30 +77,19 @@ public class StatisticsService {
     }
 
     private void updateCat(){
-        modelCategory = statisticsDAO.getModelForCategory(selectedCategory, startDate, endDate);
+        if(selectedCategory == null)
+            selectedCategory = "";
+        modelCategory = statisticsDao.getModelForCategory(selectedCategory, startDate, endDate);
     }
 
     private void updateProd(){
-        modelProduct = statisticsDAO.getModelForProduct(selectedProduct, startDate, endDate);
+        if(selectedProduct == null)
+            selectedProduct = "";
+        modelProduct = statisticsDao.getModelForProduct(selectedProduct, startDate, endDate);
     }
 
-    public void handleDateSelectStart(SelectEvent event){
-        startDate = (Date) event.getObject();
+    public void update() {
         updateCat();
         updateProd();
-    }
-
-    public void handleDateSelectEnd(SelectEvent event){
-        endDate = (Date) event.getObject();
-        updateCat();
-        updateProd();
-    }
-
-    public void handleProductChange(String string){
-        updateProd();
-    }
-
-    public void handleCategoryChange(String category){
-        updateCat();
     }
 }
