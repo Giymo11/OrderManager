@@ -34,7 +34,7 @@ public class OrderItemResource {
     }
 
     @POST
-    @Consumes("/application/json")
+    @Consumes("application/json")
     @Path("/{addressid}")
     public void storeOrderItems(@PathParam("addressid")int addressID, Collection orderitems){
         List<OrderItem> orderItems = (ArrayList) orderitems;
