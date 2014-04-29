@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="UTF-8"?>
+<?xml version="1.0" encoding="ISO-8859-15"?>
 <!DOCTYPE html
         PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
         "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
@@ -28,10 +28,10 @@
                         style="max-width: 860px" columns="3">
                 <p:panel header="#{product.title}" style="text-align: center; height: 350px; width: 250px">
                     <h:panelGrid columns="1">
-                        <p:graphicImage value="#{product.picture}" style="max-height:170px; max-width: 220px"/>
+                        <p:graphicImage value="#{pictureService.getNameForID(product.pictureID)}" style="max-height:170px; max-width: 220px"/>
                         <p:outputLabel value="#{product.description}" style="margin-top: 5px"/>
                         <br/>
-                        <p:outputLabel value="â‚¬ #{productService.getFormatedPrice(product.price)}"/>
+                        <p:outputLabel value="¤ #{productService.getFormatedPrice(product.price)}"/>
                     </h:panelGrid>
                 </p:panel>
             </p:dataGrid>

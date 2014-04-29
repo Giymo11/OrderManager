@@ -20,13 +20,16 @@ import java.util.List;
  * Time: 14:38
  * To change this template use File | Settings | File Templates.
  */
-public class UploadDao extends JdbcDao {
+public class PictureDao extends JdbcDao {
     private static final String folder = FacesContext.getCurrentInstance().getExternalContext().getRealPath("");
     private File fileToDelete;
+    private List<Picture> pictureList;
 
-    public UploadDao(){
+    public PictureDao(){
         super();
+        read();
         insertMissingFiles();
+
     }
 
     private void insertMissingFiles() {
@@ -43,6 +46,7 @@ public class UploadDao extends JdbcDao {
                 if (!exists(file.getName(), connection)) {
                     Picture picture = new Picture(file.getName());
                     insertObject("picture", picture);
+                    pictureList.add(picture);
                     statement.executeUpdate("UPDATE " + DATABASE_NAME + ".picture SET name = '" + picture.getName() +
                             "' WHERE pictureid = " + picture.getId() + ";");
                     statement.executeUpdate("COMMIT;");
@@ -86,7 +90,7 @@ public class UploadDao extends JdbcDao {
                 if(res.getInt(1)==0){
                     Picture pic = new Picture(file.getFileName().toString());
                     insertObject("picture", pic);
-
+                    pictureList.add(pic);
                     s.executeUpdate("UPDATE " + DATABASE_NAME + ".picture SET name = '" + pic.getName() + "' WHERE pictureid = " + pic.getId() + ";");
                     s.executeUpdate("COMMIT;");
                 }
@@ -151,6 +155,10 @@ public class UploadDao extends JdbcDao {
                     resId.next();
                     deleteObject("picture", resId.getInt(1));
                     fileToDelete.delete();
+
+                    for(int i = 0; i<pictureList.size(); i++)
+                        if(pictureList.get(i).getName().equals(filename))
+                            pictureList.remove(i);
                 }
             }
             FacesContext.getCurrentInstance().addMessage("Success!", new FacesMessage("Bild " + filename + " erfolgreich gelöscht"));
@@ -180,11 +188,49 @@ public class UploadDao extends JdbcDao {
                 filename.toLowerCase().endsWith(".jpeg");
     }
 
-    public List<String> getPictures(){
-        List<String> pics = new ArrayList();
-        for (File file : getUploadedPictures())
-            pics.add(file.getName());
+    public String getNameForID(int id) {
+        for(Picture pic : getPictureList())
+            if(pic.getId() == id)
+                return pic.getName();
+        return "logo.jpg";
+    }
 
-        return pics;
+    public List<Picture> getPictureList(){
+        if(pictureList.isEmpty())
+            read();
+        return pictureList;
+    }
+
+    private void read() {
+        Connection connection = null;
+        Statement statement = null;
+        ResultSet resultSet = null;
+
+        pictureList = new ArrayList();
+
+        try{
+            connection = getConnection();
+            statement = connection.createStatement();
+
+            resultSet = statement.executeQuery("SELECT * FROM " + DATABASE_NAME + ".picture");
+
+            while(resultSet.next()) {
+                Picture pic = new Picture(resultSet.getString("name"));
+                pic.setId(resultSet.getInt("pictureid"));
+                pictureList.add(pic);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        finally {
+            close(resultSet, statement, connection);
+        }
+    }
+
+    public int getIDForName(String pictureName) {
+        for(Picture pic : pictureList)
+            if(pic.getName().equalsIgnoreCase(pictureName))
+                return pic.getId();
+        return -1;
     }
 }

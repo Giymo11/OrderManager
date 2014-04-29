@@ -16,15 +16,8 @@ public class Product implements Identifiable{
     private String title;
     private String description;
     private float price;
-    private String picture;
     private int pictureID;
-    private String categoryName;
     private boolean visible;
-
-    public String getSQLSetString() {
-        return "categoryid = " + categoryID + ", name =  '" + title + "', description = '" + description + "', price = " +
-                price + ", pictureid = " + pictureID + ", priority = " + priority + ", visible = " + visible;
-    }
 
     public Product(int id, int categoryID, int priority, String title, String description, float price, int pictureID, boolean visible) {
         setId(id);
@@ -37,25 +30,31 @@ public class Product implements Identifiable{
         setVisible(visible);
     }
 
-    public boolean equals(Product product) {
-        if (id != product.getId())
-            return false;
-        if (categoryID != product.getCategoryID())
-            return false;
-        if (priority != product.getPriority())
-            return false;
-        if (!title.equals(product.getTitle()))
-            return false;
-        if (!description.equals(product.getDescription()))
-            return false;
-        if (price != product.getPrice())
-            return false;
-        if (!picture.equals(product.getPicture()))
-            return false;
-        if (visible != product.isVisible())
-            return false;
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        Product product = (Product) o;
+
+        if (categoryID != product.getCategoryID()) return false;
+        if (id != product.getId()) return false;
+        if (pictureID != product.getPictureID()) return false;
+        if (Float.compare(product.getPrice(), price) != 0) return false;
+        if (priority != product.getPriority()) return false;
+        if (visible != product.isVisible()) return false;
+        if (description != null ? !description.equals(product.getDescription()) : product.getDescription() != null) return false;
+        if (title != null ? !title.equals(product.getTitle()) : product.getTitle() != null) return false;
 
         return true;
+    }
+
+    public int getPictureID() {
+        return pictureID;
+    }
+
+    public void setPictureID(int pictureID) {
+        this.pictureID = pictureID;
     }
 
     public String getTitle() {
@@ -72,14 +71,6 @@ public class Product implements Identifiable{
 
     public void setDescription(String description) {
         this.description = description;
-    }
-
-    public String getPicture() {
-        return picture;
-    }
-
-    public void setPicture(String picture) {
-        this.picture = picture;
     }
 
     public int getPriority() {
@@ -112,14 +103,6 @@ public class Product implements Identifiable{
 
     public void setPrice(float price) {
         this.price = price;
-    }
-
-    public String getCategoryName() {
-        return categoryName;
-    }
-
-    public void setCategoryName(String categoryName) {
-        this.categoryName = categoryName;
     }
 
     public boolean isVisible() {

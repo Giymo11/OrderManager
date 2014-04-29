@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="UTF-8"?>
+<?xml version="1.0" encoding="ISO-8859-15"?>
 <!DOCTYPE html
         PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
         "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
@@ -7,7 +7,7 @@
       xmlns:p="http://primefaces.org/ui"
       xmlns:ui="http://java.sun.com/jsf/facelets">
 <head>
-    <title>√úber uns</title>
+    <title>‹ber uns</title>
     <h:outputStylesheet name="style.css" library="css"/>
 </head>
 <h:body>
@@ -15,19 +15,19 @@
         <table>
             <tr>
                 <td>
-                    <h3>√úber uns</h3>
+                    <h3>‹ber uns</h3>
                     <p:outputLabel value="#{aboutService.first.text}" style="margin:0; width: 50%"/>
                 </td>
                 <td>
-                    <h:graphicImage value="#{aboutService.first.pictureName}" style="max-height: 50%; width: 430px"/>
+                    <h:graphicImage value="#{aboutService.firstPicture}" style="max-height: 50%; width: 430px"/>
                 </td>
             </tr>
             <tr>
                 <td>
-                    <h:graphicImage value="#{aboutService.second.pictureName}" style="max-height: 50%; width: 430px"/>
+                    <h:graphicImage value="#{aboutService.secondPicture}" style="max-height: 50%; width: 430px"/>
                 </td>
                 <td>
-                    <h3>Lokalit√§t</h3>
+                    <h3>Lokalit‰t</h3>
                     <p:outputLabel value="#{aboutService.second.text}"/>
                 </td>
             </tr>
@@ -37,13 +37,13 @@
                     <p:outputLabel value="#{aboutService.third.text}" style="margin:0; width: 50%"/>
                 </td>
                 <td>
-                    <h:graphicImage value="#{aboutService.third.pictureName}" style="max-height: 50%; width: 430px"/>
+                    <h:graphicImage value="#{aboutService.thirdPicture}" style="max-height: 50%; width: 430px"/>
                 </td>
             </tr>
         </table>
     </div>
     <div class="topbar">
-        <h1>√úBER UNS</h1>
+        <h1>‹BER UNS</h1>
     </div>
     <ui:include src="menu.xhtml"/>
 </h:body>

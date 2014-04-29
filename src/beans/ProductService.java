@@ -141,7 +141,7 @@ public class ProductService {
         this.selectedPicture = selectedPicture;
     }
 
-    public String getName(int id){
+    public String getNameForID(int id){
         if(productList == null)
             productList = productDao.getProductList();
 

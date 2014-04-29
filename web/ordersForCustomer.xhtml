@@ -1,12 +1,12 @@
-<?xml version="1.0" encoding="UTF-8"?>
+<?xml version="1.0" encoding="ISO-8859-15"?>
 <!DOCTYPE html
         PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
         "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml"
       xmlns:p="http://primefaces.org/ui"
       xmlns:h="http://java.sun.com/jsf/html"
-      xmlns:ui="http://java.sun.com/jsf/facelets"
-      >
+      xmlns:ui="http://java.sun.com/jsf/facelets" xmlns:f="http://java.sun.com/jsf/core"
+        >
 <h:head>
     <title>Bestellungen</title>
     <p:growl showDetail="false"/>
@@ -38,14 +38,20 @@
                             <p:outputLabel value="#{item.ordered}"/>
                         </p:column>
                         <p:column headerText="Produkt">
-                            <p:outputLabel value="#{productService.getName(item.productid)}"/>
+                            <p:outputLabel value="#{productService.getNameForID(item.productid)}"/>
                         </p:column>
                         <p:column headerText="Preis">
-                            <p:outputLabel value="â‚¬  #{productService.getFormatedPrice(productService.getPrice(item.productid))}"/>
+                            <p:outputLabel value="¤ #{productService.getFormatedPrice(productService.getPrice(item.productid))}"/>
+                        </p:column>
+                        <p:column>
+                            <p:outputLabel value="¤ #{productService.getFormatedPrice(orderService.sumUp(productService.getPrice(item.productid), item.ordered))}"/>
+                            <f:facet name="footer">
+                                <p:outputLabel value="¤ #{productService.getFormatedPrice(orderService.getSumAll(orderService.getAllItemsWithIDForCurrentUser(order.id)))}"/>
+                            </f:facet>
                         </p:column>
                     </p:dataTable>
                 </p:column>
-                <p:column headerText="Notiz vom BÃ¤cker">
+                <p:column headerText="Notiz vom Bäcker">
                     <p:outputLabel value="#{order.memoForCustomer}"/>
                 </p:column>
             </p:dataTable>

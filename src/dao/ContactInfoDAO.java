@@ -134,8 +134,9 @@ public class ContactInfoDao extends JdbcDao {
             connection = getConnection();
             statement = connection.createStatement();
 
-            statement.executeUpdate("UPDATE " + DATABASE_NAME + ".contactinfo SET name = '" + name + "', street = '" + street +
-                    "', location = '" + location + "', telephone = '" + telephone + "', email = '" + mail + "';");
+            statement.executeUpdate("DELETE FROM " + DATABASE_NAME + ".contactinfo;");
+            statement.executeUpdate("INSERT INTO " + DATABASE_NAME + ".contactinfo VALUES('" + name + "', '" + street +
+                    "', '" + location + "', '" + telephone + "', '" + mail + "');");
             statement.executeUpdate("DELETE FROM " + DATABASE_NAME + ".openinghours;");
 
             if (mondayAM.length() > 1)
@@ -221,7 +222,6 @@ public class ContactInfoDao extends JdbcDao {
 
     public String getTelephone() {
         return telephone;
-
     }
 
     public void setTelephone(String telephone) {

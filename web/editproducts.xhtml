@@ -9,12 +9,12 @@
                 <p:selectBooleanCheckbox value="#{item.visible}"/>
             </p:column>
             <p:column headerText="Bild">
-                <p:graphicImage value="#{item.picture}" style="max-height: 70px; max-width: 100px"/>
+                <p:graphicImage value="#{pictureService.getNameForID(item.pictureID)}" style="max-height: 70px; max-width: 100px"/>
 
                 <f:facet name="footer">
                     <p:selectOneMenu value="#{productService.selectedPicture}" effect="fade" style="width:160px"
                                      panelStyle="width:150px" filter="true" filterMatchMode="startsWith">
-                        <f:selectItems value="#{uploadService.pics}"/>
+                        <f:selectItems value="#{pictureService.pics}"/>
                     </p:selectOneMenu>
                 </f:facet>
             </p:column>
@@ -36,7 +36,7 @@
             </p:column>
 
             <p:column headerText="Kategorie">
-                <p:outputLabel value="#{item.categoryName}"/>
+                <p:outputLabel value="#{categoryService.getNameForID(item.categoryID)}"/>
 
                 <f:facet name="footer">
                     <p:selectOneMenu value="#{productService.selectedCategory}">
@@ -54,11 +54,11 @@
                 </f:facet>
             </p:column>
             <p:column>
-                <p:commandButton type="submit" value="Löschen" action="#{productService.delete}" ajax="false"
+                <p:commandButton type="submit" value="Löschen" action="#{productService.delete}" ajax="true"
                                  update="@form">
                     <f:param value="#{item.id}" name="id"/>
                 </p:commandButton>
-                <p:commandButton type="submit" value="Speichern" action="#{productService.save}" ajax="false"
+                <p:commandButton type="submit" value="Speichern" action="#{productService.save}" ajax="true"
                                  update="@form">
                     <f:param value="#{item.id}" name="idS"/>
                 </p:commandButton>

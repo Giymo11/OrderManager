@@ -28,10 +28,11 @@ public class StatisticsService {
         startDate.setDate(1);
         setEndDate(new Date());
         endDate.setDate(30);
+        modelCategory = new CartesianChartModel();
     }
 
     public CartesianChartModel getModelForCategory(){
-        if (modelCategory == null) {
+        if (modelCategory.getSeries().size()==0) {
             updateCat();
         }
         return modelCategory;

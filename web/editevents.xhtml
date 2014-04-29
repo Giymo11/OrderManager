@@ -6,12 +6,12 @@
 
         <p:dataTable var="item" value="#{eventService.events}" cellpadding="15px">
             <p:column headerText="Bild">
-                <p:graphicImage value="#{item.picture}" style="width: 100px; height: 70px"/>
+                <p:graphicImage value="#{pictureService.getNameForID(item.pictureid)}" style="width: 100px; height: 70px"/>
 
                 <f:facet name="footer">
                     <p:selectOneMenu value="#{eventService.selectedPicture}" effect="fade" style="width:160px"
                                      panelStyle="width:150px" filter="true" filterMatchMode="startsWith">
-                        <f:selectItems value="#{uploadService.pics}"/>
+                        <f:selectItems value="#{pictureService.pics}"/>
                     </p:selectOneMenu>
                 </f:facet>
             </p:column>

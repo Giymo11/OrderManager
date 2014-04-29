@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="UTF-8"?>
+<?xml version="1.0" encoding="ISO-8859-15"?>
 <!DOCTYPE html
         PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
         "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
@@ -19,24 +19,24 @@
                     margin-top: 130px;
                     min-width: 600px;
                     position: absolute;">
-        <p:outputLabel value="Bitte Ã¼berprÃ¼fen Sie ihre Eingaben"/>
+        <p:outputLabel value="Bitte überprüfen Sie ihre Eingaben"/>
         <br/>
-        <p:outputLabel value="Bestellung fÃ¼r den Tag: #{orderService.orderDate}"/>
+        <p:outputLabel value="Bestellung für den Tag: #{orderService.date}"/>
         <p:dataTable value="#{orderService.newOrderItems}" var="item" id="order" emptyMessage="Keine Daten vorhanden">
             <p:column headerText="Anzahl">
                 <p:outputLabel value="#{item.ordered}"/>
             </p:column>
             <p:column headerText="Produkt">
-                <p:outputLabel value="#{productService.getName(item.productid)}"/>
+                <p:outputLabel value="#{productService.getNameForID(item.productid)}"/>
             </p:column>
             <p:column headerText="Preis">
-                <p:outputLabel value="â‚¬  #{productService.getPrice(item.productid)}"/>
+                <p:outputLabel value="¤  #{productService.getPrice(item.productid)}"/>
             </p:column>
             <p:column headerText="Gesamt">
-                <p:outputLabel value="â‚¬ #{orderService.sumUp(productService.getPrice(item.productid), item.ordered)}"/>
+                <p:outputLabel value="¤ #{orderService.sumUp(productService.getPrice(item.productid), item.ordered)}"/>
 
                 <f:facet name="footer">
-                    <p:outputLabel value="â‚¬ #{orderService.getSumAll(orderService.newOrderItems)}"/>
+                    <p:outputLabel value="¤ #{orderService.getSumAll(orderService.newOrderItems)}"/>
                 </f:facet>
             </p:column>
             <p:column>
@@ -46,10 +46,10 @@
             </p:column>
         </p:dataTable>
         <br/>
-        <p:inputTextarea value="#{orderService.memo}" placeholder="Notiz an den BÃ¤cker"/>
+        <p:inputTextarea value="#{orderService.memo}" placeholder="Notiz an den Bäcker"/>
         <br/>
         <p:commandButton value="Bestellung abschicken!" action="#{orderService.addOrder}" style="margin-right: 2px"/>
-        <p:dialog id="basicDialog" header="DankeschÃ¶n!" widgetVar="dlg1">
+        <p:dialog id="basicDialog" header="Dankeschön!" widgetVar="dlg1">
             <h:outputText value="Ihre Bestellung wurde abgeschickt. Um alle ihre bisherigen Bestellungen anzusehen klicken Sie bitte auf 'Bestellungen'"/>
         </p:dialog>
     </p:panel>
