@@ -91,7 +91,6 @@ public class OrderService {
         currentOrderid = getOrderID(tourID, email);
 
         if(currentOrderid == -1){
-            System.out.println(memo);
             Order order = orderDao.addOrder(tourID, email, memo);
             orderList.add(order);
             currentOrderid = order.getId();

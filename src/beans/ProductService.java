@@ -3,6 +3,7 @@ package beans;
 import dao.ProductDao;
 import dto.Product;
 
+import javax.faces.application.FacesMessage;
 import javax.faces.bean.ApplicationScoped;
 import javax.faces.bean.ManagedBean;
 import javax.faces.context.FacesContext;
@@ -37,6 +38,9 @@ public class ProductService {
         selectedCategory = null;
         selectedCatProducts = new ArrayList();
         productNames = new ArrayList();
+        newName = "";
+        newText = "";
+        newPrice = 0.0f;
     }
 
     public List<Product> getProducts() {
@@ -67,11 +71,15 @@ public class ProductService {
     }
 
     public void addNewProduct() {
-        productList.add(productDao.addNewProduct(selectedCategory, newName, newText, newPrice, selectedPicture));
+        if(newPrice==0.0f || selectedCategory==null || newName.equals("") || newText.equals(""))
+            FacesContext.getCurrentInstance().addMessage("Failure", new FacesMessage("Bitte überprüfen Sie Ihre Eingaben!", "Preis muss größer 0 sein; Name, Beschreibung und Kategorie müssen vorhanden sein"));
+        else {
+            productList.add(productDao.addNewProduct(selectedCategory, newName, newText, newPrice, selectedPicture));
 
-        newName = "";
-        newText = "";
-        newPrice = 0.0f;
+            newName = "";
+            newText = "";
+            newPrice = 0.0f;
+        }
     }
 
     public void save(){
@@ -172,6 +180,8 @@ public class ProductService {
 
         if (str.length()==2)
             formated = temp + "0";
+        else if (str.length()>3)
+            formated = temp.substring(0, temp.indexOf('.')) + str.substring(0,3);
         else
             formated = temp;
 

@@ -175,8 +175,8 @@ public class OrderItemDao extends JdbcDao {
         try{
             connection = getConnection();
             statement = connection.createStatement();
-            resultSet = statement.executeQuery("SELECT * FROM " + DATABASE_NAME + ".orderitem WHERE orderid = " +
-                "(SELECT id FROM " + DATABASE_NAME + ".order WHERE tourid = (SELECT id FROM " + DATABASE_NAME + ".tour" +
+            resultSet = statement.executeQuery("SELECT * FROM " + DATABASE_NAME + ".orderitem WHERE orderid IN " +
+                "(SELECT id FROM " + DATABASE_NAME + ".order WHERE tourid IN (SELECT id FROM " + DATABASE_NAME + ".tour" +
                     " WHERE date = '" + getDateSQL(startDate) + "'));");
 
             while(resultSet.next()){

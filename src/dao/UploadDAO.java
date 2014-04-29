@@ -41,7 +41,6 @@ public class UploadDao extends JdbcDao {
 
             for(File file : files) {
                 if (!exists(file.getName(), connection)) {
-                    System.out.println(file.getName());
                     Picture picture = new Picture(file.getName());
                     insertObject("picture", picture);
                     statement.executeUpdate("UPDATE " + DATABASE_NAME + ".picture SET name = '" + picture.getName() +

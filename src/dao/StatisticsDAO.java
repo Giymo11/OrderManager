@@ -29,26 +29,27 @@ public class StatisticsDao extends JdbcDao {
         category.setLabel(selectedCategory);
 
         try{
-            connection = getConnection();
-            statement = connection.createStatement();
-            statName = connection.createStatement();
+            if(selectedCategory!=null) {
+                connection = getConnection();
+                statement = connection.createStatement();
+                statName = connection.createStatement();
 
-            resultSet = statement.executeQuery("SELECT productid, sum(ordered) FROM " + DATABASE_NAME +".orderitem" +
-                    " WHERE orderid IN ( SELECT id FROM " + DATABASE_NAME +".order WHERE tourid IN" +
-                    " (SELECT id FROM " + DATABASE_NAME + ".tour WHERE date BETWEEN '" + getDateSQL(startDate) +
-                    "' AND '" + getDateSQL(endDate) + "') )" +
-                    " AND productid IN ( SELECT id FROM  " + DATABASE_NAME + ".product" +
-                    " WHERE categoryid = (SELECT id FROM " + DATABASE_NAME + ".category WHERE name = '"
-                    + selectedCategory + "') ) GROUP BY productid;");
+                resultSet = statement.executeQuery("SELECT productid, sum(ordered) FROM " + DATABASE_NAME + ".orderitem" +
+                        " WHERE orderid IN ( SELECT id FROM " + DATABASE_NAME + ".order WHERE tourid IN" +
+                        " (SELECT id FROM " + DATABASE_NAME + ".tour WHERE date BETWEEN '" + getDateSQL(startDate) +
+                        "' AND '" + getDateSQL(endDate) + "') )" +
+                        " AND productid IN ( SELECT id FROM  " + DATABASE_NAME + ".product" +
+                        " WHERE categoryid = (SELECT id FROM " + DATABASE_NAME + ".category WHERE name = '"
+                        + selectedCategory + "') ) GROUP BY productid;");
 
-            while(resultSet.next()){
-                resName = statName.executeQuery("SELECT name FROM " + DATABASE_NAME + ".product WHERE id = "
-                        + resultSet.getInt(1) + ";");
-                resName.next();
-
-                category.set(resName.getString(1), resultSet.getInt(2));
+                while (resultSet.next()) {
+                    resName = statName.executeQuery("SELECT name FROM " + DATABASE_NAME + ".product WHERE id = "
+                            + resultSet.getInt(1) + ";");
+                    resName.next();
+                    category.set(resName.getString(1), resultSet.getInt(2));
+                }
+                model.addSeries(category);
             }
-            model.addSeries(category);
         } catch (SQLException e) {
             e.printStackTrace();
         }

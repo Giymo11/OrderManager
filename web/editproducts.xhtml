@@ -4,7 +4,7 @@
         xmlns:f="http://java.sun.com/jsf/core"
         xmlns:p="http://primefaces.org/ui">
 
-        <p:dataTable var="item" value="#{productService.products}" cellpadding="5px" style="padding: 2px">
+        <p:dataTable var="item" value="#{productService.products}" cellpadding="5px" style="padding: 2px" id="productTable">
             <p:column headerText="Anzeige">
                 <p:selectBooleanCheckbox value="#{item.visible}"/>
             </p:column>
@@ -65,7 +65,7 @@
 
 
                 <f:facet name="footer">
-                    <p:commandButton type="submit" action="#{productService.addNewProduct}" value="Hinzufügen" ajax="false"
+                    <p:commandButton type="submit" action="#{productService.addNewProduct}" value="Hinzufügen" ajax="true"
                                      update="@form"/>
                 </f:facet>
             </p:column>

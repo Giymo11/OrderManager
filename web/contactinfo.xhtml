@@ -1,41 +1,37 @@
 <ui:composition
         xmlns:ui="http://java.sun.com/jsf/facelets"
         xmlns:h="http://java.sun.com/jsf/html">
-    <h:head>
-        <h:outputStylesheet name="style.css" library="css"/>
-    </h:head>
 
     <table class="contact">
-        <caption>Kontakt</caption>
         <tbody>
         <tr>
             <th>Name:</th>
             <td>
-                <h:outputText value="#{contactInfoBean.name}"/>
+                <h:outputText value="#{contactInfoService.name}"/>
             </td>
         </tr>
         <tr>
             <th>Straße:</th>
             <td>
-                <h:outputText value="#{contactInfoBean.street}"/>
+                <h:outputText value="#{contactInfoService.street}"/>
             </td>
         </tr>
         <tr>
             <th>Ort:</th>
             <td>
-                <h:outputText value="#{contactInfoBean.location}"/>
+                <h:outputText value="#{contactInfoService.location}"/>
             </td>
         </tr>
         <tr>
             <th>Telefon:</th>
             <td>
-                <h:outputText value="#{contactInfoBean.telephone}"/>
+                <h:outputText value="#{contactInfoService.telephone}"/>
             </td>
         </tr>
         <tr>
             <th>E-Mail:</th>
             <td>
-                <h:outputText value="#{contactInfoBean.mail}"/>
+                <h:outputText value="#{contactInfoService.mail}"/>
             </td>
         </tr>
         </tbody>
