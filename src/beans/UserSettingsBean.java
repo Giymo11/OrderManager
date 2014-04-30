@@ -7,7 +7,7 @@ import dto.User;
 
 import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
-import javax.faces.bean.RequestScoped;
+import javax.faces.bean.SessionScoped;
 import javax.faces.context.FacesContext;
 import javax.servlet.http.HttpServletRequest;
 
@@ -15,7 +15,7 @@ import javax.servlet.http.HttpServletRequest;
  * Created by Sarah on 30.03.2014.
  */
 @ManagedBean
-@RequestScoped
+@SessionScoped
 public class UserSettingsBean {
     private String newEmail;
     private String oldPass;
@@ -29,6 +29,7 @@ public class UserSettingsBean {
     private String selectedTown;
 
     public UserSettingsBean(){
+        System.out.println("UserSettingsBean created");
         settingsDAO = new UserSettingsDAO();
 
         HttpServletRequest req = (HttpServletRequest) FacesContext.getCurrentInstance().getExternalContext().getRequest();
@@ -75,8 +76,11 @@ public class UserSettingsBean {
     }
 
     public void saveLoginData(){
+        System.out.println("saveLoginData called");
         HttpServletRequest req = (HttpServletRequest) FacesContext.getCurrentInstance().getExternalContext().getRequest();
         String email = req.getSession().getAttribute("email").toString();
+
+        System.out.println("saveLoginData called " + email);
 
         if(settingsDAO.check(oldPass, email)){
             if(newPass1.equals(newPass2)){

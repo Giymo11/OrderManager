@@ -290,6 +290,8 @@ public class OrderService {
         if(string.length()<=2)
             sumStr += "0";
 
+        sumStr = sumStr.replace('.', ',');
+
         return sumStr;
     }
 
@@ -304,6 +306,8 @@ public class OrderService {
 
         if(string.length()<=2)
             sumStr += "0";
+
+        sumStr = sumStr.replace('.', ',');
 
         return sumStr;
     }
@@ -358,5 +362,9 @@ public class OrderService {
     public List<OrderItem> getAllItemsForDate(){
         allItemsForDate = orderItemDAO.getAllItemsForDate(startDate);
         return allItemsForDate;
+    }
+
+    public String getFormatedDate(Date date){
+        return date.getDate() + "." + (date.getMonth()+1) + "." + (date.getYear()+1900);
     }
 }

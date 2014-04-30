@@ -5,7 +5,7 @@
         <h:head>
             <p:growl showDetail="false"/>
         </h:head>
-        <table>
+        <table id="table">
             <tbody>
                 <tr>
                     <th>Neue E-Mail-Adresse:</th>
@@ -33,6 +33,6 @@
                 </tr>
             </tbody>
         </table>
-        <p:commandButton value="Speichern" ajax="false" action="#{userSettingsBean.saveLogin}"/>
+        <p:commandButton value="Speichern" ajax="false" action="#{userSettingsBean.saveLoginData}" type="submit" update="table"/>
     </h:form>
 </ui:composition>

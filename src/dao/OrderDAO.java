@@ -270,6 +270,35 @@ public class OrderDao extends JdbcDao {
         return orderList;
     }
 
+    public List<Order> getOrdersByAddressForCurrentDay(int addressID){
+        Connection connection = null;
+        Statement statement = null;
+        ResultSet resultSet = null;
+        Order order;
+        List<Order> orderList = new ArrayList();
+
+        try{
+            connection = getConnection();
+            statement = connection.createStatement();
+            resultSet = statement.executeQuery("SELECT * FROM " + DATABASE_NAME + ".order where AddressID = "
+                    + addressID + " AND tourid = (SELECT id FROM " + DATABASE_NAME + ".tour WHERE date = '" + getDateSQL(new Date()) + "');");
+
+            while(resultSet.next()){
+                order = getOrderWithResultSet(resultSet);
+                order.setId(resultSet.getInt("id"));
+
+                orderList.add(order);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        finally {
+            close(resultSet, statement, connection);
+        }
+
+        return orderList;
+    }
+
     public int addOrderWithAddressID(int addressID, Date date){
         int id = 0;
         Connection connection = null;

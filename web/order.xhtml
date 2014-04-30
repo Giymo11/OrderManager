@@ -21,7 +21,7 @@
                     position: absolute;">
         <p:outputLabel value="Bitte überprüfen Sie ihre Eingaben"/>
         <br/>
-        <p:outputLabel value="Bestellung für den Tag: #{orderService.date}"/>
+        <p:outputLabel value="Bestellung für den Tag: #{orderService.getFormatedDate(orderService.date)}"/>
         <p:dataTable value="#{orderService.newOrderItems}" var="item" id="order" emptyMessage="Keine Daten vorhanden">
             <p:column headerText="Anzahl">
                 <p:outputLabel value="#{item.ordered}"/>
@@ -30,7 +30,7 @@
                 <p:outputLabel value="#{productService.getNameForID(item.productid)}"/>
             </p:column>
             <p:column headerText="Preis">
-                <p:outputLabel value="¤  #{productService.getPrice(item.productid)}"/>
+                <p:outputLabel value="¤  #{productService.getFormatedPrice(productService.getPrice(item.productid))}"/>
             </p:column>
             <p:column headerText="Gesamt">
                 <p:outputLabel value="¤ #{orderService.sumUp(productService.getPrice(item.productid), item.ordered)}"/>

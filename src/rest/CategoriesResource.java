@@ -16,7 +16,7 @@ import java.util.List;
  */
 
 @Path("/categories")
-@Produces("application/json")
+@Produces("application/json;charset=utf-8")
 public class CategoriesResource {
     private CategoryDao categoryDao;
 

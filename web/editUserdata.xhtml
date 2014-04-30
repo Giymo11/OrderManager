@@ -29,7 +29,7 @@
                 <tr>
                     <th>Geburtstag:</th>
                     <td>
-                        <p:calendar value="#{userSettingsBean.user.birthdate}" maxdate="#{registerBean.getMaxDate}"/>
+                        <p:calendar value="#{userSettingsBean.user.birthdate}" maxdate="#{registerBean.getMaxDate}" navigator="true"/>
                     </td>
                 </tr>
                 <tr>
@@ -54,6 +54,6 @@
                 </tr>
             </tbody>
         </table>
-        <p:commandButton value="Speichern" ajax="false" update="@form" action="#{userSettingsBean.saveUserData}"/>
+        <p:commandButton value="Speichern" ajax="true" update="@form" action="#{userSettingsBean.saveUserData}" type="submit"/>
     </h:form>
 </ui:composition>

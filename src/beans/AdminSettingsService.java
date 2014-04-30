@@ -18,8 +18,6 @@ import java.util.Map;
 public class AdminSettingsService {
     private UserAdminDAO userAdminDAO;
     private AdminSettingsDao adminSettingsDao;
-    private String pass;
-    private String email;
     private List<User> userList;
 
     public AdminSettingsService(){
@@ -52,22 +50,6 @@ public class AdminSettingsService {
 
     public void addAsAdmin(){
         int id = Integer.parseInt("idAdmin");
-        adminSettingsDao.addAsAdmin(email, pass, id);
-    }
-
-    public void setPass(String pass) {
-        this.pass = pass;
-    }
-
-    public void setEmail(String email) {
-        this.email = email;
-    }
-
-    public String getPass() {
-        return pass;
-    }
-
-    public String getEmail() {
-        return email;
+        adminSettingsDao.addAsAdmin(id);
     }
 }
