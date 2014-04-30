@@ -54,7 +54,9 @@ public class OrderItemResource {
     }
 
     @GET
-    public List getOrderItems(@PathParam("id")int orderID){
+    @Produces("application/json")
+    @Path("/{orderid}")
+    public List getOrderItems(@PathParam("orderid") int orderID) {
         return orderItemDao.getAllItemsForOrder(orderID);
     }
 
