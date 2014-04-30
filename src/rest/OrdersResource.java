@@ -1,10 +1,10 @@
 package rest;
 
 import dao.OrderDao;
+import dto.Order;
 
 import javax.ws.rs.*;
 import java.util.Date;
-import java.util.List;
 
 /**
  * Created with IntelliJ IDEA.
@@ -24,7 +24,7 @@ public class OrdersResource {
     }
 
     @GET
-    public List getOrders(@PathParam("id")int addressid){
+    public Order getOrders(@PathParam("id") int addressid) {
         return orderdao.getOrdersByAddressForCurrentDay(addressid);
     }
 
