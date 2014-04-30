@@ -31,7 +31,7 @@
                     <h:panelGrid columns="1" style="height: 350px">
                         <p:graphicImage value="#{pictureService.getNameForID(product.pictureID)}" style="height:150px; max-width: 200px"/>
                         <p:outputLabel value="#{product.description}" style="margin-top: 5px"/>
-                        <p:outputLabel value="¤ #{productService.getFormatedPrice(product.price)}"/>
+                        <p:outputLabel value="#{productService.getFormatedPrice(product.price)}"/>
                         <p:inputText binding="#{quantity}" type="number" maxlength="2" size="2" style="width: 30px"/>
                         <p:commandButton value="+" action="#{orderService.addOneOrderItem(quantity.value)}"
                                           ajax="true" update=":form:order">
@@ -63,12 +63,12 @@
                     <p:outputLabel value="#{productService.getNameForID(item.productid)}"/>
                 </p:column>
                 <p:column headerText="Preis">
-                    <p:outputLabel value="¤ #{productService.getFormatedPrice(productService.getPrice(item.productid))}"/>
+                    <p:outputLabel value="#{productService.getFormatedPrice(productService.getPrice(item.productid))}"/>
                 </p:column>
                 <p:column headerText="Gesamt">
-                    <p:outputLabel value="¤ #{productService.getFormatedPrice(orderService.sumUp(productService.getPrice(item.productid), item.ordered))}"/>
+                    <p:outputLabel value="#{orderService.sumUp(productService.getPrice(item.productid), item.ordered)}"/>
                     <f:facet name="footer">
-                        <p:outputLabel value="¤ #{productService.getFormatedPrice(orderService.getSumAll(orderService.newOrderItems))}"/>
+                        <p:outputLabel value="#{orderService.getSumAll(orderService.newOrderItems)}"/>
                     </f:facet>
                 </p:column>
                 <p:column>
@@ -88,12 +88,12 @@
                     <p:outputLabel value="#{productService.getNameForID(item.productid)}"/>
                 </p:column>
                 <p:column headerText="Preis">
-                    <p:outputLabel value="¤ #{productService.getFormatedPrice(productService.getPrice(item.productid))}"/>
+                    <p:outputLabel value="#{productService.getFormatedPrice(productService.getPrice(item.productid))}"/>
                 </p:column>
                 <p:column headerText="Gesamt">
-                    <p:outputLabel value="¤ #{productService.getFormatedPrice(orderService.sumUp(productService.getPrice(item.productid), item.ordered))}"/>
+                    <p:outputLabel value="#{orderService.sumUp(productService.getPrice(item.productid), item.ordered)}"/>
                     <f:facet name="footer">
-                        <p:outputLabel value="¤ #{productService.getFormatedPrice(orderService.getSumAll(orderService.orderItemsForDate))}"/>
+                        <p:outputLabel value="#{orderService.getSumAll(orderService.orderItemsForDate)}"/>
                     </f:facet>
                 </p:column>
             </p:dataTable>

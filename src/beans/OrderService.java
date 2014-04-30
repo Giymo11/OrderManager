@@ -284,7 +284,7 @@ public class OrderService {
 
     public String sumUp(float price, int quantity){
         float sum = (float) Math.round(price*quantity * 100) / 100;
-        String sumStr = sum + "";
+        String sumStr = "€ " + sum + "";
         String string = sumStr.substring(sumStr.indexOf('.'));
 
         if(string.length()<=2)
@@ -301,7 +301,7 @@ public class OrderService {
             sum += item.getOrdered() * getPrice(item.getProductid());
         }
 
-        String sumStr = sum + "";
+        String sumStr = "€ " + sum + "";
         String string = sumStr.substring(sumStr.indexOf('.'));
 
         if(string.length()<=2)

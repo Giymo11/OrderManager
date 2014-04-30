@@ -33,13 +33,13 @@
                     <p:outputLabel value="#{productService.getNameForID(item.productid)}"/>
                 </p:column>
                 <p:column headerText="Preis">
-                    <p:outputLabel value="¤ #{productService.getFormatedPrice(productService.getPrice(item.productid))}"/>
+                    <p:outputLabel value="#{productService.getFormatedPrice(productService.getPrice(item.productid))}"/>
                 </p:column>
                 <p:column headerText="Summe">
-                    <p:outputLabel value="¤ #{productService.getFormatedPrice(orderService.sumUp(productService.getPrice(item.productid), item.ordered))}"/>
+                    <p:outputLabel value="#{orderService.sumUp(productService.getPrice(item.productid), item.ordered)}"/>
 
                     <f:facet name="footer">
-                        <p:outputLabel value="¤ #{productService.getFormatedPrice(orderService.getSumAll(orderService.allItemsForDate))}"/>
+                        <p:outputLabel value="#{orderService.getSumAll(orderService.allItemsForDate)}"/>
                     </f:facet>
                 </p:column>
             </p:dataTable>

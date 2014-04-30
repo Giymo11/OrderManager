@@ -31,7 +31,7 @@
                         <p:graphicImage value="#{pictureService.getNameForID(product.pictureID)}" style="max-height:170px; max-width: 220px"/>
                         <p:outputLabel value="#{product.description}" style="margin-top: 5px"/>
                         <br/>
-                        <p:outputLabel value="¤ #{productService.getFormatedPrice(product.price)}"/>
+                        <p:outputLabel value="#{productService.getFormatedPrice(product.price)}"/>
                     </h:panelGrid>
                 </p:panel>
             </p:dataGrid>

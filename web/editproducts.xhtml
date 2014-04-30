@@ -46,7 +46,7 @@
             </p:column>
 
             <p:column headerText="Preis in € ">
-                <p:outputLabel value="€#{item.price}"/>
+                <p:outputLabel value="#{productService.getFormatedPrice(item.price)}"/>
 
                 <f:facet name="footer">
                     <p:outputLabel value="Bitte mit . trennen"/>
