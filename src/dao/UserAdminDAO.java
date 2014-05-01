@@ -12,8 +12,8 @@ import java.util.List;
 /**
  * Created by Sarah on 03.04.2014.
  */
-public class UserAdminDAO extends JdbcDao {
-    public UserAdminDAO(){
+public class UserAdminDao extends JdbcDao {
+    public UserAdminDao(){
         super();
     }
 

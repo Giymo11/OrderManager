@@ -270,12 +270,11 @@ public class OrderDao extends JdbcDao {
         return orderList;
     }
 
-    public List<Order> getOrdersByAddressForCurrentDay(int addressID){
+    public Order getOrderByAddressForCurrentDay(int addressID) {
         Connection connection = null;
         Statement statement = null;
         ResultSet resultSet = null;
-        Order order;
-        List<Order> orderList = new ArrayList();
+        Order order = null;
 
         try{
             connection = getConnection();
@@ -286,8 +285,6 @@ public class OrderDao extends JdbcDao {
             while(resultSet.next()){
                 order = getOrderWithResultSet(resultSet);
                 order.setId(resultSet.getInt("id"));
-
-                orderList.add(order);
             }
         } catch (SQLException e) {
             e.printStackTrace();
@@ -296,7 +293,7 @@ public class OrderDao extends JdbcDao {
             close(resultSet, statement, connection);
         }
 
-        return orderList;
+        return order;
     }
 
     public int addOrderWithAddressID(int addressID, Date date){

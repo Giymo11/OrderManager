@@ -17,8 +17,8 @@ import java.util.List;
  * Time: 14:54
  * To change this template use File | Settings | File Templates.
  */
-public class TourDAO extends JdbcDao {
-    public TourDAO(){
+public class TourDao extends JdbcDao {
+    public TourDao(){
         super();
     }
 
