@@ -45,12 +45,13 @@ public class UploadService {
         file = null;
     }
 
-    public void delete() {
+    public String delete() {
         String filename = fetchParameter("name");
         uploadDao.delete(filename);
         for(int i = 0; i<pics.size(); i++)
             if(pics.get(i).equals(filename))
                 pics.remove(i);
+        return "#";
     }
 
     public String fetchParameter(String param) {

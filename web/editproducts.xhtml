@@ -54,19 +54,21 @@
                 </f:facet>
             </p:column>
             <p:column>
-                <p:commandButton type="submit" value="Löschen" action="#{productService.delete}" ajax="false"
-                                 update="@form">
+                <p:commandLink type="submit" action="#{productService.delete}" styleClass="btn btn-danger" ajax="true" update="@form">
                     <f:param value="#{item.id}" name="id"/>
-                </p:commandButton>
-                <p:commandButton type="submit" value="Speichern" action="#{productService.save}" ajax="false"
-                                 update="@form">
+                    <i class="fa fa-trash-o fa-2x fa-lg"/>
+                </p:commandLink>
+                <br/>
+                <br/>
+                <p:commandLink type="submit" action="#{productService.save}" styleClass="btn btn-danger" ajax="true" update="@form">
                     <f:param value="#{item.id}" name="idS"/>
-                </p:commandButton>
-
+                    <i class="fa fa-save fa-2x fa-lg"/>
+                </p:commandLink>
 
                 <f:facet name="footer">
-                    <p:commandButton type="submit" action="#{productService.addNewProduct}" value="Hinzufügen" ajax="true"
-                                     update="@form"/>
+                    <p:commandLink type="submit" action="#{productService.addNewProduct}" styleClass="btn btn-danger" ajax="true" update="@form">
+                        <i class="fa fa-plus fa-2x fa-lg"/>
+                    </p:commandLink>
                 </f:facet>
             </p:column>
         </p:dataTable>

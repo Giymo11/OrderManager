@@ -51,7 +51,8 @@ public class AboutService {
         return new About(0, "", 0);
     }
 
-    public void save(){
+    public String save(){
         aboutDao.save(aboutList);
+        return "#";
     }
 }

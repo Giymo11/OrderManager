@@ -21,9 +21,10 @@
                     <p:graphicImage value="#{picture}" style="max-width: 250px; max-height: 200px"/>
                 </p:column>
                 <p:column>
-                    <p:commandButton value="Löschen" action="#{uploadService.delete}" ajax="false" update="@form">
+                    <p:commandLink type="submit" action="#{uploadService.delete}" styleClass="btn btn-danger" ajax="false" update="@form">
                         <f:param value="#{picture}" name="name"/>
-                    </p:commandButton>
+                        <i class="fa fa-trash-o fa-2x fa-lg"/>
+                    </p:commandLink>
                 </p:column>
             </p:dataTable>
 

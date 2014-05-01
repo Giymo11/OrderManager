@@ -2,7 +2,7 @@
         xmlns="http://www.w3.org/1999/xhtml"
         xmlns:ui="http://java.sun.com/jsf/facelets"
         xmlns:f="http://java.sun.com/jsf/core"
-        xmlns:p="http://primefaces.org/ui">
+        xmlns:p="http://primefaces.org/ui" xmlns:h="http://java.sun.com/jsf/html">
 
         <p:dataTable var="item" value="#{eventService.events}" cellpadding="15px">
             <p:column headerText="Bild">
@@ -33,17 +33,21 @@
             </p:column>
 
             <p:column>
-                <p:commandButton type="submit" value="Löschen" action="#{eventService.delete}" ajax="true" update="@form">
-                    <f:param value="#{item.id}" name="id"/>
-                </p:commandButton>
 
-                <p:commandButton type="submit" action="#{eventService.save}" value="Speichern" ajax="true" update="@form">
-                    <f:param value="#{item.id}" name="ids"/>
-                </p:commandButton>
+                <p:commandLink type="submit" action="#{eventService.delete}" styleClass="btn btn-danger" ajax="true" update="@form">
+                    <f:param value="#{item.id}" name="id"/>
+                    <i class="fa fa-trash-o fa-2x fa-lg"/>
+                </p:commandLink>
+
+                <p:commandLink type="submit" action="#{eventService.save}" styleClass="btn btn-danger" ajax="true" update="@form">
+                    <f:param value="#{item.id}" name="id"/>
+                    <i class="fa fa-save fa-2x fa-lg"/>
+                </p:commandLink>
 
                 <f:facet name="footer">
-                    <p:commandButton type="submit" action="#{eventService.addNewEvent}" value="Hinzufügen" ajax="true"
-                                     update="@form"/>
+                    <p:commandLink type="submit" action="#{eventService.addNewEvent}" styleClass="btn btn-danger" ajax="true" update="@form">
+                        <i class="fa fa-plus fa-2x fa-lg"/>
+                    </p:commandLink>
                 </f:facet>
             </p:column>
         </p:dataTable>

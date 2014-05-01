@@ -38,24 +38,27 @@ public class OfferService {
         return offerList;
     }
 
-    public void addNewOffer() {
-       offerList.add(offerDao.addNewOffer(newName, newText, selectedPicture));
+    public String addNewOffer() {
+        offerList.add(offerDao.addNewOffer(newName, newText, selectedPicture));
 
-       newName = "";
-       newText = "";
+        newName = "";
+        newText = "";
+        return "#";
     }
 
-    public void delete() {
+    public String delete() {
         int id = Integer.parseInt(fetchParameter("id"));
         for(int i = 0; i<offerList.size(); i++)
             if(offerList.get(i).getId() == id)
                 offerList.remove(i);
         offerDao.delete(id);
+        return "#";
     }
 
-    public void save(){
+    public String save(){
         int id = Integer.parseInt(fetchParameter("ids"));
         offerDao.save(id, offerList);
+        return "#";
     }
 
     public String fetchParameter(String param) {

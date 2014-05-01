@@ -1,7 +1,7 @@
 package beans;
 
 import dao.AdminSettingsDao;
-import dao.UserAdminDAO;
+import dao.UserAdminDao;
 import dto.User;
 
 import javax.faces.bean.ManagedBean;
@@ -16,27 +16,27 @@ import java.util.Map;
 @ManagedBean
 @SessionScoped
 public class AdminSettingsService {
-    private UserAdminDAO userAdminDAO;
+    private UserAdminDao userAdminDao;
     private AdminSettingsDao adminSettingsDao;
     private String pass;
     private String email;
     private List<User> userList;
 
     public AdminSettingsService(){
-        userAdminDAO = new UserAdminDAO();
+        userAdminDao = new UserAdminDao();
         adminSettingsDao = new AdminSettingsDao();
     }
 
     public List<User> getUserList(){
         if(userList == null)
-            userList = userAdminDAO.getUserList();
+            userList = userAdminDao.getUserList();
 
         return userList;
     }
 
     public void save(){
         int id = Integer.parseInt(fetchParameter("idU"));
-        userAdminDAO.save(id, userList);
+        userAdminDao.save(id, userList);
     }
 
     public String fetchParameter(String param) {

@@ -50,13 +50,14 @@ public class ProductService {
         return productList;
     }
 
-    public void delete() {
+    public String delete() {
         int id = Integer.parseInt(fetchParameter("id"));
         productDao.delete(id);
 
         for(int i=0; i<productList.size(); i++)
             if(productList.get(i).getId() == id)
                 productList.remove(i);
+        return "#";
     }
 
     public String fetchParameter(String param) {
@@ -70,7 +71,7 @@ public class ProductService {
         return value;
     }
 
-    public void addNewProduct() {
+    public String addNewProduct() {
         if(newPrice==0.0f || selectedCategory==null || newName.equals("") || newText.equals(""))
             FacesContext.getCurrentInstance().addMessage("Failure", new FacesMessage("Bitte überprüfen Sie Ihre Eingaben!", "Preis muss größer 0 sein; Name, Beschreibung und Kategorie müssen vorhanden sein"));
         else {
@@ -80,11 +81,13 @@ public class ProductService {
             newText = "";
             newPrice = 0.0f;
         }
+        return "#";
     }
 
-    public void save(){
+    public String save(){
         int id = Integer.parseInt(fetchParameter("idS"));
         productDao.save(id, productList);
+        return "#";
     }
 
     public void getProductsByCategory() {

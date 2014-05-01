@@ -39,24 +39,27 @@ public class EventService {
         return events;
     }
 
-    public void addNewEvent() {
+    public String addNewEvent() {
         events.add(eventDAO.addNewEvent(newName, newText, selectedPicture));
 
         newName = "";
         newText = "";
+        return "#";
     }
 
-    public void delete() {
+    public String delete() {
         int id = Integer.parseInt(fetchParameter("id"));
         for(int i = 0; i<events.size(); i++)
             if(events.get(i).getId() == id)
                 events.remove(i);
         eventDAO.delete(id);
+        return "#";
     }
 
-    public void save(){
+    public String save(){
         int id = Integer.parseInt(fetchParameter("ids"));
         eventDAO.save(id);
+        return "#";
     }
 
     public String fetchParameter(String param) {

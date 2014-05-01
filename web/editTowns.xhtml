@@ -19,15 +19,19 @@
                 </f:facet>
             </p:column>
             <p:column>
-                <p:commandButton value="Löschen" action="#{townService.delete}" update="@form" ajax="false">
-                    <f:param name="id" value="#{item.id}"/>
-                </p:commandButton>
-                <p:commandButton value="Speichern" action="#{townService.save}" update="@form" ajax="false">
-                    <f:param name="idS" value="#{item.id}"/>
-                </p:commandButton>
+                <p:commandLink type="submit" action="#{townService.delete}" styleClass="btn btn-danger" ajax="false" update="@form">
+                    <f:param value="#{item.id}" name="id"/>
+                    <i class="fa fa-trash-o fa-2x fa-lg"/>
+                </p:commandLink>
+
+                <p:commandLink type="submit" action="#{townService.save}" styleClass="btn btn-danger" ajax="false" update="@form">
+                    <f:param value="#{item.id}" name="idS"/>
+                    <i class="fa fa-save fa-2x fa-lg"/>
+                </p:commandLink>
                 <f:facet name="footer">
-                    <p:commandButton value="Hinzufügen" action="#{townService.addTown}" update="@form"
-                                     ajax="false"/>
+                    <p:commandLink type="submit" action="#{townService.addTown}" styleClass="btn btn-danger" ajax="false" update="@form">
+                        <i class="fa fa-plus fa-2x fa-lg"/>
+                    </p:commandLink>
                 </f:facet>
             </p:column>
         </p:dataTable>

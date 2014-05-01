@@ -55,20 +55,22 @@ public class TownService {
         this.name = name;
     }
 
-    public void addTown(){
+    public String addTown(){
         Town town = new Town(plz, name);
         townDao.addTown(town);
         towns.add(town);
         plz = 0;
         name = "";
+        return "#";
     }
 
-    public void delete() throws SQLException {
+    public String delete() throws SQLException {
         int id = Integer.parseInt(fetchParameter("id"));
         townDao.deleteObject("town", id);
         for(int i = 0; i<towns.size(); i++)
             if(towns.get(i).getId() == id)
                 towns.remove(i);
+        return "#";
     }
 
     public String fetchParameter(String param) {
@@ -103,8 +105,9 @@ public class TownService {
         return townDao.getTownWithID(id).getPlz();
     }
 
-    public void save(){
+    public String save(){
         int id = Integer.parseInt(fetchParameter("idS"));
         townDao.save(towns, id);
+        return "#";
     }
 }

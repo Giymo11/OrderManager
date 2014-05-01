@@ -44,12 +44,13 @@ public class CategoryService {
         return null;
     }
 
-    public void delete() {
+    public String delete() {
         int id = Integer.parseInt(fetchParameter("id"));
         Category cat = getCategoryForId(id);
         names.remove(cat.getName());
         categories.remove(cat);
         categoryDao.delete(id);
+        return "#";
     }
 
     public String fetchParameter(String param) {
@@ -63,17 +64,19 @@ public class CategoryService {
         return value;
     }
 
-    public void addNewCategory() {
+    public String addNewCategory() {
         if(categoryDao.addCategory(new Category(newName))) {
             categories.add(new Category(newName));
             names.add(newName);
         }
         newName = "";
+        return "#";
     }
 
-    public void save() {
+    public String save() {
         int id = Integer.parseInt(fetchParameter("idS"));
         categoryDao.save(getCategoryForId(id));
+        return "#";
     }
 
     public List<String> getNames() {
