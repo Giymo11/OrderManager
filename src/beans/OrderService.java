@@ -3,7 +3,7 @@ package beans;
 import dao.OrderDao;
 import dao.OrderItemDao;
 import dao.ProductDao;
-import dao.TourDAO;
+import dao.TourDao;
 import dto.Order;
 import dto.OrderItem;
 import dto.Product;
@@ -32,7 +32,7 @@ import java.util.Map;
 public class OrderService {
     private OrderItemDao orderItemDAO;
     private List<OrderItem> newOrderItems;
-    private TourDAO tourDAO;
+    private TourDao tourDao;
     private OrderDao orderDao;
     private int productID;
     private Date date, startDate, endDate;
@@ -50,14 +50,14 @@ public class OrderService {
     public OrderService(){
         orderItemDAO = new OrderItemDao();
         orderDao = new OrderDao();
-        tourDAO = new TourDAO();
+        tourDao = new TourDao();
         orderList = orderDao.getOrderList();
         newOrderItems = new ArrayList();
         ordersInDateRange = new ArrayList();
         allOrdered = new ArrayList();
         newOrderItems = new ArrayList();
         orderItemsForDate = new ArrayList();
-        tourList = tourDAO.getTourList();
+        tourList = tourDao.getTourList();
 
         setDate(getNextDay());
 
@@ -84,7 +84,7 @@ public class OrderService {
         int tourID = getTourIDWithDate(date);
 
         if(tourID==-1){
-            tourList.add(tourDAO.addTour(date));
+            tourList.add(tourDao.addTour(date));
             tourID = getTourIDWithDate(date);
         }
 

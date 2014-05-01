@@ -1,7 +1,7 @@
 package beans;
 
 import dao.AdminSettingsDao;
-import dao.UserAdminDAO;
+import dao.UserAdminDao;
 import dto.User;
 
 import javax.faces.bean.ManagedBean;
@@ -16,12 +16,12 @@ import java.util.Map;
 @ManagedBean
 @SessionScoped
 public class AdminSettingsService {
-    private UserAdminDAO userAdminDAO;
+    private UserAdminDao userAdminDAO;
     private AdminSettingsDao adminSettingsDao;
     private List<User> userList;
 
     public AdminSettingsService(){
-        userAdminDAO = new UserAdminDAO();
+        userAdminDAO = new UserAdminDao();
         adminSettingsDao = new AdminSettingsDao();
     }
 

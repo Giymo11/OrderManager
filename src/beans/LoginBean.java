@@ -5,7 +5,7 @@ package beans;
  * @author Markus
  */
 
-import dao.LoginDAO;
+import dao.LoginDao;
 
 import javax.annotation.PreDestroy;
 import javax.faces.application.FacesMessage;
@@ -18,7 +18,7 @@ import java.io.IOException;
 @ManagedBean
 @SessionScoped
 public class LoginBean {
-    private LoginDAO loginDAO;
+    private LoginDao loginDao;
     private String status;
 
     public String getStatus() {
@@ -26,32 +26,32 @@ public class LoginBean {
     }
 
     public LoginBean() {
-        loginDAO = new LoginDAO();
+        loginDao = new LoginDao();
         status = "Anmelden";
     }
 
     public String getWrongPassword() {
-        return loginDAO.getWrongPassword();
+        return loginDao.getWrongPassword();
     }
 
     public void setWrongPassword(String wrongPassword) {
-        loginDAO.setWrongPassword(wrongPassword);
+        loginDao.setWrongPassword(wrongPassword);
     }
 
     public String getEmail() {
-        return loginDAO.getEmail();
+        return loginDao.getEmail();
     }
 
     public void setEmail(String email) {
-        loginDAO.setEmail(email);
+        loginDao.setEmail(email);
     }
 
     public String getPassword() {
-        return loginDAO.getPassword();
+        return loginDao.getPassword();
     }
 
     public void setPassword(String password) {
-        loginDAO.setPassword(password);
+        loginDao.setPassword(password);
     }
 
     public String check() throws IOException {
@@ -60,7 +60,7 @@ public class LoginBean {
         if (FacesContext.getCurrentInstance() != null) {
             req = (HttpServletRequest) FacesContext.getCurrentInstance().getExternalContext().getRequest();
         }
-        String returnValue = loginDAO.check(req);
+        String returnValue = loginDao.check(req);
         if(returnValue.equals("notVerified"))
             FacesContext.getCurrentInstance().addMessage("Fail", new FacesMessage("Diese Addresse wurde noch nicht vom Administrator bestätigt. Bitte versuchen Sie es später erneut"));
 

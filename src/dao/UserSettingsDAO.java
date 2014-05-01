@@ -14,8 +14,8 @@ import java.util.Date;
 /**
  * Created by Sarah on 31.03.2014.
  */
-public class UserSettingsDAO extends JdbcDao {
-    public UserSettingsDAO(){
+public class UserSettingsDao extends JdbcDao {
+    public UserSettingsDao(){
         super();
     }
 

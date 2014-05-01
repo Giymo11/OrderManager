@@ -1,6 +1,6 @@
 package beans;
 
-import dao.RegisterDAO;
+import dao.RegisterDao;
 import dto.Address;
 import dto.User;
 
@@ -26,10 +26,10 @@ public class RegisterBean {
     private String selectedTown;
     private Date birthdate;
     private Address address;
-    private RegisterDAO registerDAO;
+    private RegisterDao registerDao;
 
     public RegisterBean() {
-        registerDAO = new RegisterDAO();
+        registerDao = new RegisterDao();
         getGetMaxDate();
     }
 
@@ -41,7 +41,7 @@ public class RegisterBean {
             address = new Address(street, houseNr);
             User u = new User(email, firstName, lastName, hash, telNr, birthdate, -1, false, false);
 
-            registerDAO.register(u, address, selectedTown);
+            registerDao.register(u, address, selectedTown);
 
         } else {
             FacesContext.getCurrentInstance().addMessage("FAILURE", new FacesMessage("Passwörter stimmen nicht überein"));

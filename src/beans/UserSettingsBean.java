@@ -1,7 +1,7 @@
 package beans;
 
 import dao.AddressDao;
-import dao.UserSettingsDAO;
+import dao.UserSettingsDao;
 import dto.Address;
 import dto.User;
 
@@ -25,12 +25,12 @@ public class UserSettingsBean {
     private User user;
     private Address address;
 
-    private UserSettingsDAO settingsDAO;
+    private UserSettingsDao settingsDAO;
     private String selectedTown;
 
     public UserSettingsBean(){
         System.out.println("UserSettingsBean created");
-        settingsDAO = new UserSettingsDAO();
+        settingsDAO = new UserSettingsDao();
 
         HttpServletRequest req = (HttpServletRequest) FacesContext.getCurrentInstance().getExternalContext().getRequest();
         user = settingsDAO.getUser(req.getSession().getAttribute("email").toString());
