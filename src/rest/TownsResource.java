@@ -1,6 +1,7 @@
 package rest;
 
 import dao.TownDao;
+import dto.Town;
 
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
@@ -15,7 +16,6 @@ import java.util.List;
  * To change this template use File | Settings | File Templates.
  */
 @Path("/towns")
-@Produces("application/json")
 public class TownsResource {
 
     private TownDao towndao;
@@ -26,7 +26,8 @@ public class TownsResource {
     }
 
     @GET
-    public List getTowns(){
+    @Produces("application/json")
+    public List<Town> getTowns(){
         return towndao.getTowns();
     }
 

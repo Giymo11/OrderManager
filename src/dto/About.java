@@ -11,7 +11,6 @@ public class About {
     private int id;
     private String text;
     private int pictureID;
-    private String pictureName;
 
     public About(int id, String text, int pictureID) {
         setId(id);
@@ -41,13 +40,5 @@ public class About {
 
     public void setPictureID(int pictureID) {
         this.pictureID = pictureID;
-    }
-
-    public String getPictureName() {
-        return pictureName;
-    }
-
-    public void setPictureName(String pictureName) {
-        this.pictureName = pictureName;
     }
 }

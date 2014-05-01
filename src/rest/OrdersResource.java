@@ -1,10 +1,10 @@
 package rest;
 
 import dao.OrderDao;
+import dto.Order;
 
 import javax.ws.rs.*;
 import java.util.Date;
-import java.util.List;
 
 /**
  * Created with IntelliJ IDEA.
@@ -24,12 +24,12 @@ public class OrdersResource {
     }
 
     @GET
-    public List getOrders(@PathParam("id")int addressid){
-        return orderdao.getOrdersByAddress(addressid);
+    public Order getOrders(@PathParam("id") int addressid) {
+        return orderdao.getOrderByAddressForCurrentDay(addressid);
     }
 
     @POST
-    @Consumes("/application/json")
+    @Consumes("application/json")
     @Path("/{addressid}")
     public void setMemo(@PathParam("addressid")int addressID, String memo){
         orderdao.writeMemoWithAddressID(addressID, new Date(), memo);

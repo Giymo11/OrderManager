@@ -7,7 +7,7 @@ import dto.User;
 
 import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
-import javax.faces.bean.RequestScoped;
+import javax.faces.bean.SessionScoped;
 import javax.faces.context.FacesContext;
 import javax.servlet.http.HttpServletRequest;
 
@@ -15,7 +15,7 @@ import javax.servlet.http.HttpServletRequest;
  * Created by Sarah on 30.03.2014.
  */
 @ManagedBean
-@RequestScoped
+@SessionScoped
 public class UserSettingsBean {
     private String newEmail;
     private String oldPass;
@@ -29,6 +29,7 @@ public class UserSettingsBean {
     private String selectedTown;
 
     public UserSettingsBean(){
+        System.out.println("UserSettingsBean created");
         settingsDAO = new UserSettingsDao();
 
         HttpServletRequest req = (HttpServletRequest) FacesContext.getCurrentInstance().getExternalContext().getRequest();
@@ -105,7 +106,10 @@ public class UserSettingsBean {
     }
 
     public void saveUserData(){
-        settingsDAO.saveUserData(user, address, selectedTown);
+        if(settingsDAO.saveUserData(user, address, selectedTown))
+            FacesContext.getCurrentInstance().addMessage("Success", new FacesMessage("Änderungen erfolgreich übernommen!"));
+        else
+            FacesContext.getCurrentInstance().addMessage("Failure", new FacesMessage("Fehler beim Speichern der Daten"));
     }
 
     public void setSelectedTown(String selectedTown) {

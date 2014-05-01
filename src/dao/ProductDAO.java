@@ -25,8 +25,6 @@ public class ProductDao extends JdbcDao {
         Connection connection = null;
         Statement statement = null;
         ResultSet res = null;
-        ResultSet resCat;
-        ResultSet resPic;
 
         List<Product> productList = new ArrayList();
         try {
@@ -35,36 +33,10 @@ public class ProductDao extends JdbcDao {
             res = statement.executeQuery("SELECT * FROM " + DATABASE_NAME + ".product");
 
             Product product;
-            if (res.next())
-                while (true) {
-                    statement = connection.createStatement();
-
-                    resCat = statement.executeQuery("SELECT name FROM " + DATABASE_NAME + ".category WHERE id = " +
-                                                    res.getInt("CategoryID") + ";");
-
-                    statement = connection.createStatement();
-
-                    resPic = statement.executeQuery("SELECT name FROM " + DATABASE_NAME + ".picture WHERE pictureid = "
-                                                   + res.getInt(6) + ";");
-
-                    product = getProductWithResultSet(res);
-
-                    resCat.next();
-                    resPic.next();
-
-                    product.setCategoryName(resCat.getString(1));
-                    product.setPicture(resPic.getString(1));
-
-                    productList.add(product);
-
-                    close(resCat, null, null);
-                    close(resPic, null, null);
-
-                    if (res.isLast())
-                        break;
-                    else
-                        res.next();
-                }
+            while (res.next()) {
+                product = getProductWithResultSet(res);
+                productList.add(product);
+            }
         } catch (SQLException e) {
             e.printStackTrace();
         }
@@ -92,7 +64,10 @@ public class ProductDao extends JdbcDao {
             Connection con = getConnection();
             Statement stat = con.createStatement();
 
-            stat.executeUpdate("UPDATE " + DATABASE_NAME + ".product SET " + product.getSQLSetString() +
+            stat.executeUpdate("UPDATE " + DATABASE_NAME + ".product SET name = '" + product.getTitle() +
+                    "', categoryid = " + product.getCategoryID() + ", description = '" + product.getDescription() +
+                    "', price = " + product.getPrice() + ", pictureID = " + product.getPictureID() + ", priority = " +
+                    product.getPriority() + ", visible = " + product.isVisible() +
                     " WHERE id = " + product.getId() + ";");
 
             stat.executeUpdate("COMMIT;");
@@ -113,7 +88,6 @@ public class ProductDao extends JdbcDao {
         ResultSet resPicture = null;
         ResultSet resCategory = null;
         ResultSet resPriority = null;
-
 
         Product product = null;
 
@@ -136,8 +110,6 @@ public class ProductDao extends JdbcDao {
             if(resCategory.next()&&resPicture.isFirst()) {
                 product = new Product(0, resCategory.getInt(1), resPriority.getInt(1)+10,
                         newName, newText, newPrice, resPicture.getInt(1), true);
-                product.setPicture(selectedPicture);
-                product.setCategoryName(selectedCategory);
             }
         } catch (SQLException e) {
             e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
@@ -181,12 +153,6 @@ public class ProductDao extends JdbcDao {
 
             while(resultSet.next()){
                 Product product = getProductWithResultSet(resultSet);
-
-                resPicture = statPicture.executeQuery("SELECT name FROM " + DATABASE_NAME + ".picture WHERE pictureid = "
-                        + resultSet.getInt(6) + ";");
-                resPicture.next();
-
-                product.setPicture(resPicture.getString(1));
 
                 products.add(product);
             }

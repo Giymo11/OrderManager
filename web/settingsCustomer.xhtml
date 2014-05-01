@@ -1,8 +1,5 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<!--
-To change this template, choose Tools | Templates
-and open the template in the editor.
--->
+<?xml version="1.0" encoding="ISO-8859-15"?>
+
 <!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/xhtml"
       xmlns:h="http://java.sun.com/jsf/html"
@@ -22,14 +19,16 @@ and open the template in the editor.
                 position: absolute;
                 margin-right: 10px;
                 box-shadow: 5px 5px 5px #BBB">
-        <p:tabView>
-            <p:tab title="Logindaten Ã¤ndern">
-                <ui:include src="editLogindata.xhtml"/>
-            </p:tab>
-            <p:tab title="Benutzerdaten Ã¤ndern">
-                <ui:include src="editUserdata.xhtml"/>
-            </p:tab>
-        </p:tabView>
+        <h:form>
+            <p:tabView>
+                <p:tab title="Logindaten ändern">
+                    <ui:include src="editLogindata.xhtml"/>
+                </p:tab>
+                <p:tab title="Benutzerdaten ändern">
+                    <ui:include src="editUserdata.xhtml"/>
+                </p:tab>
+            </p:tabView>
+        </h:form>
     </div>
     <div class="topbar">
         <h1>Einstellungen</h1>

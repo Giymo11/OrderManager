@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="UTF-8"?>
+<?xml version="1.0" encoding="ISO-8859-15"?>
 <!DOCTYPE html
         PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
         "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
@@ -10,6 +10,7 @@
 
 <h:head>
     <title>Unsere Produkte</title>
+    <p:growl showDetail="false"/>
 </h:head>
 <h:body>
     <h:form id="form">
@@ -28,9 +29,9 @@
                         columns="2">
                 <p:panel header="#{product.title}" style="text-align: center; font-size: 11pt">
                     <h:panelGrid columns="1" style="height: 350px">
-                        <p:graphicImage value="#{product.picture}" style="height:150px; max-width: 200px"/>
+                        <p:graphicImage value="#{pictureService.getNameForID(product.pictureID)}" style="height:150px; max-width: 200px"/>
                         <p:outputLabel value="#{product.description}" style="margin-top: 5px"/>
-                        <p:outputLabel value="€ #{productService.getFormatedPrice(product.price)}"/>
+                        <p:outputLabel value="#{productService.getFormatedPrice(product.price)}"/>
                         <p:inputText binding="#{quantity}" type="number" maxlength="2" size="2" style="width: 30px"/>
                         <p:commandButton value="+" action="#{orderService.addOneOrderItem(quantity.value)}"
                                           ajax="true" update=":form:order">
@@ -43,30 +44,31 @@
         <div class="topbar">
             <h1>Unsere Produkte</h1>
         </div>
-        <p:panel style="margin-top: 130px;
+        <p:scrollPanel style="margin-top: 130px;
                         margin-right: 5px;
                         float: right;
-                        width: 280px;
+                        width: 295px;
+                        max-height: 550px;
                         position: fixed;
                         margin-left: 900px;
                         border: 1px solid green;
-                        font-size: 10pt;">
+                        font-size: 10pt;" mode="native">
 
             <p:dataTable value="#{orderService.newOrderItems}" var="item" id="order"
-                         emptyMessage="Keine Produkte hinzugefügt">
+                         emptyMessage="Keine Produkte hinzugef�gt">
                 <p:column>
                     <p:outputLabel value="#{item.ordered}x"/>
                 </p:column>
                 <p:column headerText="Produkt">
-                    <p:outputLabel value="#{productService.getName(item.productid)}"/>
+                    <p:outputLabel value="#{productService.getNameForID(item.productid)}"/>
                 </p:column>
                 <p:column headerText="Preis">
-                    <p:outputLabel value="€  #{productService.getFormatedPrice(productService.getPrice(item.productid))}"/>
+                    <p:outputLabel value="#{productService.getFormatedPrice(productService.getPrice(item.productid))}"/>
                 </p:column>
                 <p:column headerText="Gesamt">
-                    <p:outputLabel value="€  #{productService.getFormatedPrice(orderService.sumUp(productService.getPrice(item.productid), item.ordered))}"/>
+                    <p:outputLabel value="#{orderService.sumUp(productService.getPrice(item.productid), item.ordered)}"/>
                     <f:facet name="footer">
-                        <p:outputLabel value="€ #{productService.getFormatedPrice(orderService.getSumAll(orderService.newOrderItems))}"/>
+                        <p:outputLabel value="#{orderService.getSumAll(orderService.newOrderItems)}"/>
                     </f:facet>
                 </p:column>
                 <p:column>
@@ -78,20 +80,20 @@
             <br/>
             Bereits bestellt:
             <p:dataTable value="#{orderService.orderItemsForDate}" var="item" id="items"
-                         emptyMessage="Keine Bestellung für diesen Tag">
+                         emptyMessage="Keine Bestellung f�r diesen Tag">
                 <p:column>
                     <p:outputLabel value="#{item.ordered}x"/>
                 </p:column>
                 <p:column headerText="Produkt">
-                    <p:outputLabel value="#{productService.getName(item.productid)}"/>
+                    <p:outputLabel value="#{productService.getNameForID(item.productid)}"/>
                 </p:column>
                 <p:column headerText="Preis">
-                    <p:outputLabel value="€  #{productService.getFormatedPrice(productService.getPrice(item.productid))}"/>
+                    <p:outputLabel value="#{productService.getFormatedPrice(productService.getPrice(item.productid))}"/>
                 </p:column>
                 <p:column headerText="Gesamt">
-                    <p:outputLabel value="€  #{productService.getFormatedPrice(orderService.sumUp(productService.getPrice(item.productid), item.ordered))}"/>
+                    <p:outputLabel value="#{orderService.sumUp(productService.getPrice(item.productid), item.ordered)}"/>
                     <f:facet name="footer">
-                        <p:outputLabel value="€ #{productService.getFormatedPrice(orderService.getSumAll(orderService.orderItemsForDate))}"/>
+                        <p:outputLabel value="#{orderService.getSumAll(orderService.orderItemsForDate)}"/>
                     </f:facet>
                 </p:column>
             </p:dataTable>
@@ -100,7 +102,7 @@
                 <p:ajax event="dateSelect" listener="#{orderService.handleDateSelect}" update="items" />
             </p:calendar>
             <p:commandButton action="#{orderService.redirectToOrders}" value="Abschicken" update="@form" ajax="false"/>
-        </p:panel>
+        </p:scrollPanel>
         <ui:include src="menu.xhtml"/>
     </h:form>
 </h:body>

@@ -48,7 +48,9 @@ public class CategoryService {
         int id = Integer.parseInt(fetchParameter("id"));
         Category cat = getCategoryForId(id);
         names.remove(cat.getName());
-        categories.remove(cat);
+        for(int i = 0; i<categories.size(); i++)
+            if(categories.get(i).getId() == cat.getId())
+                categories.remove(i);
         categoryDao.delete(id);
         return "#";
     }
@@ -76,6 +78,9 @@ public class CategoryService {
     public String save() {
         int id = Integer.parseInt(fetchParameter("idS"));
         categoryDao.save(getCategoryForId(id));
+        categories = categoryDao.getCategories();
+        names = null;
+        names = getNames();
         return "#";
     }
 
@@ -94,5 +99,14 @@ public class CategoryService {
 
     public void setNewName(String newName) {
         this.newName = newName;
+    }
+
+    public String getNameForID(int id){
+        for(Category cat : getCategories())
+            if(cat.getId() == id) {
+                cat.getName();
+                return cat.getName();
+            }
+        return "asdf";
     }
 }

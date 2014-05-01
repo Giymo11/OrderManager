@@ -28,7 +28,7 @@ public class AddressResource {
     }
 
     @POST
-    @Consumes("/application/json")
+    @Consumes("application/json")
     public void setAddressID(Address address){
 
 

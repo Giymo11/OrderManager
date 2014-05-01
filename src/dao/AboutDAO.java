@@ -25,10 +25,8 @@ public class AboutDao extends JdbcDao {
         About about;
         List<About> aboutList = new ArrayList();
         ResultSet res = null;
-        ResultSet res2 = null;
         ResultSet resCount = null;
         Statement stat = null;
-        Statement stat2 = null;
         Statement stat3 = null;
         Statement stat4 = null;
         Connection connection = null;
@@ -36,7 +34,6 @@ public class AboutDao extends JdbcDao {
         try {
             connection = getConnection();
             stat = connection.createStatement();
-            stat2 = connection.createStatement();
             stat3 = connection.createStatement();
             stat4 = connection.createStatement();
 
@@ -52,11 +49,8 @@ public class AboutDao extends JdbcDao {
 
             res = stat.executeQuery("SELECT * FROM " + DATABASE_NAME + ".about;");
             while (res.next()) {
-                res2 = stat2.executeQuery("SELECT name FROM " + DATABASE_NAME + ".picture WHERE pictureid = " + res.getInt(3) + ";");
-
                 about = getAboutWithResultSet(res);
-                if(res2.next())
-                about.setPictureName(res2.getString(1));
+
                 aboutList.add(about);
             }
         } catch (SQLException e) {
@@ -64,7 +58,6 @@ public class AboutDao extends JdbcDao {
         }
         finally {
             close(res, stat, connection);
-            close(res2, stat2, null);
             close(resCount, stat3, null);
             close(null, stat4, null);
         }
@@ -76,8 +69,6 @@ public class AboutDao extends JdbcDao {
     }
 
     public void save(List<About> aboutList) {
-        setPictureIDs(aboutList);
-
         Connection connection = null;
         Statement statement = null;
 
@@ -96,30 +87,6 @@ public class AboutDao extends JdbcDao {
         }
         finally {
             close(null, statement, connection);
-        }
-    }
-
-    private void setPictureIDs(List<About> aboutList) {
-        Connection connection = null;
-        Statement statement = null;
-        ResultSet resultSet = null;
-
-        try{
-            connection = getConnection();
-            statement = connection.createStatement();
-            resultSet = statement.executeQuery("SELECT * FROM " + DATABASE_NAME + ".picture;");
-
-            while ( resultSet.next() ){
-                for ( About about : aboutList){
-                    if ( about.getPictureName().equals(resultSet.getString("name")) )
-                        about.setPictureID( resultSet.getInt("pictureid") );
-                }
-            }
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-        finally {
-            close(resultSet, statement, connection);
         }
     }
 }

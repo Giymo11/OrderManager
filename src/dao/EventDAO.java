@@ -108,7 +108,7 @@ public class EventDao extends JdbcDao {
             resultSet = statement1.executeQuery("SELECT max(priority) FROM " + DATABASE_NAME + ".event;");
             resultSet.next();
 
-            event = new Event(0, newName, text, res.getInt(1), resultSet.getInt(1));
+            event = new Event(0, newName, text, res.getInt(1), resultSet.getInt(1)+10);
             event.setPicture(selectedPicture);
 
         } catch (SQLException e) {

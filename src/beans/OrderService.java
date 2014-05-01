@@ -284,11 +284,13 @@ public class OrderService {
 
     public String sumUp(float price, int quantity){
         float sum = (float) Math.round(price*quantity * 100) / 100;
-        String sumStr = sum + "";
+        String sumStr = "€ " + sum + "";
         String string = sumStr.substring(sumStr.indexOf('.'));
 
         if(string.length()<=2)
             sumStr += "0";
+
+        sumStr = sumStr.replace('.', ',');
 
         return sumStr;
     }
@@ -298,14 +300,20 @@ public class OrderService {
         for (OrderItem item : items ) {
             sum += item.getOrdered() * getPrice(item.getProductid());
         }
+        String temp = sum+"";
+        String formated;
+        String str = temp.substring(temp.indexOf('.'));
 
-        String sumStr = sum + "";
-        String string = sumStr.substring(sumStr.indexOf('.'));
+        if (str.length()==2)
+            formated = "€ " + temp + "0";
+        else if (str.length()>3)
+            formated = "€ " + temp.substring(0, temp.indexOf('.')) + str.substring(0,3);
+        else
+            formated = "€ " + temp;
 
-        if(string.length()<=2)
-            sumStr += "0";
+        formated = formated.replace('.', ',');
 
-        return sumStr;
+        return formated;
     }
 
     private float getPrice(int id){
@@ -358,5 +366,9 @@ public class OrderService {
     public List<OrderItem> getAllItemsForDate(){
         allItemsForDate = orderItemDAO.getAllItemsForDate(startDate);
         return allItemsForDate;
+    }
+
+    public String getFormatedDate(Date date){
+        return date.getDate() + "." + (date.getMonth()+1) + "." + (date.getYear()+1900);
     }
 }

@@ -144,7 +144,7 @@ public class ProductService {
         this.selectedPicture = selectedPicture;
     }
 
-    public String getName(int id){
+    public String getNameForID(int id){
         if(productList == null)
             productList = productDao.getProductList();
 
@@ -182,11 +182,11 @@ public class ProductService {
         String str = temp.substring(temp.indexOf('.'));
 
         if (str.length()==2)
-            formated = temp + "0";
+            formated = "€ " + temp + "0";
         else if (str.length()>3)
-            formated = temp.substring(0, temp.indexOf('.')) + str.substring(0,3);
+            formated = "€ " + temp.substring(0, temp.indexOf('.')) + str.substring(0,3);
         else
-            formated = temp;
+            formated = "€ " + temp;
 
         formated = formated.replace('.', ',');
 

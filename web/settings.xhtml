@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="UTF-8"?>
+<?xml version="1.0" encoding="ISO-8859-15"?>
 <!--
 To change this template, choose Tools | Templates
 and open the template in the editor.
@@ -28,6 +28,9 @@ and open the template in the editor.
             <p:tab title="Produkte">
                 <ui:include src="editproducts.xhtml"/>
             </p:tab>
+            <p:tab title="Kategorien">
+                <ui:include src="editcategories.xhtml"/>
+            </p:tab>
             <p:tab title="Veranstaltungen">
                 <ui:include src="editevents.xhtml"/>
             </p:tab>
@@ -40,20 +43,23 @@ and open the template in the editor.
             <p:tab title="Bild-Upload">
                 <ui:include src="upload.xhtml"/>
             </p:tab>
-            <p:tab title="Kategorien">
-                <ui:include src="editcategories.xhtml"/>
-            </p:tab>
             <p:tab title = "Ortschaften">
                 <ui:include src="editTowns.xhtml"/>
             </p:tab>
             <p:tab title="Kunden">
                 <ui:include src="userAdministration.xhtml"/>
             </p:tab>
-            <p:tab title="Ãœber uns">
+            <p:tab title="Über uns">
                 <ui:include src="editAbout.xhtml"/>
             </p:tab>
             <p:tab title="Statistiken">
                 <ui:include src="statistics.xhtml"/>
+            </p:tab>
+            <p:tab title="Logindaten ändern">
+                <ui:include src="editLogindata.xhtml"/>
+            </p:tab>
+            <p:tab title="Benutzerdaten ändern">
+                <ui:include src="editUserdata.xhtml"/>
             </p:tab>
         </p:tabView>
         </h:form>

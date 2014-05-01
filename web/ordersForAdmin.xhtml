@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="UTF-8"?>
+<?xml version="1.0" encoding="ISO-8859-15"?>
 <!DOCTYPE html
         PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
         "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
@@ -25,27 +25,27 @@
             </p:calendar>
             <br/>
             <br/>
-            <p:dataTable value="#{orderService.allItemsForDate}" var="item" type="definition" id="items" emptyMessage="Keine Bestellung für diesen Tag">
+            <p:dataTable value="#{orderService.allItemsForDate}" var="item" type="definition" id="items" emptyMessage="Keine Bestellung f�r diesen Tag">
                 <p:column headerText="Anzahl">
                     <p:outputLabel value="#{item.ordered}"/>
                 </p:column>
                 <p:column headerText="Produkt">
-                    <p:outputLabel value="#{productService.getName(item.productid)}"/>
+                    <p:outputLabel value="#{productService.getNameForID(item.productid)}"/>
                 </p:column>
                 <p:column headerText="Preis">
-                    <p:outputLabel value="€ #{productService.getFormatedPrice(productService.getPrice(item.productid))}"/>
+                    <p:outputLabel value="#{productService.getFormatedPrice(productService.getPrice(item.productid))}"/>
                 </p:column>
                 <p:column headerText="Summe">
-                    <p:outputLabel value="€ #{productService.getFormatedPrice(orderService.sumUp(productService.getPrice(item.productid), item.ordered))}"/>
+                    <p:outputLabel value="#{orderService.sumUp(productService.getPrice(item.productid), item.ordered)}"/>
 
                     <f:facet name="footer">
-                        <p:outputLabel value="€ #{productService.getFormatedPrice(orderService.getSumAll(orderService.allItemsForDate))}"/>
+                        <p:outputLabel value="#{orderService.getSumAll(orderService.allItemsForDate)}"/>
                     </f:facet>
                 </p:column>
             </p:dataTable>
             <br/>
             <p:panel id="orders">
-                <p:dataTable value="#{orderService.ordersForDate}" var="order" emptyMessage="Keine Bestellungen für diesen Tag">
+                <p:dataTable value="#{orderService.ordersForDate}" var="order" emptyMessage="Keine Bestellungen f�r diesen Tag">
                     <p:column headerText="Adresse">
                         <p:dataList value="#{addressService.getAddressWithID(order.addressid)}" var="address"
                                     type="definition">

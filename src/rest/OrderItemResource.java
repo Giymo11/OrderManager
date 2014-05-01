@@ -32,7 +32,7 @@ public class OrderItemResource {
     }
 
     @POST
-    @Consumes("/application/json")
+    @Consumes("application/json")
     @Path("/{addressid}")
     public void storeOrderItems(@PathParam("addressid")int addressID, Collection orderitems){
         List<OrderItem> orderItems = (ArrayList) orderitems;
@@ -54,7 +54,9 @@ public class OrderItemResource {
     }
 
     @GET
-    public List getOrderItems(@PathParam("id")int orderID){
+    @Produces("application/json")
+    @Path("/{orderid}")
+    public List getOrderItems(@PathParam("orderid") int orderID) {
         return orderItemDao.getAllItemsForOrder(orderID);
     }
 

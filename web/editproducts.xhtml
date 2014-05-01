@@ -9,12 +9,12 @@
                 <p:selectBooleanCheckbox value="#{item.visible}"/>
             </p:column>
             <p:column headerText="Bild">
-                <p:graphicImage value="#{item.picture}" style="max-height: 70px; max-width: 100px"/>
+                <p:graphicImage value="#{pictureService.getNameForID(item.pictureID)}" style="max-height: 70px; max-width: 100px"/>
 
                 <f:facet name="footer">
                     <p:selectOneMenu value="#{productService.selectedPicture}" effect="fade" style="width:160px"
                                      panelStyle="width:150px" filter="true" filterMatchMode="startsWith">
-                        <f:selectItems value="#{uploadService.pics}"/>
+                        <f:selectItems value="#{pictureService.pics}"/>
                     </p:selectOneMenu>
                 </f:facet>
             </p:column>
@@ -36,7 +36,7 @@
             </p:column>
 
             <p:column headerText="Kategorie">
-                <p:outputLabel value="#{item.categoryName}"/>
+                <p:outputLabel value="#{categoryService.getNameForID(item.categoryID)}"/>
 
                 <f:facet name="footer">
                     <p:selectOneMenu value="#{productService.selectedCategory}">
@@ -46,7 +46,7 @@
             </p:column>
 
             <p:column headerText="Preis in € ">
-                <p:outputLabel value="€#{item.price}"/>
+                <p:outputLabel value="#{productService.getFormatedPrice(item.price)}"/>
 
                 <f:facet name="footer">
                     <p:outputLabel value="Bitte mit . trennen"/>
@@ -64,6 +64,7 @@
                     <f:param value="#{item.id}" name="idS"/>
                     <i class="fa fa-save fa-2x fa-lg"/>
                 </p:commandLink>
+
 
                 <f:facet name="footer">
                     <p:commandLink type="submit" action="#{productService.addNewProduct}" styleClass="btn btn-danger" ajax="true" update="@form">

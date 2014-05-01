@@ -1,11 +1,10 @@
 <ui:composition xmlns:h="http://java.sun.com/jsf/html"
       xmlns:p="http://primefaces.org/ui"
       xmlns:ui="http://java.sun.com/jsf/facelets">
-    <h:form >
         <h:head>
             <p:growl showDetail="false"/>
         </h:head>
-        <table>
+        <table id="table">
             <tbody>
                 <tr>
                     <th>Neue E-Mail-Adresse:</th>
@@ -33,6 +32,5 @@
                 </tr>
             </tbody>
         </table>
-        <p:commandButton value="Speichern" ajax="false" action="#{userSettingsBean.saveLogin}"/>
-    </h:form>
+        <p:commandButton value="Speichern" ajax="false" action="#{userSettingsBean.saveLoginData}" type="submit" update="@form"/>
 </ui:composition>
