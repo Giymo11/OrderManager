@@ -10,6 +10,7 @@
 <h:head>
     <title>Bestellungen</title>
     <p:growl showDetail="false"/>
+    <link href="http://netdna.bootstrapcdn.com/font-awesome/4.0.3/css/font-awesome.css" rel="stylesheet"/>
 </h:head>
 <body>
     <h:form>
@@ -40,18 +41,16 @@
                 </f:facet>
             </p:column>
             <p:column>
-                <p:commandButton value="X" action="#{orderService.deleteOneOrderItem}" update="@form" ajax="false">
+                <p:commandLink styleClass="btn btn-danger" action="#{orderService.deleteOneOrderItem}" update="@form" ajax="false">
                     <f:param value="#{item.id}" name="orderItemID"/>
-                </p:commandButton>
+                    <i class="fa fa-trash-o fa-2x fa-lg"/>
+                </p:commandLink>
             </p:column>
         </p:dataTable>
         <br/>
         <p:inputTextarea value="#{orderService.memo}" placeholder="Notiz an den Bäcker"/>
         <br/>
         <p:commandButton value="Bestellung abschicken!" action="#{orderService.addOrder}" style="margin-right: 2px"/>
-        <p:dialog id="basicDialog" header="Dankeschön!" widgetVar="dlg1">
-            <h:outputText value="Ihre Bestellung wurde abgeschickt. Um alle ihre bisherigen Bestellungen anzusehen klicken Sie bitte auf 'Bestellungen'"/>
-        </p:dialog>
     </p:panel>
     </h:form>
     <div class="topbar">

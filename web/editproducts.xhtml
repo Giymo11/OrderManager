@@ -4,7 +4,7 @@
         xmlns:f="http://java.sun.com/jsf/core"
         xmlns:p="http://primefaces.org/ui">
 
-        <p:dataTable var="item" value="#{productService.products}" cellpadding="5px" style="padding: 2px" id="productTable">
+        <p:dataTable var="item" value="#{productService.products}" cellpadding="5px" style="padding: 0; font-size: 11pt" id="productTable">
             <p:column headerText="Anzeige">
                 <p:selectBooleanCheckbox value="#{item.visible}"/>
             </p:column>
@@ -12,15 +12,15 @@
                 <p:graphicImage value="#{pictureService.getNameForID(item.pictureID)}" style="max-height: 70px; max-width: 100px"/>
 
                 <f:facet name="footer">
-                    <p:selectOneMenu value="#{productService.selectedPicture}" effect="fade" style="width:160px"
-                                     panelStyle="width:150px" filter="true" filterMatchMode="startsWith">
+                    <p:selectOneMenu value="#{productService.selectedPicture}" effect="fade" style="width:140px"
+                                     panelStyle="width:140px" filter="true" filterMatchMode="startsWith">
                         <f:selectItems value="#{pictureService.pics}"/>
                     </p:selectOneMenu>
                 </f:facet>
             </p:column>
 
             <p:column headerText="Name">
-                <p:inputText value="#{item.title}" maxlength="45" size="15"/>
+                <p:inputText value="#{item.title}" maxlength="45" size="15" style="width: 140px"/>
 
                 <f:facet name="footer">
                     <p:inputText value="#{productService.newName}" size="12"/>
@@ -28,10 +28,10 @@
             </p:column>
 
             <p:column headerText="Beschreibung">
-                <p:inputTextarea value="#{item.description}"/>
+                <p:inputTextarea value="#{item.description}" style="width: 150px"/>
 
                 <f:facet name="footer">
-                    <p:inputTextarea value="#{productService.newText}"/>
+                    <p:inputTextarea value="#{productService.newText}" style="width: 150px"/>
                 </f:facet>
             </p:column>
 
@@ -50,7 +50,7 @@
 
                 <f:facet name="footer">
                     <p:outputLabel value="Bitte mit . trennen"/>
-                    <p:inputText value="#{productService.newPrice}" size="5"/>
+                    <p:inputText value="#{productService.newPrice}" size="5" style="width: 50px"/>
                 </f:facet>
             </p:column>
             <p:column>

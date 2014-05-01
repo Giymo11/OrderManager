@@ -29,7 +29,6 @@ public class UserSettingsBean {
     private String selectedTown;
 
     public UserSettingsBean(){
-        System.out.println("UserSettingsBean created");
         settingsDAO = new UserSettingsDao();
 
         HttpServletRequest req = (HttpServletRequest) FacesContext.getCurrentInstance().getExternalContext().getRequest();

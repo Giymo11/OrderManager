@@ -11,6 +11,7 @@
 <h:head>
     <title>Unsere Produkte</title>
     <p:growl showDetail="false"/>
+    <link href="http://netdna.bootstrapcdn.com/font-awesome/4.0.3/css/font-awesome.css" rel="stylesheet"/>
 </h:head>
 <h:body>
     <h:form id="form">
@@ -33,10 +34,11 @@
                         <p:outputLabel value="#{product.description}" style="margin-top: 5px"/>
                         <p:outputLabel value="#{productService.getFormatedPrice(product.price)}"/>
                         <p:inputText binding="#{quantity}" type="number" maxlength="2" size="2" style="width: 30px"/>
-                        <p:commandButton value="+" action="#{orderService.addOneOrderItem(quantity.value)}"
+                        <p:commandLink styleClass="btn btn-danger" action="#{orderService.addOneOrderItem(quantity.value)}"
                                           ajax="true" update=":form:order">
                             <f:param value="#{product.id}" name="productID"/>
-                        </p:commandButton>
+                            <i class="fa fa-plus fa-2x fa-lg"/>
+                        </p:commandLink>
                     </h:panelGrid>
                 </p:panel>
             </p:dataGrid>
@@ -72,9 +74,10 @@
                     </f:facet>
                 </p:column>
                 <p:column>
-                    <p:commandButton type="submit" action="#{orderService.deleteOneOrderItem}" value="X" update="order">
+                    <p:commandLink type="submit" action="#{orderService.deleteOneOrderItem}" update="order" styleClass="btn btn-danger">
                         <f:param name="orderItemID" value="#{item.id}"/>
-                    </p:commandButton>
+                        <i class="fa fa-trash-o fa-2x fa-lg"/>
+                    </p:commandLink>
                 </p:column>
             </p:dataTable>
             <br/>

@@ -78,35 +78,39 @@ public class OrderService {
     }
 
     public String addOrder(){
-        HttpServletRequest req = (HttpServletRequest) FacesContext.getCurrentInstance().getExternalContext().getRequest();
-        String email = (String) req.getSession().getAttribute("email");
+        if(newOrderItems.size()>0) {
+            HttpServletRequest req = (HttpServletRequest) FacesContext.getCurrentInstance().getExternalContext().getRequest();
+            String email = (String) req.getSession().getAttribute("email");
 
-        int tourID = getTourIDWithDate(date);
+            int tourID = getTourIDWithDate(date);
 
-        if(tourID==-1){
-            tourList.add(tourDao.addTour(date));
-            tourID = getTourIDWithDate(date);
-        }
+            if (tourID == -1) {
+                tourList.add(tourDao.addTour(date));
+                tourID = getTourIDWithDate(date);
+            }
 
-        currentOrderid = getOrderID(tourID, email);
+            currentOrderid = getOrderID(tourID, email);
 
-        if(currentOrderid == -1){
-            Order order = orderDao.addOrder(tourID, email, memo);
-            orderList.add(order);
-            currentOrderid = order.getId();
-        }
-        else
-            if(!memo.equals(""))
+            if (currentOrderid == -1) {
+                Order order = orderDao.addOrder(tourID, email, memo);
+                orderList.add(order);
+                currentOrderid = order.getId();
+            } else if (!memo.equals(""))
                 orderDao.writeMemoWithID(currentOrderid, memo, "Pock");
 
-        addOrderIDToItems(currentOrderid);
+            addOrderIDToItems(currentOrderid);
 
-        for(OrderItem item : newOrderItems)
-            orderItemDAO.addOrderItem(item);
+            for (OrderItem item : newOrderItems)
+                orderItemDAO.addOrderItem(item);
 
-        newOrderItems = new ArrayList();
+            newOrderItems = new ArrayList();
 
-        return "/ordersForCustomer.xhtml?faces-redirect=true";
+            return "/ordersForCustomer.xhtml?faces-redirect=true";
+        }
+        else{
+            FacesContext.getCurrentInstance().addMessage("Failure", new FacesMessage("Sie müssen mindestens ein Produkt hinzufügen!"));
+            return "";
+        }
     }
 
     private int getTourIDWithDate(Date date){
