@@ -19,14 +19,16 @@
                 position: absolute;
                 margin-right: 10px;
                 box-shadow: 5px 5px 5px #BBB">
-        <p:tabView>
-            <p:tab title="Logindaten ändern">
-                <ui:include src="editLogindata.xhtml"/>
-            </p:tab>
-            <p:tab title="Benutzerdaten ändern">
-                <ui:include src="editUserdata.xhtml"/>
-            </p:tab>
-        </p:tabView>
+        <h:form>
+            <p:tabView>
+                <p:tab title="Logindaten ändern">
+                    <ui:include src="editLogindata.xhtml"/>
+                </p:tab>
+                <p:tab title="Benutzerdaten ändern">
+                    <ui:include src="editUserdata.xhtml"/>
+                </p:tab>
+            </p:tabView>
+        </h:form>
     </div>
     <div class="topbar">
         <h1>Einstellungen</h1>

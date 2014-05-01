@@ -76,11 +76,8 @@ public class UserSettingsBean {
     }
 
     public void saveLoginData(){
-        System.out.println("saveLoginData called");
         HttpServletRequest req = (HttpServletRequest) FacesContext.getCurrentInstance().getExternalContext().getRequest();
         String email = req.getSession().getAttribute("email").toString();
-
-        System.out.println("saveLoginData called " + email);
 
         if(settingsDAO.check(oldPass, email)){
             if(newPass1.equals(newPass2)){
@@ -109,7 +106,10 @@ public class UserSettingsBean {
     }
 
     public void saveUserData(){
-        settingsDAO.saveUserData(user, address, selectedTown);
+        if(settingsDAO.saveUserData(user, address, selectedTown))
+            FacesContext.getCurrentInstance().addMessage("Success", new FacesMessage("Änderungen erfolgreich übernommen!"));
+        else
+            FacesContext.getCurrentInstance().addMessage("Failure", new FacesMessage("Fehler beim Speichern der Daten"));
     }
 
     public void setSelectedTown(String selectedTown) {

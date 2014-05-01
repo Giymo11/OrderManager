@@ -172,7 +172,7 @@ public class UserSettingsDAO extends JdbcDao {
         return null;
     }
 
-    public void saveUserData(User user, Address address, String selectedTown) {
+    public boolean saveUserData(User user, Address address, String selectedTown) {
         Connection connection = null;
         Statement statement = null;
 
@@ -190,10 +190,12 @@ public class UserSettingsDAO extends JdbcDao {
 
         } catch (SQLException e) {
             e.printStackTrace();
+            return false;
         }
         finally {
             close(null, statement, connection);
         }
+        return true;
     }
 
     private String getDateSQL(Date date) {

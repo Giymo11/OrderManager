@@ -300,16 +300,20 @@ public class OrderService {
         for (OrderItem item : items ) {
             sum += item.getOrdered() * getPrice(item.getProductid());
         }
+        String temp = sum+"";
+        String formated;
+        String str = temp.substring(temp.indexOf('.'));
 
-        String sumStr = "€ " + sum + "";
-        String string = sumStr.substring(sumStr.indexOf('.'));
+        if (str.length()==2)
+            formated = "€ " + temp + "0";
+        else if (str.length()>3)
+            formated = "€ " + temp.substring(0, temp.indexOf('.')) + str.substring(0,3);
+        else
+            formated = "€ " + temp;
 
-        if(string.length()<=2)
-            sumStr += "0";
+        formated = formated.replace('.', ',');
 
-        sumStr = sumStr.replace('.', ',');
-
-        return sumStr;
+        return formated;
     }
 
     private float getPrice(int id){

@@ -25,7 +25,7 @@ public class OrdersResource {
 
     @GET
     public Order getOrders(@PathParam("id") int addressid) {
-        return orderdao.getOrdersByAddressForCurrentDay(addressid);
+        return orderdao.getOrderByAddressForCurrentDay(addressid);
     }
 
     @POST

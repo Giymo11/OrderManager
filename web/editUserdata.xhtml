@@ -2,7 +2,6 @@
                 xmlns:p="http://primefaces.org/ui"
                 xmlns:ui="http://java.sun.com/jsf/facelets"
                 xmlns:f="http://java.sun.com/jsf/core">
-    <h:form>
         <h:head>
             <p:growl showDetail="false"/>
         </h:head>
@@ -54,6 +53,5 @@
                 </tr>
             </tbody>
         </table>
-        <p:commandButton value="Speichern" ajax="true" update="@form" action="#{userSettingsBean.saveUserData}" type="submit"/>
-    </h:form>
+        <p:commandButton value="Speichern" ajax="false" update="@form" action="#{userSettingsBean.saveUserData}" type="submit"/>
 </ui:composition>
