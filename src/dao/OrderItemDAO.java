@@ -226,6 +226,7 @@ public class OrderItemDao extends JdbcDao {
             connection=getConnection();
             statement=connection.createStatement();
             statement.executeUpdate("UPDATE " + DATABASE_NAME + ".orderitem set delivered = " + item.getDelivered()+";");
+            statement.executeUpdate("COMMIT;");
         }
         catch(SQLException e){
             e.printStackTrace();

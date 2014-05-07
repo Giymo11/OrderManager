@@ -34,35 +34,37 @@ public class OrderItemResource {
     @Path("/{addressid}")
     public void storeOrderItems(@PathParam("addressid")int addressID, Collection orderitems){
         Collection<LinkedHashMap<String, Object>> orderItems = orderitems;
+        if(addressID<0){
+            addressID = AddressResource.addressMap.get(addressID);
+            System.out.println("Address new: " + addressID);
+        }
+
+        Order order = orderDao.getOrderByAddressForCurrentDay(addressID);
+        int orderID;
+
+        if(order!=null) {
+            order.setDelivered(true);
+            orderDao.writeDeliveredStatus(order);
+            orderID = order.getId();
+        }
+        else
+            orderID = orderDao.addOrderWithAddressID(addressID, new Date());
 
         for (LinkedHashMap<String, Object> map : orderItems) {
-
             OrderItem item = getOrderItem(map);
-
             System.out.println("addressid: " + addressID + ", item - " + item.toString());
 
             if(item.getId()>0){
                 orderItemDao.update(item);
             }
             else{
-                if(addressID<0){
-                    addressID = AddressResource.addressMap.get(addressID);
-                    System.out.println("Address new: " + addressID);
-                }
                 if (item.getOrderid() < 0) {
-                    int orderID;
-                    Order order = orderDao.getOrderByAddressForCurrentDay(addressID);
-                    if (order != null)
-                        orderID = order.getId();
-                    else
-                        orderID = orderDao.addOrderWithAddressID(addressID, new Date());
-                    System.out.println("orderID: " + orderID + ", addressID: " + addressID);
                     item.setOrderid(orderID);
+                    System.out.println("orderID: " + orderID + ", addressID: " + addressID);
                 }
                 orderItemDao.insertItem(item, addressID);
             }
         }
-
     }
 
     private OrderItem getOrderItem(HashMap<String, Object> json) {
