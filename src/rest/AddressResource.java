@@ -22,28 +22,31 @@ public class AddressResource {
     public static Map<Integer, Integer> addressMap;
     private AddressDao addressDao;
 
-    public AddressResource(){
+    public AddressResource() {
         addressDao = new AddressDao();
         addressMap = new HashMap();
     }
 
     @POST
     @Consumes("application/json")
-    public void setAddressID(Address address){
+    public void setAddressID(Address address) {
 
+        System.out.println("works? - " + address);
 
-        if(address.getId()<0){
+        if (address.getId() < 0) {
             int negativeID = address.getId();
             addressDao.writeAddress(address);
             addressMap.put(negativeID, address.getId());
         }
+
+        for (Map.Entry<Integer, Integer> entry : addressMap.entrySet())
+            System.out.println("negative: " + entry.getKey() + " - positive: " + entry.getValue());
     }
 
     @GET
-    public List getAddresses(@PathParam("id")int townid){
+    public List getAddresses(@PathParam("id") int townid) {
         return addressDao.getAddressesWithTownID(townid);
     }
-
 
 
 }

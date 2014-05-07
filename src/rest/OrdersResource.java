@@ -29,7 +29,7 @@ public class OrdersResource {
     }
 
     @POST
-    @Consumes("application/json")
+    @Consumes("test/plain")
     @Path("/{addressid}")
     public void setMemo(@PathParam("addressid")int addressID, String memo){
         orderdao.writeMemoWithAddressID(addressID, new Date(), memo);

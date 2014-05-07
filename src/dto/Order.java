@@ -72,4 +72,16 @@ public class Order implements Identifiable {
     public void setDelivered(boolean delivered) {
         this.delivered = delivered;
     }
+
+    @Override
+    public String toString() {
+        return "Order{" +
+                "id=" + id +
+                ", tourid=" + tourid +
+                ", addressid=" + addressid +
+                ", memoForPock='" + memoForPock + '\'' +
+                ", memoForCustomer='" + memoForCustomer + '\'' +
+                ", delivered=" + delivered +
+                '}';
+    }
 }

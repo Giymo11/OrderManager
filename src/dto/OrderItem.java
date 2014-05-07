@@ -29,6 +29,17 @@ public class OrderItem implements Identifiable {
         setDelivered(delivered);
     }
 
+    public OrderItem() {
+    }
+
+    public OrderItem(int id, int orderid, int productid, int ordered, int delivered) {
+        setId(id);
+        setOrderid(orderid);
+        setProductid(productid);
+        setOrdered(ordered);
+        setDelivered(delivered);
+    }
+
     public int getId() {
         return id;
     }
@@ -67,5 +78,16 @@ public class OrderItem implements Identifiable {
 
     public void setProductid(int productid) {
         this.productid = productid;
+    }
+
+    @Override
+    public String toString() {
+        return "OrderItem{" +
+                "id=" + id +
+                ", orderid=" + orderid +
+                ", productid=" + productid +
+                ", ordered=" + ordered +
+                ", delivered=" + delivered +
+                '}';
     }
 }

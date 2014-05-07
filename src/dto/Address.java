@@ -18,6 +18,9 @@ public class Address implements Identifiable {
         this.houseNr = houseNr;
     }
 
+    public Address() {
+    }
+
     public String getSQLString() {
         return id + ", " + street + "', '" + houseNr + "'," + townid;
     }
@@ -52,5 +55,15 @@ public class Address implements Identifiable {
 
     public void setTownid(int townid) {
         this.townid = townid;
+    }
+
+    @Override
+    public String toString() {
+        return "Address{" +
+                "id=" + id +
+                ", townid=" + townid +
+                ", street='" + street + '\'' +
+                ", houseNr='" + houseNr + '\'' +
+                '}';
     }
 }
