@@ -7,6 +7,7 @@
     <h:form>
         <p:commandButton value="#{loginBean.status}" action="#{loginBean.handleClick}"
                          style="position: fixed; right: 5px; top: 5px; font-size: 10pt" update="@form" ajax="false"/>
+        <p:outputLabel value="#{loginBean.currentMail}" style="position: fixed; right: 5px; top: 37px; color: #2b812b; text-shadow: 1px 1px 5px #AAA; font: status-bar;"/>
     </h:form>
 
 </ui:composition>

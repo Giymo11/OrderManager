@@ -13,7 +13,7 @@
             <br/>
             <p:fileUpload fileUploadListener="#{pictureService.upload}" mode="advanced"
                           allowTypes="/(\.|\/)(gif|jpe?g|png)$/" dragDropSupport="false"
-                          fileLimit="1" invalidFileMessage="Falsches Bildformat" update="@form"/>
+                          fileLimit="1" invalidFileMessage="Falsches Bildformat" update="@form" cancelLabel="Abbrechen" label="Auswählen"/>
             <br/>
 
             <p:dataTable value="#{pictureService.pics}" var="picture">

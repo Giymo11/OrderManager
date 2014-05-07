@@ -30,7 +30,7 @@
                         columns="2">
                 <p:panel header="#{product.title}" style="text-align: center; font-size: 11pt">
                     <h:panelGrid columns="1" style="height: 350px">
-                        <p:graphicImage value="#{pictureService.getNameForID(product.pictureID)}" style="height:150px; max-width: 200px"/>
+                        <p:graphicImage value="#{pictureService.getNameForID(product.pictureID)}" style="max-height:200px; max-width: 200px"/>
                         <p:outputLabel value="#{product.description}" style="margin-top: 5px"/>
                         <p:outputLabel value="#{productService.getFormatedPrice(product.price)}"/>
                         <p:inputText binding="#{quantity}" type="number" maxlength="2" size="2" style="width: 30px"/>

@@ -82,9 +82,9 @@ public class JdbcDao {
             try {
                 String sqlCommand;
                 if(tablename.equals("picture"))
-                    sqlCommand = LAST_INSERT_PIC_ID + tablename;
+                    sqlCommand = LAST_INSERT_PIC_ID + tablename + ";";
                 else
-                    sqlCommand = LAST_INSERT_ID + tablename;
+                    sqlCommand = LAST_INSERT_ID + tablename + ";";
 
                 statement = con.createStatement();
                 rs = statement.executeQuery(sqlCommand);

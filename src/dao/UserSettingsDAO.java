@@ -130,6 +130,9 @@ public class UserSettingsDao extends JdbcDao {
         } catch (SQLException e) {
             e.printStackTrace();
         }
+        finally {
+            close(resultSet, statement, connection);
+        }
         return user;
     }
 

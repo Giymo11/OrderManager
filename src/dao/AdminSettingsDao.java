@@ -21,6 +21,7 @@ public class AdminSettingsDao extends JdbcDao {
             statement = connection.createStatement();
 
             statement.executeUpdate("INSERT INTO " + DATABASE_NAME + ".admin VALUES(" + id + ");");
+            statement.executeUpdate("COMMIT;");
         } catch (SQLException e) {
             e.printStackTrace();
         }

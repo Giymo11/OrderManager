@@ -18,55 +18,62 @@
                 margin-top: 130px;
                 width: 860px;
                 position: absolute;">
-        <h:form>
-            <h3>Auslieferung</h3>
-            <p:calendar value="#{orderService.startDate}">
-                <p:ajax event="dateSelect" update="items, orders"/>
-            </p:calendar>
-            <br/>
-            <br/>
-            <p:dataTable value="#{orderService.allItemsForDate}" var="item" type="definition" id="items" emptyMessage="Keine Bestellung für diesen Tag">
-                <p:column headerText="Anzahl">
-                    <p:outputLabel value="#{item.ordered}"/>
-                </p:column>
-                <p:column headerText="Produkt">
-                    <p:outputLabel value="#{productService.getNameForID(item.productid)}"/>
-                </p:column>
-                <p:column headerText="Preis">
-                    <p:outputLabel value="#{productService.getFormatedPrice(productService.getPrice(item.productid))}"/>
-                </p:column>
-                <p:column headerText="Summe">
-                    <p:outputLabel value="#{orderService.sumUp(productService.getPrice(item.productid), item.ordered)}"/>
+        <p:tabView>
+            <p:tab title="Kunden Bestellungen">
+                <h:form>
+                    <h3>Auslieferung</h3>
+                    <p:calendar value="#{orderService.startDate}">
+                        <p:ajax event="dateSelect" update="items, orders"/>
+                    </p:calendar>
+                    <br/>
+                    <br/>
+                    <p:dataTable value="#{orderService.allItemsForDate}" var="item" type="definition" id="items" emptyMessage="Keine Bestellung für diesen Tag">
+                        <p:column headerText="Anzahl">
+                            <p:outputLabel value="#{item.ordered}"/>
+                        </p:column>
+                        <p:column headerText="Produkt">
+                            <p:outputLabel value="#{productService.getNameForID(item.productid)}"/>
+                        </p:column>
+                        <p:column headerText="Preis">
+                            <p:outputLabel value="#{productService.getFormatedPrice(productService.getPrice(item.productid))}"/>
+                        </p:column>
+                        <p:column headerText="Summe">
+                            <p:outputLabel value="#{orderService.sumUp(productService.getPrice(item.productid), item.ordered)}"/>
 
-                    <f:facet name="footer">
-                        <p:outputLabel value="#{orderService.getSumAll(orderService.allItemsForDate)}"/>
-                    </f:facet>
-                </p:column>
-            </p:dataTable>
-            <br/>
-            <p:panel id="orders">
-                <p:dataTable value="#{orderService.ordersForDate}" var="order" emptyMessage="Keine Bestellungen für diesen Tag">
-                    <p:column headerText="Adresse">
-                        <p:dataList value="#{addressService.getAddressWithID(order.addressid)}" var="address"
-                                    type="definition">
-                            <p:outputLabel value="#{townService.getPostalCodeWithID(address.townid)} "/>
-                            <p:outputLabel value="#{townService.getNameWithID(address.townid)},     "/>
-                            <p:outputLabel value="#{address.street} #{address.houseNr}"/>
-                        </p:dataList>
-                    </p:column>
-                    <p:column headerText="Notiz vom Kunden">
-                        <p:outputLabel value="#{order.memoForPock}"/>
-                    </p:column>
-                    <p:column headerText="Notiz an den Kunden">
-                        <p:inputTextarea binding="#{memoForCustomer}" placeholder="#{order.memoForCustomer}"/>
-                        <p:commandButton type="submit" value="Senden"
-                                         action="#{orderService.writeMemo(memoForCustomer.value)}" ajax="false">
-                            <f:param value="#{order.id}" name="orderMemo"/>
-                        </p:commandButton>
-                    </p:column>
-                </p:dataTable>
-            </p:panel>
-        </h:form>
+                            <f:facet name="footer">
+                                <p:outputLabel value="#{orderService.getSumAll(orderService.allItemsForDate)}"/>
+                            </f:facet>
+                        </p:column>
+                    </p:dataTable>
+                    <br/>
+                    <p:panel id="orders">
+                        <p:dataTable value="#{orderService.ordersForDate}" var="order" emptyMessage="Keine Bestellungen für diesen Tag">
+                            <p:column headerText="Adresse">
+                                <p:dataList value="#{addressService.getAddressWithID(order.addressid)}" var="address"
+                                            type="definition">
+                                    <p:outputLabel value="#{townService.getPostalCodeWithID(address.townid)} "/>
+                                    <p:outputLabel value="#{townService.getNameWithID(address.townid)},     "/>
+                                    <p:outputLabel value="#{address.street} #{address.houseNr}"/>
+                                </p:dataList>
+                            </p:column>
+                            <p:column headerText="Notiz vom Kunden">
+                                <p:outputLabel value="#{order.memoForPock}"/>
+                            </p:column>
+                            <p:column headerText="Notiz an den Kunden">
+                                <p:inputTextarea binding="#{memoForCustomer}" placeholder="#{order.memoForCustomer}"/>
+                                <p:commandButton type="submit" value="Senden"
+                                                 action="#{orderService.writeMemo(memoForCustomer.value)}" ajax="false">
+                                    <f:param value="#{order.id}" name="orderMemo"/>
+                                </p:commandButton>
+                            </p:column>
+                        </p:dataTable>
+                    </p:panel>
+                </h:form>
+            </p:tab>
+            <p:tab title="Meine Bestellungen">
+                <ui:include src="ordersForCustomerDetail.xhtml"/>
+            </p:tab>
+        </p:tabView>
     </p:panel>
     <div class="topbar">
         <h1>Ihre Bestellungen</h1>

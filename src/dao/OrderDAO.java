@@ -84,7 +84,7 @@ public class OrderDao extends JdbcDao {
                 statement.executeUpdate("COMMIT;");
             }
             else{
-                FacesContext.getCurrentInstance().addMessage("Achtung", new FacesMessage("Für diesen Tag gibt es schon eine Bestellung"));
+                FacesContext.getCurrentInstance().addMessage("Achtung", new FacesMessage("FÃ¼r diesen Tag gibt es schon eine Bestellung"));
             }
         } catch (SQLException e) {
             e.printStackTrace();
@@ -300,30 +300,37 @@ public class OrderDao extends JdbcDao {
         int id = 0;
         Connection connection = null;
         Statement statement = null;
-        Statement statement2 = null;
         ResultSet resultSet = null;
 
         try{
             connection = getConnection();
             statement = connection.createStatement();
-            statement2 = connection.createStatement();
             resultSet = statement.executeQuery("SELECT id from " + DATABASE_NAME + ".tour WHERE date = '" +getDateSQL(date)+"';");
+            if (!resultSet.next()) {
+                new TourDao().addTour(new Date());
+            }
+            resultSet = statement.executeQuery("SELECT id from " + DATABASE_NAME + ".tour WHERE date = '" + getDateSQL(date) + "';");
             resultSet.next();
-
             Order order = new Order(resultSet.getInt(1), addressID, "", "", true);
             insertObject("order", order);
             id = order.getId();
-            statement2.executeQuery("UPDATE " + DATABASE_NAME + ".order SET addressid = "+addressID+", tourid = "+order.getTourid()+", delivered = true;");
+            System.out.println("Order updating: " + order.toString());
+            String sqlstring = "UPDATE " + DATABASE_NAME + ".order SET addressID = " + order.getAddressid() + ", tourID = " + order.getTourid() + ", delivered = 1 WHERE id = " + order.getId() + ";";
+            System.out.println("Order sql: " + sqlstring);
+            statement = connection.createStatement();
+            statement.executeUpdate(sqlstring);
+            statement.executeUpdate("COMMIT;");
+
         }catch(SQLException e){
             e.printStackTrace();
         }
         finally {
             close(resultSet,statement,connection);
-            close(null,statement2,null);
         }
         return id;
 
     }
+
 
     public void writeMemoWithAddressID(int addressID, Date date, String memo){
         int orderID;
@@ -334,19 +341,21 @@ public class OrderDao extends JdbcDao {
         try{
             connection = getConnection();
             statement = connection.createStatement();
-            resultSet = statement.executeQuery("SELECT id FROM " + DATABASE_NAME + ".order WHERE addressid = "+addressID+" AND date = '"+getDateSQL(date)+"';");
-            resultSet.next();
-            orderID = resultSet.getInt(1);
+            String sqlstring = "SELECT id FROM " + DATABASE_NAME + ".order WHERE addressid = " + addressID + " AND tourID = (SELECT id from " + DATABASE_NAME + ".tour WHERE date = \'" + getDateSQL(date) + "\');";
+            System.out.println("MemoSelect: " + sqlstring);
+            resultSet = statement.executeQuery(sqlstring);
+            if (!resultSet.next()) {
+                orderID = addOrderWithAddressID(addressID, new Date());
+            } else
+                orderID = resultSet.getInt(1);
 
             writeMemoWithID(orderID, memo, "Customer");
-
-
 
         } catch (SQLException e) {
             e.printStackTrace();
         }
         finally{
-               close(resultSet,statement,connection);
-            }
+            close(resultSet, statement, connection);
+        }
     }
 }

@@ -20,6 +20,7 @@ import java.io.IOException;
 public class LoginBean {
     private LoginDao loginDao;
     private String status;
+    private String currentMail;
 
     public String getStatus() {
         return status;
@@ -28,6 +29,7 @@ public class LoginBean {
     public LoginBean() {
         loginDao = new LoginDao();
         status = "Anmelden";
+        currentMail = "";
     }
 
     public String getWrongPassword() {
@@ -67,10 +69,15 @@ public class LoginBean {
         if ( returnValue.equals("blocked") )
             FacesContext.getCurrentInstance().addMessage("Fail", new FacesMessage("Diese Adresse wurde blockiert!"));
 
-        if(returnValue.equals(""))
+        if(returnValue.equals("")) {
             status = "Anmelden";
-        else
+            currentMail = "";
+        }
+        else {
             status = "Abmelden";
+            if(req.getSession()!=null)
+                currentMail = req.getSession().getAttribute("email") + "";
+        }
 
         return returnValue;
     }
@@ -105,5 +112,9 @@ public class LoginBean {
         req.setAttribute("email", null);
         req.setAttribute("adminLoggedIn", false);
         FacesContext.getCurrentInstance().getExternalContext().invalidateSession();
+    }
+
+    public String getCurrentMail(){
+        return currentMail;
     }
 }

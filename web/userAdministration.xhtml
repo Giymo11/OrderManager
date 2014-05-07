@@ -34,7 +34,7 @@
                 </p:commandButton>
             </p:column>
             <p:column>
-                <p:commandButton id="commandUserAdmin" value="Speichern" type="submit" ajax="true" update="userList" action="#{adminSettingsService.save}">
+                <p:commandButton id="commandUserAdmin" value="Speichern" type="submit" ajax="false" update="userList" action="#{adminSettingsService.save}">
                     <f:param name="idU" value="#{user.id}"/>
                 </p:commandButton>
             </p:column>

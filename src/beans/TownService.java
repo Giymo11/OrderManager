@@ -3,8 +3,8 @@ package beans;
 import dao.TownDao;
 import dto.Town;
 
-import javax.faces.bean.ApplicationScoped;
 import javax.faces.bean.ManagedBean;
+import javax.faces.bean.RequestScoped;
 import javax.faces.context.FacesContext;
 import java.sql.SQLException;
 import java.util.ArrayList;
@@ -19,7 +19,7 @@ import java.util.Map;
  * To change this template use File | Settings | File Templates.
  */
 @ManagedBean
-@ApplicationScoped
+@RequestScoped
 public class TownService {
     private int plz;
     private String name;

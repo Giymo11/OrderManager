@@ -49,7 +49,8 @@ public class AdminSettingsService {
     }
 
     public void addAsAdmin(){
-        int id = Integer.parseInt("idAdmin");
+        int id = Integer.parseInt(fetchParameter("idAdmin"));
         adminSettingsDao.addAsAdmin(id);
+        userList = userAdminDao.getUserList();
     }
 }
