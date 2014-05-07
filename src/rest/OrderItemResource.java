@@ -3,6 +3,7 @@ package rest;
 import dao.AddressDao;
 import dao.OrderDao;
 import dao.OrderItemDao;
+import dto.Order;
 import dto.OrderItem;
 
 import javax.ws.rs.*;
@@ -50,7 +51,11 @@ public class OrderItemResource {
                 }
                 if (item.getOrderid() < 0) {
                     int orderID;
-                    orderID = orderDao.addOrderWithAddressID(addressID, new Date());
+                    Order order = orderDao.getOrderByAddressForCurrentDay(addressID);
+                    if (order != null)
+                        orderID = order.getId();
+                    else
+                        orderID = orderDao.addOrderWithAddressID(addressID, new Date());
                     System.out.println("orderID: " + orderID + ", addressID: " + addressID);
                     item.setOrderid(orderID);
                 }

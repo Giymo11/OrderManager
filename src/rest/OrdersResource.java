@@ -15,7 +15,6 @@ import java.util.Date;
  */
 
 @Path("/orders/{id}")
-@Produces("application/json")
 public class OrdersResource {
     private OrderDao orderdao;
 
@@ -24,14 +23,17 @@ public class OrdersResource {
     }
 
     @GET
+    @Produces("application/json")
     public Order getOrders(@PathParam("id") int addressid) {
         return orderdao.getOrderByAddressForCurrentDay(addressid);
     }
 
     @POST
-    @Consumes("test/plain")
-    @Path("/{addressid}")
-    public void setMemo(@PathParam("addressid")int addressID, String memo){
+    @Consumes("text/plain")
+    public void setMemo(@PathParam("id") int addressID, String memo) {
+        System.out.println("Memo: " + memo);
+        if (addressID < 0)
+            addressID = AddressResource.addressMap.get(addressID);
         orderdao.writeMemoWithAddressID(addressID, new Date(), memo);
     }
 }
