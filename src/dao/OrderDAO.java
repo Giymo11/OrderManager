@@ -305,7 +305,7 @@ public class OrderDao extends JdbcDao {
         try{
             connection = getConnection();
             statement = connection.createStatement();
-            resultSet = statement.executeQuery("SELECT id from " + DATABASE_NAME + ".tour WHERE date = '" +getDateSQL(date)+"';");
+            resultSet = statement.executeQuery("SELECT id from " + DATABASE_NAME + ".tour WHERE date = '" + getDateSQL(date) + "';");
             if (!resultSet.next()) {
                 new TourDao().addTour(new Date());
             }
@@ -356,6 +356,25 @@ public class OrderDao extends JdbcDao {
         }
         finally{
             close(resultSet, statement, connection);
+        }
+    }
+
+    public void writeDeliveredStatus(Order order) {
+        Connection connection = null;
+        Statement statement = null;
+
+        try{
+            connection = getConnection();
+            statement = connection.createStatement();
+
+            statement.executeUpdate("UPDATE " + DATABASE_NAME + ".order SET delivered = " + order.isDelivered() +
+                    " WHERE id = " + order.getId() + ";");
+            statement.executeUpdate("COMMIT;");
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        finally{
+            close(null, statement, connection);
         }
     }
 }
