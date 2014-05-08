@@ -25,6 +25,7 @@ public class EventService {
     private String newText;
     private String newName;
     private String selectedPicture;
+    private int newPriority;
 
     private List<Event> events;
 
@@ -95,5 +96,15 @@ public class EventService {
 
     public void setSelectedPicture(String selectedPicture) {
         this.selectedPicture = selectedPicture;
+    }
+
+    public void setNewPriority(int newPriority){
+        if(eventDAO.isPriorityAlreadyInDB(newPriority))
+            eventDAO.reorganisePriorities();
+        this.newPriority = newPriority;
+    }
+
+    public int getNewPriority(){
+        return newPriority;
     }
 }

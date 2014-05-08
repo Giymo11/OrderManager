@@ -32,6 +32,12 @@
                 </f:facet>
             </p:column>
 
+            <p:column headerText="Priorität">
+                <p:outputLabel value="#{item.priority}"/>
+                <br/>
+                <p:inputText value="=#{eventService.newPriority}"/>
+            </p:column>
+
             <p:column>
 
                 <p:commandLink type="submit" action="#{eventService.delete}" styleClass="btn btn-danger" ajax="true" update="@form">
