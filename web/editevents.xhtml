@@ -2,59 +2,58 @@
         xmlns="http://www.w3.org/1999/xhtml"
         xmlns:ui="http://java.sun.com/jsf/facelets"
         xmlns:f="http://java.sun.com/jsf/core"
-        xmlns:p="http://primefaces.org/ui" xmlns:h="http://java.sun.com/jsf/html">
+        xmlns:p="http://primefaces.org/ui">
 
-        <p:dataTable var="item" value="#{eventService.events}" cellpadding="15px">
-            <p:column headerText="Bild">
-                <p:graphicImage value="#{pictureService.getNameForID(item.pictureid)}" style="width: 100px; height: 70px"/>
+    <p:dataTable var="item" value="#{eventService.events}" cellpadding="15px">
+        <p:column headerText="Bild">
+            <p:graphicImage value="#{pictureService.getNameForID(item.pictureid)}" style="width: 100px; height: 70px"/>
 
-                <f:facet name="footer">
-                    <p:selectOneMenu value="#{eventService.selectedPicture}" effect="fade" style="width:160px"
-                                     panelStyle="width:150px" filter="true" filterMatchMode="startsWith">
-                        <f:selectItems value="#{pictureService.pics}"/>
-                    </p:selectOneMenu>
-                </f:facet>
-            </p:column>
+            <f:facet name="footer">
+                <p:selectOneMenu value="#{eventService.selectedPicture}" effect="fade" style="width:160px"
+                                 panelStyle="width:150px" filter="true" filterMatchMode="startsWith">
+                    <f:selectItems value="#{pictureService.pics}"/>
+                </p:selectOneMenu>
+            </f:facet>
+        </p:column>
 
-            <p:column headerText="Name" width="30px">
-                <p:inputText value="#{item.title}"/>
+        <p:column headerText="Name" width="30px">
+            <p:inputText value="#{item.title}"/>
 
-                <f:facet name="footer">
-                    <p:inputText value="#{eventService.newName}"/>
-                </f:facet>
-            </p:column>
+            <f:facet name="footer">
+                <p:inputText value="#{eventService.newName}"/>
+            </f:facet>
+        </p:column>
 
-            <p:column headerText="Beschreibung">
-                <p:inputTextarea value="#{item.description}"/>
+        <p:column headerText="Beschreibung">
+            <p:inputTextarea value="#{item.description}"/>
 
-                <f:facet name="footer">
-                    <p:inputTextarea value="#{eventService.newText}"/>
-                </f:facet>
-            </p:column>
+            <f:facet name="footer">
+                <p:inputTextarea value="#{eventService.newText}"/>
+            </f:facet>
+        </p:column>
 
-            <p:column headerText="Priorität">
-                <p:outputLabel value="#{item.priority}"/>
-                <br/>
-                <p:inputText value="=#{eventService.newPriority}"/>
-            </p:column>
+        <p:column>
 
-            <p:column>
+            <p:commandLink type="submit" action="#{eventService.delete}" styleClass="btn btn-danger" ajax="true" update="@form">
+                <f:param value="#{item.id}" name="id"/>
+                <i class="fa fa-trash-o fa-2x fa-lg"/>
+            </p:commandLink>
 
-                <p:commandLink type="submit" action="#{eventService.delete}" styleClass="btn btn-danger" ajax="true" update="@form">
-                    <f:param value="#{item.id}" name="id"/>
-                    <i class="fa fa-trash-o fa-2x fa-lg"/>
+            <p:commandLink type="submit" action="#{eventService.save}" styleClass="btn btn-danger" ajax="true" update="@form">
+                <f:param value="#{item.id}" name="id"/>
+                <i class="fa fa-save fa-2x fa-lg"/>
+            </p:commandLink>
+
+            <f:facet name="footer">
+                <p:commandLink type="submit" action="#{eventService.addNewEvent}" styleClass="btn btn-danger" ajax="true" update="@form">
+                    <i class="fa fa-plus fa-2x fa-lg"/>
                 </p:commandLink>
+            </f:facet>
+        </p:column>
+    </p:dataTable>
 
-                <p:commandLink type="submit" action="#{eventService.save}" styleClass="btn btn-danger" ajax="true" update="@form">
-                    <f:param value="#{item.id}" name="id"/>
-                    <i class="fa fa-save fa-2x fa-lg"/>
-                </p:commandLink>
-
-                <f:facet name="footer">
-                    <p:commandLink type="submit" action="#{eventService.addNewEvent}" styleClass="btn btn-danger" ajax="true" update="@form">
-                        <i class="fa fa-plus fa-2x fa-lg"/>
-                    </p:commandLink>
-                </f:facet>
-            </p:column>
-        </p:dataTable>
+    <p:orderList value="#{eventService.orderEvents}" itemValue="#{event}" itemLabel="#{event}"
+                 var="event" controlsLocation="left" id="eventList">
+    </p:orderList>
+    <p:commandButton value="Reihenfolge speichern" action="#{eventService.saveOrderList}" ajax="false" update="@form"/>
 </ui:composition>

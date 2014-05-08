@@ -1,6 +1,7 @@
 package dto;
 
 import interfaces.Identifiable;
+
 import java.util.Objects;
 
 /**
@@ -106,6 +107,10 @@ public class Event implements Identifiable {
         return true;
     }
 
+    @Override
+    public String toString() {
+        return title;
+    }
 
     public int getId() {
         return id;

@@ -3,9 +3,11 @@ package beans;
 import dao.EventDao;
 import dto.Event;
 
+import javax.faces.application.FacesMessage;
 import javax.faces.bean.ApplicationScoped;
 import javax.faces.bean.ManagedBean;
 import javax.faces.context.FacesContext;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -25,9 +27,9 @@ public class EventService {
     private String newText;
     private String newName;
     private String selectedPicture;
-    private int newPriority;
 
     private List<Event> events;
+    private List<String> orderEvents;
 
     public EventService() {
         eventDAO = new EventDao();
@@ -40,27 +42,49 @@ public class EventService {
         return events;
     }
 
-    public String addNewEvent() {
-        events.add(eventDAO.addNewEvent(newName, newText, selectedPicture));
-
-        newName = "";
-        newText = "";
-        return "#";
+    public void setEvents(List<Event> eventList) {
+        events = eventList;
     }
 
-    public String delete() {
+    public List<String> getOrderEvents(){
+        if(orderEvents == null) {
+            orderEvents = new ArrayList();
+            for (Event event : getEvents())
+                orderEvents.add(event.getTitle());
+        }
+        return orderEvents;
+    }
+
+    public void setOrderEvents(List<String> list){
+        orderEvents = list;
+    }
+
+    public void addNewEvent() {
+        Event event = eventDAO.addNewEvent(newName, newText, selectedPicture);
+        if(event!=null && !newText.equals("") && !newName.equals("")) {
+            events.add(event);
+            orderEvents.add(newName);
+            newName = "";
+            newText = "";
+        }
+        else
+            FacesContext.getCurrentInstance().addMessage("Fail", new FacesMessage("Bitte überprüfen Sie Ihre Eingaben"));
+
+    }
+
+    public void delete() {
         int id = Integer.parseInt(fetchParameter("id"));
         for(int i = 0; i<events.size(); i++)
             if(events.get(i).getId() == id)
                 events.remove(i);
         eventDAO.delete(id);
-        return "#";
+        orderEvents = null;
+        getOrderEvents();
     }
 
-    public String save(){
+    public void save(){
         int id = Integer.parseInt(fetchParameter("ids"));
         eventDAO.save(id);
-        return "#";
     }
 
     public String fetchParameter(String param) {
@@ -72,6 +96,7 @@ public class EventService {
             throw new IllegalArgumentException("Could not find parameter '" + param + "' in request parameters");
 
         return value;
+
     }
 
     public String getNewText() {
@@ -98,13 +123,15 @@ public class EventService {
         this.selectedPicture = selectedPicture;
     }
 
-    public void setNewPriority(int newPriority){
-        if(eventDAO.isPriorityAlreadyInDB(newPriority))
-            eventDAO.reorganisePriorities();
-        this.newPriority = newPriority;
-    }
-
-    public int getNewPriority(){
-        return newPriority;
+    public void saveOrderList(){
+        int priority = orderEvents.size()*10;
+        for(String str : orderEvents)
+            for(Event event : events)
+                if(event.getTitle().equals(str)) {
+                    event.setPriority(priority);
+                    priority-=10;
+                }
+        eventDAO.writeEventPriorities(events);
+        events = eventDAO.getEventList();
     }
 }
