@@ -24,6 +24,7 @@ public class EventDao extends JdbcDao {
     public List<Event> getEventList(){
         Connection con = null;
         Statement stat = null;
+        Statement statement = null;
         ResultSet res = null;
         ResultSet resPic = null;
 
@@ -33,35 +34,25 @@ public class EventDao extends JdbcDao {
         try {
             con = getConnection();
             stat = con.createStatement();
+            statement = con.createStatement();
+            res = stat.executeQuery("SELECT * FROM " + DATABASE_NAME + ".event ORDER BY priority desc;");
 
-            res = stat.executeQuery("SELECT * FROM " + DATABASE_NAME + ".event");
+            while (res.next()) {
+                event = getEventWithResultSet(res);
 
-            if(res.next()){
-                while (true){
-                    stat = con.createStatement();
-                    event = getEventWithResultSet(res);
-
-                    resPic = stat.executeQuery("SELECT name FROM " + DATABASE_NAME + ".picture WHERE pictureid = "
-                            + res.getInt("pictureid") + ";");
-                    resPic.next();
-
+                resPic = statement.executeQuery("SELECT name FROM " + DATABASE_NAME + ".picture WHERE pictureid = "
+                        + res.getInt("pictureid") + ";");
+                if(resPic.next()) {
                     event.setPicture(resPic.getString(1));
-                    eventList.add(event);
-
-                    close(resPic, null, null);
-
-                    if(res.isLast())
-                        break;
-                    else
-                        res.next();
                 }
+                eventList.add(event);
             }
         } catch (SQLException e) {
             e.printStackTrace();
         }
         finally {
             close(res, stat, con);
-            close(resPic, null, null);
+            close(resPic, statement, null);
         }
         return eventList;
     }
@@ -94,11 +85,21 @@ public class EventDao extends JdbcDao {
         ResultSet res = null;
         Statement statement1 = null;
         ResultSet resultSet = null;
+        Statement statement2 = null;
+        ResultSet resultSet1 = null;
 
         Event event = null;
 
         try {
             con = getConnection();
+            statement2 = con.createStatement();
+            resultSet1 = statement2.executeQuery("SELECT count(*) FROM " + DATABASE_NAME + ".event WHERE title = '"
+                    + newName + "';");
+            if(resultSet1.next()){
+                if(resultSet1.getInt(1)>0)
+                    return null;
+            }
+
             statement = con.createStatement();
             statement1 = con.createStatement();
             res = statement.executeQuery("SELECT pictureid FROM " + DATABASE_NAME + ".picture WHERE name = '"
@@ -117,6 +118,7 @@ public class EventDao extends JdbcDao {
         finally {
             close(res, statement, con);
             close(resultSet, statement1, null);
+            close(resultSet1, statement2, null);
             if(event!=null)
                 insertEvent(event);
         }
@@ -132,13 +134,11 @@ public class EventDao extends JdbcDao {
     }
 
     private Event getEventWithResultSet(ResultSet res) throws SQLException {
-        if (res != null)
-            return new Event(res.getInt("ID"),
-                    res.getString("Title"),
-                    res.getString("Description"),
-                    res.getInt("PictureID"),
-                    res.getInt("Priority"));
-        return null;
+        return new Event(res.getInt("ID"),
+                res.getString("Title"),
+                res.getString("Description"),
+                res.getInt("PictureID"),
+                res.getInt("Priority"));
     }
 
     public void save(int id){
@@ -159,6 +159,34 @@ public class EventDao extends JdbcDao {
         }
         finally{
             close(null, stat, connection);
+        }
+    }
+
+    public void writeEventPriorities(List<Event> events) {
+        Connection connection = null;
+        Statement statement = null;
+
+        try{
+            connection = getConnection();
+            statement = connection.createStatement();
+            statement.executeUpdate("DELETE FROM " + DATABASE_NAME + ".event;");
+            statement.executeUpdate("COMMIT;");
+            close(null, statement, connection);
+
+            for(Event event : events) {
+                insertObject("event", event);
+                connection = getConnection();
+                statement = connection.createStatement();
+                statement.executeUpdate("UPDATE " + DATABASE_NAME + ".event SET priority = " + event.getPriority() +
+                        ", title = '" + event.getTitle() + "', description = '" + event.getDescription() +
+                        "', pictureID = " + event.getPictureid() + " WHERE id = " + event.getId() + ";");
+                statement.executeUpdate("COMMIT;");
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        finally {
+            close(null, statement, connection);
         }
     }
 }
