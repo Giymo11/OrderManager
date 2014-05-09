@@ -83,8 +83,23 @@ public class EventService {
     }
 
     public void save(){
-        int id = Integer.parseInt(fetchParameter("ids"));
-        eventDAO.save(id);
+        int id = Integer.parseInt(fetchParameter("id"));
+        System.out.println("Save called with id: " + id);
+        int count=0;
+        for(Event event : events){
+            if(event.getId() == id) {
+                for (Event e : events)
+                    if (e.getTitle().equals(event.getTitle()))
+                        ++count;
+
+                if (count == 1)
+                    eventDAO.save(event);
+                else {
+                    FacesContext.getCurrentInstance().addMessage("Fail", new FacesMessage("Achtung, zwei gleiche Titel sind nicht erlaubt!"));
+                    events = eventDAO.getEventList();
+                }
+            }
+        }
     }
 
     public String fetchParameter(String param) {

@@ -141,19 +141,17 @@ public class EventDao extends JdbcDao {
                 res.getInt("Priority"));
     }
 
-    public void save(int id){
+    public void save(Event event){
         Connection connection = null;
         Statement stat = null;
         try {
             connection = getConnection();
             stat = connection.createStatement();
-            for (Event event : getEventList()) {
-                if (event.getId() == id) {
-                    stat.executeUpdate("UPDATE " + DATABASE_NAME + ".event SET title = '" + event.getTitle() +
-                            "', description = '" + event.getDescription() + "' WHERE id = " + id + ";");
-                    stat.executeUpdate("COMMIT;");
-                }
-            }
+
+            stat.executeUpdate("UPDATE " + DATABASE_NAME + ".event SET title = '" + event.getTitle() +
+                    "', description = '" + event.getDescription() + "' WHERE id = " + event.getId() + ";");
+            stat.executeUpdate("COMMIT;");
+
         } catch (SQLException e) {
             e.printStackTrace();
         }

@@ -6,7 +6,7 @@
 
     <p:dataTable var="item" value="#{eventService.events}" cellpadding="15px">
         <p:column headerText="Bild">
-            <p:graphicImage value="#{pictureService.getNameForID(item.pictureid)}" style="width: 100px; height: 70px"/>
+            <p:graphicImage value="#{pictureService.getNameForID(item.pictureid)}" style="max-width: 100px; max-height: 70px"/>
 
             <f:facet name="footer">
                 <p:selectOneMenu value="#{eventService.selectedPicture}" effect="fade" style="width:160px"
@@ -39,7 +39,7 @@
                 <i class="fa fa-trash-o fa-2x fa-lg"/>
             </p:commandLink>
 
-            <p:commandLink type="submit" action="#{eventService.save}" styleClass="btn btn-danger" ajax="true" update="@form">
+            <p:commandLink type="submit" action="#{eventService.save}" styleClass="btn btn-danger" ajax="false" update="@form">
                 <f:param value="#{item.id}" name="id"/>
                 <i class="fa fa-save fa-2x fa-lg"/>
             </p:commandLink>
