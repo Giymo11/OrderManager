@@ -45,6 +45,25 @@
                             </f:facet>
                         </p:column>
                     </p:dataTable>
+                    <p:dataTable value="#{orderService.allDeliveredItemsForDate}" var="deliveredItem"
+                                 emptyMessage="Diese Bestellung wurde (noch) nicht geliefert">
+                        <p:column headerText="Anzahl Geliefert">
+                            <p:outputLabel value="#{deliveredItem.delivered}"/>
+                        </p:column>
+                        <p:column headerText="Produkt">
+                            <p:outputLabel value="#{productService.getNameForID(deliveredItem.productid)}"/>
+                        </p:column>
+                        <p:column headerText="Preis">
+                            <p:outputLabel value="#{productService.getFormatedPrice(productService.getPrice(deliveredItem.productid))}"/>
+                        </p:column>
+                        <p:column headerText="Summe">
+                            <p:outputLabel value="#{orderService.sumUp(productService.getPrice(deliveredItem.productid), deliveredItem.delivered)}"/>
+
+                            <f:facet name="footer">
+                                <p:outputLabel value="#{orderService.getSumAllDelivered(orderService.allDeliveredItemsForDate)}"/>
+                            </f:facet>
+                        </p:column>
+                    </p:dataTable>
                     <br/>
                     <p:panel id="orders">
                         <p:dataTable value="#{orderService.ordersForDate}" var="order" emptyMessage="Keine Bestellungen für diesen Tag">

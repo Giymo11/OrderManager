@@ -211,14 +211,14 @@ public class OrderService {
         orderItemDAO.deleteOneItem(id);
     }
 
-    public String getDateWithOrderID(int orderid){
+    public Date getDateWithOrderID(int orderid){
         Date date = new Date();
 
         int tourID = getTourIDWithID(orderid);
         if(tourID != -1)
             date = getDateWithID(tourID);
 
-        return (date.getYear()+1900) + "-" + (date.getMonth()+1) + "-" + date.getDate();
+        return date;
     }
 
     private Date getDateWithID(int tourID) {
@@ -236,6 +236,16 @@ public class OrderService {
                 orderItems.add(orderItem);
 
         return orderItems;
+    }
+    public List<OrderItem> deliveredOrderItemsForUser(int orderid){
+        List<OrderItem> temp = getAllItemsWithIDForCurrentUser(orderid);
+        List<OrderItem> list = new ArrayList();
+
+        for(OrderItem item : temp){
+            if(item.getDelivered()!=-1)
+                list.add(item);
+        }
+        return list;
     }
 
     public Date getMinDate(){
@@ -320,6 +330,27 @@ public class OrderService {
         return formated;
     }
 
+    public String getSumAllDelivered(List<OrderItem> items){
+        float sum = 0.0f;
+        for (OrderItem item : items ) {
+            sum += item.getDelivered() * getPrice(item.getProductid());
+        }
+        String temp = sum+"";
+        String formated;
+        String str = temp.substring(temp.indexOf('.'));
+
+        if (str.length()==2)
+            formated = "€ " + temp + "0";
+        else if (str.length()>3)
+            formated = "€ " + temp.substring(0, temp.indexOf('.')) + str.substring(0,3);
+        else
+            formated = "€ " + temp;
+
+        formated = formated.replace('.', ',');
+
+        return formated;
+    }
+
     private float getPrice(int id){
         for(Product p : productDAO.getProductList())
             if(p.getId() == id)
@@ -359,7 +390,7 @@ public class OrderService {
     }
 
     public List<Order> getOrdersForDate() {
-        return orderDao.getOrdersByStatus(startDate, false);
+        return orderDao.getOrdersByDate(startDate);
     }
 
     public void writeMemo(String memo) {
@@ -370,6 +401,17 @@ public class OrderService {
     public List<OrderItem> getAllItemsForDate(){
         allItemsForDate = orderItemDAO.getAllItemsForDate(startDate);
         return allItemsForDate;
+    }
+
+    public List<OrderItem> getAllDeliveredItemsForDate(){
+        List<OrderItem> temp = getAllItemsForDate();
+        List<OrderItem> list = new ArrayList();
+
+        for(OrderItem item : temp){
+            if(item.getDelivered()>-1)
+                list.add(item);
+        }
+        return list;
     }
 
     public String getFormatedDate(Date date){

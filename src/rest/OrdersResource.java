@@ -31,7 +31,6 @@ public class OrdersResource {
     @POST
     @Consumes("text/plain")
     public void setMemo(@PathParam("id") int addressID, String memo) {
-        System.out.println("Memo: " + memo);
         if (addressID < 0)
             addressID = AddressResource.addressMap.get(addressID);
         orderdao.writeMemoWithAddressID(addressID, new Date(), memo);

@@ -16,7 +16,7 @@
             <p:dataTable value="#{orderService.ordersInDateRange}" var="order"
                          emptyMessage="Keine Bestellungen in diesem Zeitraum">
                 <p:column headerText="Bestellungen">
-                    <p:outputLabel value="#{orderService.getDateWithOrderID(order.id)}"/><br/>
+                    <p:outputLabel value="#{orderService.getFormatedDate(orderService.getDateWithOrderID(order.id))}" style="font-size: 14pt"/><br/>
                     <p:dataTable value="#{orderService.getAllItemsWithIDForCurrentUser(order.id)}" var="item"
                                  emptyMessage="Noch keine aufgegebenen Bestellungen">
                         <p:column headerText="Menge">
@@ -35,7 +35,28 @@
                             </f:facet>
                         </p:column>
                     </p:dataTable>
-                </p:column>
+                    <br/>
+                    Ausgeliefert:
+                    <p:dataTable value="#{orderService.deliveredOrderItemsForUser(order.id)}" var="deliveredItem"
+                                 emptyMessage="Diese Bestellung wurde noch nicht ausgeliefert">
+                        <p:column headerText="Menge">
+                            <p:outputLabel value="#{deliveredItem.delivered}"/>
+                        </p:column>
+                        <p:column headerText="Produkt">
+                            <p:outputLabel value="#{productService.getNameForID(deliveredItem.productid)}"/>
+                        </p:column>
+                        <p:column headerText="Preis">
+                            <p:outputLabel value="#{productService.getFormatedPrice(productService.getPrice(deliveredItem.productid))}"/>
+                        </p:column>
+                        <p:column>
+                            <p:outputLabel value="#{orderService.sumUp(productService.getPrice(deliveredItem.productid), deliveredItem.delivered)}"/>
+                            <f:facet name="footer">
+                                <p:outputLabel value="#{orderService.getSumAllDelivered(orderService.deliveredOrderItemsForUser(order.id))}"/>
+                            </f:facet>
+                        </p:column>
+                    </p:dataTable>
+                    <br/>
+            </p:column>
                 <p:column headerText="Notiz vom Bäcker">
                     <p:outputLabel value="#{order.memoForCustomer}"/>
                 </p:column>
