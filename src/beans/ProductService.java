@@ -162,10 +162,11 @@ public class ProductService {
     public String getNameForID(int id){
         if(productList == null)
             productList = productDao.getProductList();
-
-        for(Product p : productList)
-            if(p.getId() == id)
+        for(Product p : productList) {
+            if (p.getId() == id) {
                 return p.getTitle();
+            }
+        }
         return null;
     }
 

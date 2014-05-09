@@ -50,4 +50,8 @@
                 </f:facet>
             </p:column>
         </p:dataTable>
+    <p:orderList value="#{offerService.orderOffers}" itemValue="#{offer}" itemLabel="#{offer}"
+                 var="offer" controlsLocation="left" id="offerList">
+    </p:orderList>
+    <p:commandButton value="Reihenfolge speichern" action="#{offerService.saveOrderList}" ajax="false" update="@form"/>
 </ui:composition>

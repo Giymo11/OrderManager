@@ -178,9 +178,20 @@ public class OrderItemDao extends JdbcDao {
             resultSet = statement.executeQuery("SELECT * FROM " + DATABASE_NAME + ".orderitem WHERE orderid IN " +
                 "(SELECT id FROM " + DATABASE_NAME + ".order WHERE tourid IN (SELECT id FROM " + DATABASE_NAME + ".tour" +
                     " WHERE date = '" + getDateSQL(startDate) + "'));");
-
+            int count=0;
             while(resultSet.next()){
-                items.add(getOrderItemWithResultSet(resultSet));
+                OrderItem item = getOrderItemWithResultSet(resultSet);
+                for(OrderItem i : items)
+                    if(i.getProductid() == item.getProductid()) {
+                        i.setOrdered(i.getOrdered() + item.getOrdered());
+                        i.setDelivered(i.getDelivered() + item.getDelivered());
+                        ++count;
+                    }
+                if(count==0) {
+                    items.add(item);
+                }
+                else
+                    count = 0;
             }
 
         } catch (SQLException e) {

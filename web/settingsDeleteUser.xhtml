@@ -1,0 +1,27 @@
+<ui:composition
+        xmlns:h="http://java.sun.com/jsf/html"
+        xmlns:p="http://primefaces.org/ui"
+        xmlns:ui="http://java.sun.com/jsf/facelets"
+        xmlns:f="http://java.sun.com/jsf/core">
+    <p:commandButton id="loginLink" onclick="PF('dlg').show()" value="Konto löschen"/>
+
+    <p:growl id="growl" showDetail="false" life="300" />
+
+    <p:dialog id="dialog" header="Achtung!" widgetVar="dlg" resizable="false">
+        <p:outputLabel value="Bitte bestätigen Sie zum Löschen Ihrer Daten Ihre E-Mail-Addresse und Ihr Passwort"/>
+        <h:panelGrid columns="2" cellpadding="5">
+            <h:outputLabel for="username" value="Email:" />
+            <p:inputText value="#{userSettingsService.newEmail}"
+                         id="username" label="username" />
+
+            <h:outputLabel for="password" value="Passwort:" />
+            <h:inputSecret value="#{userSettingsService.oldPass}"
+                           id="password" label="password" />
+
+            <f:facet name="footer">
+                <p:commandButton id="loginButton" value="Löschen" update="growl"
+                                 action="#{userSettingsService.delete}"/>
+            </f:facet>
+        </h:panelGrid>
+    </p:dialog>
+</ui:composition>

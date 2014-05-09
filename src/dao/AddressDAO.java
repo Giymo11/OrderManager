@@ -22,6 +22,7 @@ public class AddressDao extends JdbcDao {
     }
 
     public void writeAddress(Address address) {
+        System.out.println("write address called, " + address.getStreet());
         Connection connection = null;
         Statement statement = null;
 

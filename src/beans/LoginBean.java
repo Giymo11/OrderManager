@@ -19,7 +19,7 @@ import java.io.IOException;
 @SessionScoped
 public class LoginBean {
     private LoginDao loginDao;
-    private String status;
+    public static String status;
     private String currentMail;
 
     public String getStatus() {
@@ -116,5 +116,18 @@ public class LoginBean {
 
     public String getCurrentMail(){
         return currentMail;
+    }
+
+    public String logout() {
+        HttpServletRequest req = null;
+
+        req = (HttpServletRequest) FacesContext.getCurrentInstance().getExternalContext().getRequest();
+
+        req.setAttribute("loggedIn", false);
+        req.setAttribute("email", null);
+        req.setAttribute("adminLoggedIn", false);
+        FacesContext.getCurrentInstance().getExternalContext().invalidateSession();
+        status="Anmelden";
+        return "/offers.xhtml?faces-redirect=true";
     }
 }

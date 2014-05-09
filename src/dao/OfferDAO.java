@@ -34,7 +34,7 @@ public class OfferDao extends JdbcDao {
             con = getConnection();
             stat = con.createStatement();
 
-            res = stat.executeQuery("SELECT * FROM " + DATABASE_NAME + ".offer");
+            res = stat.executeQuery("SELECT * FROM " + DATABASE_NAME + ".offer ORDER BY priority desc;");
 
             while (res.next()) {
                 stat = con.createStatement();
@@ -152,6 +152,34 @@ public class OfferDao extends JdbcDao {
         }
         finally{
             close(null, stat, connection);
+        }
+    }
+
+    public void writeOfferPriorities(List<Offer> offers) {
+        Connection connection = null;
+        Statement statement = null;
+
+        try{
+            connection = getConnection();
+            statement = connection.createStatement();
+            statement.executeUpdate("DELETE FROM " + DATABASE_NAME + ".offer;");
+            statement.executeUpdate("COMMIT;");
+            close(null, statement, connection);
+
+            for(Offer offer : offers) {
+                insertObject("offer", offer);
+                connection = getConnection();
+                statement = connection.createStatement();
+                statement.executeUpdate("UPDATE " + DATABASE_NAME + ".offer SET priority = " + offer.getPriority() +
+                        ", title = '" + offer.getTitle() + "', description = '" + offer.getDescription() +
+                        "', pictureID = " + offer.getPictureid() + " WHERE id = " + offer.getId() + ";");
+                statement.executeUpdate("COMMIT;");
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        finally {
+            close(null, statement, connection);
         }
     }
 }

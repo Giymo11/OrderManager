@@ -16,7 +16,7 @@ import javax.servlet.http.HttpServletRequest;
  */
 @ManagedBean
 @SessionScoped
-public class UserSettingsBean {
+public class UserSettingsService {
     private String newEmail;
     private String oldPass;
     private String newPass1;
@@ -28,7 +28,7 @@ public class UserSettingsBean {
     private UserSettingsDao settingsDAO;
     private String selectedTown;
 
-    public UserSettingsBean(){
+    public UserSettingsService(){
         settingsDAO = new UserSettingsDao();
 
         HttpServletRequest req = (HttpServletRequest) FacesContext.getCurrentInstance().getExternalContext().getRequest();
@@ -125,5 +125,16 @@ public class UserSettingsBean {
 
     public void setAddress(Address address) {
         this.address = address;
+    }
+
+    public String delete(){
+        boolean check = settingsDAO.check(oldPass, newEmail);
+        if(check) {
+            settingsDAO.deleteUser(newEmail);
+            return new LoginBean().logout();
+        }
+        else
+            FacesContext.getCurrentInstance().addMessage("Failure", new FacesMessage("Passwort nicht korrekt"));
+        return "#";
     }
 }

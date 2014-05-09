@@ -149,13 +149,10 @@ public class ProductDao extends JdbcDao {
         Connection connection = null;
         Statement stat = null;
         ResultSet resultSet = null;
-        ResultSet resPicture = null;
-        Statement statPicture = null;
 
         try {
             connection = getConnection();
             stat = connection.createStatement();
-            statPicture = connection.createStatement();
             resultSet = stat.executeQuery("SELECT * FROM " + DATABASE_NAME + ".product WHERE categoryid = " +
                     " (SELECT id FROM " + DATABASE_NAME + ".category WHERE name = '" + category + "') ORDER BY priority desc;");
 
@@ -170,7 +167,6 @@ public class ProductDao extends JdbcDao {
         }
         finally{
             close(resultSet, stat, connection);
-            close(resPicture, statPicture, null);
         }
         return products;
     }

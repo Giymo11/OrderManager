@@ -9,28 +9,31 @@
                 <tr>
                     <th>Neue E-Mail-Adresse:</th>
                     <td>
-                        <p:inputText value="#{userSettingsBean.newEmail}" type="text"/>
+                        <p:inputText value="#{userSettingsService.newEmail}" type="text"/>
                     </td>
                 </tr>
                 <tr>
                     <th>Altes Passwort:</th>
                     <td>
-                        <p:inputText value="#{userSettingsBean.oldPass}" type="password"/>
+                        <p:inputText value="#{userSettingsService.oldPass}" type="password"/>
                     </td>
                 </tr>
                 <tr>
                     <th>Neues Passwort:</th>
                     <td>
-                        <p:inputText value="#{userSettingsBean.newPass1}" type="password"/>
+                        <p:inputText value="#{userSettingsService.newPass1}" type="password"/>
                     </td>
                 </tr>
                 <tr>
                     <th>Neues Passwort wiederholen:</th>
                     <td>
-                        <p:inputText value="#{userSettingsBean.newPass2}" type="password"/>
+                        <p:inputText value="#{userSettingsService.newPass2}" type="password"/>
                     </td>
                 </tr>
             </tbody>
         </table>
-        <p:commandButton value="Speichern" ajax="false" action="#{userSettingsBean.saveLoginData}" type="submit" update="@form"/>
+        <p:commandButton value="Speichern" ajax="false" action="#{userSettingsService.saveLoginData}" type="submit" update="@form"/>
+        <br/>
+        <br/>
+        <ui:include src="settingsDeleteUser.xhtml"/>
 </ui:composition>

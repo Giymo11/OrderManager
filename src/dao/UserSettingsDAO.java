@@ -213,4 +213,23 @@ public class UserSettingsDao extends JdbcDao {
 
         return (date.getYear()+1900) + "-" + (1+date.getMonth()) + "-" + date.getDate();
     }
+
+    public void deleteUser(String email) {
+        Connection connection = null;
+        Statement statement = null;
+        ResultSet resultSet = null;
+
+        try{
+            connection = getConnection();
+            statement = connection.createStatement();
+            resultSet = statement.executeQuery("SELECT id FROM " + DATABASE_NAME + ".user WHERE email = '" + email + "';" );
+            if(resultSet.next())
+                deleteObject("user", resultSet.getInt(1));
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        finally {
+            close(resultSet, statement, connection);
+        }
+    }
 }

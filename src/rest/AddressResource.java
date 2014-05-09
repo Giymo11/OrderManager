@@ -30,7 +30,6 @@ public class AddressResource {
     @POST
     @Consumes("application/json")
     public void setAddressID(Address address) {
-
         System.out.println("works? - " + address);
 
         if (address.getId() < 0) {
@@ -47,6 +46,4 @@ public class AddressResource {
     public List getAddresses(@PathParam("id") int townid) {
         return addressDao.getAddressesWithTownID(townid);
     }
-
-
 }

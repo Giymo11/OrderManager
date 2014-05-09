@@ -10,48 +10,48 @@
                 <tr>
                     <th>Vorname:</th>
                     <td>
-                        <p:inputText value="#{userSettingsBean.user.firstName}"/>
+                        <p:inputText value="#{userSettingsService.user.firstName}"/>
                     </td>
                 </tr>
                 <tr>
                     <th>Nachname:</th>
                     <td>
-                        <p:inputText value="#{userSettingsBean.user.lastName}"/>
+                        <p:inputText value="#{userSettingsService.user.lastName}"/>
                     </td>
                 </tr>
                 <tr>
                     <th>Telefon:</th>
                     <td>
-                        <p:inputText value="#{userSettingsBean.user.telNr}"/>
+                        <p:inputText value="#{userSettingsService.user.telNr}"/>
                     </td>
                 </tr>
                 <tr>
                     <th>Geburtstag:</th>
                     <td>
-                        <p:calendar value="#{userSettingsBean.user.birthdate}" maxdate="#{registerBean.getMaxDate}" navigator="true"/>
+                        <p:calendar value="#{userSettingsService.user.birthdate}" maxdate="#{registerBean.getMaxDate}" navigator="true"/>
                     </td>
                 </tr>
                 <tr>
                     <th>Straße:</th>
                     <td>
-                        <p:inputText value="#{userSettingsBean.address.street}"/>
+                        <p:inputText value="#{userSettingsService.address.street}"/>
                     </td>
                 </tr>
                 <tr>
                     <th>Hausnummer:</th>
                     <td>
-                        <p:inputText value="#{userSettingsBean.address.houseNr}"/>
+                        <p:inputText value="#{userSettingsService.address.houseNr}"/>
                     </td>
                 </tr>
                 <tr>
                     <th>Ort:</th>
                     <td>
-                        <h:selectOneMenu value="#{userSettingsBean.selectedTown}" >
+                        <h:selectOneMenu value="#{userSettingsService.selectedTown}" >
                             <f:selectItems value="#{townService.stringTowns}"/>
                         </h:selectOneMenu>
                     </td>
                 </tr>
             </tbody>
         </table>
-        <p:commandButton value="Speichern" ajax="false" update="@form" action="#{userSettingsBean.saveUserData}" type="submit"/>
+        <p:commandButton value="Speichern" ajax="false" update="@form" action="#{userSettingsService.saveUserData}" type="submit"/>
 </ui:composition>

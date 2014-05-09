@@ -6,6 +6,7 @@ import dto.Offer;
 import javax.faces.bean.ApplicationScoped;
 import javax.faces.bean.ManagedBean;
 import javax.faces.context.FacesContext;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -26,6 +27,7 @@ public class OfferService {
     private String selectedPicture;
 
     private List<Offer> offerList;
+    private List<String> orderOffers;
 
     public OfferService() {
         offerDao = new OfferDao();
@@ -40,7 +42,8 @@ public class OfferService {
 
     public String addNewOffer() {
         offerList.add(offerDao.addNewOffer(newName, newText, selectedPicture));
-
+        orderOffers = null;
+        getOrderOffers();
         newName = "";
         newText = "";
         return "#";
@@ -52,6 +55,8 @@ public class OfferService {
             if(offerList.get(i).getId() == id)
                 offerList.remove(i);
         offerDao.delete(id);
+        orderOffers = null;
+        getOrderOffers();
         return "#";
     }
 
@@ -94,5 +99,30 @@ public class OfferService {
 
     public void setSelectedPicture(String selectedPicture) {
         this.selectedPicture = selectedPicture;
+    }
+
+    public List<String> getOrderOffers(){
+        if(orderOffers == null) {
+            orderOffers = new ArrayList();
+            for (Offer offer : getOffers())
+                orderOffers.add(offer.getTitle());
+        }
+        return orderOffers;
+    }
+
+    public void setOrderOffers(List<String> list){
+        orderOffers = list;
+    }
+
+    public void saveOrderList() {
+        int priority = orderOffers.size() * 10;
+        for (String str : orderOffers)
+            for (Offer offer : offerList)
+                if (offer.getTitle().equals(str)) {
+                    offer.setPriority(priority);
+                    priority -= 10;
+                }
+        offerDao.writeOfferPriorities(offerList);
+        offerList = offerDao.getOfferList();
     }
 }

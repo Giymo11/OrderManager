@@ -34,9 +34,10 @@
                 </p:commandButton>
             </p:column>
             <p:column>
-                <p:commandButton id="commandUserAdmin" value="Speichern" type="submit" ajax="false" update="userList" action="#{adminSettingsService.save}">
+                <p:commandLink type="submit" action="#{adminSettingsService.save}" styleClass="btn btn-danger" ajax="false" update="userList">
                     <f:param name="idU" value="#{user.id}"/>
-                </p:commandButton>
+                    <i class="fa fa-save fa-2x fa-lg"/>
+                </p:commandLink>
             </p:column>
         </p:dataTable>
     </h:body>

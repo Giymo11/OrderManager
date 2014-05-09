@@ -64,6 +64,8 @@ public class OrderDao extends JdbcDao {
 
     public Order addOrder(int tourID, String email, String memo){
         int addressid = getAddressIDForEmail(email);
+        if(memo==null)
+            memo="";
         Order order =  new Order(tourID, addressid, "", memo, false);
 
         Connection connection = null;
@@ -323,7 +325,8 @@ public class OrderDao extends JdbcDao {
                 insertObject("order", order);
                 id = order.getId();
 
-                String sqlstring = "UPDATE " + DATABASE_NAME + ".order SET addressID = " + order.getAddressid() + ", tourID = " + order.getTourid() + ", delivered = 1 WHERE id = " + order.getId() + ";";
+                String sqlstring = "UPDATE " + DATABASE_NAME + ".order SET addressID = " + order.getAddressid() +
+                        ", tourID = " + order.getTourid() + ", delivered = 1, memoForPock = '', memoForCustomer = '' WHERE id = " + order.getId() + ";";
 
                 connection = getConnection();
                 statement = connection.createStatement();
