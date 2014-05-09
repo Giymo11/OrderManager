@@ -29,6 +29,7 @@ public class ProductService {
     private List<Product> selectedCatProducts;
     private List<String> productNames;
     private List<Product> productList;
+    private List<String> orderProducts;
 
     private String selectedCategory;
     private String selectedPicture;
@@ -37,7 +38,6 @@ public class ProductService {
         productDao = new ProductDao();
         selectedCategory = null;
         selectedCatProducts = new ArrayList();
-        productNames = new ArrayList();
         newName = "";
         newText = "";
         newPrice = 0.0f;
@@ -75,7 +75,15 @@ public class ProductService {
         if(newPrice==0.0f || selectedCategory==null || newName.equals("") || newText.equals(""))
             FacesContext.getCurrentInstance().addMessage("Failure", new FacesMessage("Bitte überprüfen Sie Ihre Eingaben!", "Preis muss größer 0 sein; Name, Beschreibung und Kategorie müssen vorhanden sein"));
         else {
-            productList.add(productDao.addNewProduct(selectedCategory, newName, newText, newPrice, selectedPicture));
+            Product p = productDao.addNewProduct(selectedCategory, newName, newText, newPrice, selectedPicture);
+            if(p!=null) {
+                productList.add(p);
+                productNames.add(newName);
+                orderProducts = null;
+                getOrderProducts();
+            }
+            else
+                FacesContext.getCurrentInstance().addMessage("Failure", new FacesMessage("Achtung, zwei gleiche Namen sind nicht erlaubt!"));
 
             newName = "";
             newText = "";
@@ -86,7 +94,14 @@ public class ProductService {
 
     public String save(){
         int id = Integer.parseInt(fetchParameter("idS"));
-        productDao.save(id, productList);
+        for(Product product : productList)
+            if(product.getId() == id)
+                if(!productDao.save(product)) {
+                    FacesContext.getCurrentInstance().addMessage("Failure", new FacesMessage("Achtung, zwei gleiche Namen sind nicht erlaubt!"));
+                    productList = productDao.getProductList();
+                    productNames = null;
+                    getProductNames();
+                }
         return "#";
     }
 
@@ -168,7 +183,8 @@ public class ProductService {
         if(productList == null)
             productList = productDao.getProductList();
 
-        if(productNames.isEmpty()){
+        if(productNames==null){
+            productNames = new ArrayList();
             for(Product p : productList){
                 productNames.add(p.getTitle());
             }
@@ -191,5 +207,31 @@ public class ProductService {
         formated = formated.replace('.', ',');
 
         return formated;
+    }
+
+    public List<String> getOrderProducts(){
+        if(orderProducts == null) {
+            orderProducts = new ArrayList();
+            for (Product product : productList)
+                orderProducts.add(product.getTitle());
+        }
+
+        return orderProducts;
+    }
+
+    public void setOrderProducts(List<String> list){
+        orderProducts = list;
+    }
+
+    public void saveOrder(){
+        int priority = orderProducts.size()*10;
+        for(String str : orderProducts)
+            for(Product product: productList)
+                if(product.getTitle().equals(str)) {
+                    product.setPriority(priority);
+                    priority-=10;
+                }
+        productDao.writeProductPriorities(productList);
+        productList = productDao.getProductList();
     }
 }

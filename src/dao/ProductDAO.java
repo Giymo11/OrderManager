@@ -30,7 +30,7 @@ public class ProductDao extends JdbcDao {
         try {
             connection = getConnection();
             statement = connection.createStatement();
-            res = statement.executeQuery("SELECT * FROM " + DATABASE_NAME + ".product");
+            res = statement.executeQuery("SELECT * FROM " + DATABASE_NAME + ".product ORDER BY priority desc");
 
             Product product;
             while (res.next()) {
@@ -85,31 +85,38 @@ public class ProductDao extends JdbcDao {
         Statement stat = null;
         Statement stat1 = null;
         Statement statPriority = null;
+        Statement statName = null;
         ResultSet resPicture = null;
         ResultSet resCategory = null;
         ResultSet resPriority = null;
+        ResultSet resName = null;
 
         Product product = null;
 
         try {
             con = getConnection();
-            stat = con.createStatement();
-            stat1 = con.createStatement();
-            statPriority = con.createStatement();
+            statName = con.createStatement();
+            resName = statName.executeQuery("SELECT count(*) FROM " + DATABASE_NAME + ".product WHERE name = '" + newName + "';");
+            resName.next();
+            if(resName.getInt(1)==0) {
+                stat = con.createStatement();
+                stat1 = con.createStatement();
+                statPriority = con.createStatement();
 
-            resPicture = stat.executeQuery("SELECT pictureID FROM " + DATABASE_NAME + ".picture WHERE name = '" +
-                                            selectedPicture + "';");
-            resPicture.next();
+                resPicture = stat.executeQuery("SELECT pictureID FROM " + DATABASE_NAME + ".picture WHERE name = '" +
+                        selectedPicture + "';");
+                resPicture.next();
 
-            resCategory = stat1.executeQuery("SELECT id FROM " + DATABASE_NAME + ".category WHERE name = '" +
-                                            selectedCategory + "';");
+                resCategory = stat1.executeQuery("SELECT id FROM " + DATABASE_NAME + ".category WHERE name = '" +
+                        selectedCategory + "';");
 
-            resPriority = statPriority.executeQuery("SELECT max(priority) FROM " + DATABASE_NAME + ".product");
-            resPriority.next();
+                resPriority = statPriority.executeQuery("SELECT max(priority) FROM " + DATABASE_NAME + ".product");
+                resPriority.next();
 
-            if(resCategory.next()&&resPicture.isFirst()) {
-                product = new Product(0, resCategory.getInt(1), resPriority.getInt(1)+10,
-                        newName, newText, newPrice, resPicture.getInt(1), true);
+                if (resCategory.next() && resPicture.isFirst()) {
+                    product = new Product(0, resCategory.getInt(1), resPriority.getInt(1) + 10,
+                            newName, newText, newPrice, resPicture.getInt(1), true);
+                }
             }
         } catch (SQLException e) {
             e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
@@ -119,6 +126,7 @@ public class ProductDao extends JdbcDao {
             close(resPicture, stat, con);
             close(resCategory, stat1, null);
             close(resPriority, statPriority, null);
+            close(resName, statName, null);
             if(product!=null)
                 insertProduct(product);
         }
@@ -149,7 +157,7 @@ public class ProductDao extends JdbcDao {
             stat = connection.createStatement();
             statPicture = connection.createStatement();
             resultSet = stat.executeQuery("SELECT * FROM " + DATABASE_NAME + ".product WHERE categoryid = " +
-                    " (SELECT id FROM " + DATABASE_NAME + ".category WHERE name = '" + category + "');");
+                    " (SELECT id FROM " + DATABASE_NAME + ".category WHERE name = '" + category + "') ORDER BY priority desc;");
 
             while(resultSet.next()){
                 Product product = getProductWithResultSet(resultSet);
@@ -189,27 +197,52 @@ public class ProductDao extends JdbcDao {
         return category;
     }
 
-    public void save(int id, List<Product> productList){
+    public boolean save(Product product){
         Connection con = null;
         Statement stat = null;
+        ResultSet resultSet = null;
         try {
             con = getConnection();
             stat = con.createStatement();
+            resultSet = stat.executeQuery("SELECT count(*) FROM " + DATABASE_NAME + ".product WHERE name = '" + product + "';");
+            resultSet.next();
+            if (resultSet.getInt(1) == 0){
+                stat = con.createStatement();
+                stat.executeUpdate("UPDATE " + DATABASE_NAME + ".product SET name = '" + product.getTitle() +
+                        "', description = '" + product.getDescription() + "', visible = " +
+                        product.isVisible() + " WHERE id = " + product.getId() + ";");
 
-            for (Product product : productList) {
-                if (product.getId() == id) {
-                    stat.executeUpdate("UPDATE " + DATABASE_NAME + ".product SET name = '" + product.getTitle() +
-                            "', description = '" + product.getDescription() + "', visible = " +
-                            product.isVisible() + " WHERE id = " + id + ";");
-
-                    stat.executeUpdate("COMMIT;");
-                }
+                stat.executeUpdate("COMMIT;");
             }
+            else
+                return false;
         } catch (SQLException e) {
             e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
         }
         finally {
-            close(null, stat, con);
+            close(resultSet, stat, con);
+        }
+        return true;
+    }
+
+    public void writeProductPriorities(List<Product> productList) {
+        Connection connection = null;
+        Statement statement = null;
+
+        try{
+            connection = getConnection();
+            statement = connection.createStatement();
+            statement.executeUpdate("DELETE FROM " + DATABASE_NAME + ".product;");
+            statement.executeUpdate("COMMIT;");
+            close(null, statement, connection);
+            for(Product product : productList) {
+                insertProduct(product);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        finally {
+            close(null, statement, connection);
         }
     }
 }

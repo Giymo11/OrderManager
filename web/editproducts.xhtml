@@ -4,73 +4,75 @@
         xmlns:f="http://java.sun.com/jsf/core"
         xmlns:p="http://primefaces.org/ui">
 
-        <p:dataTable var="item" value="#{productService.products}" cellpadding="5px" style="padding: 0; font-size: 11pt" id="productTable">
-            <p:column headerText="Anzeige">
-                <p:selectBooleanCheckbox value="#{item.visible}"/>
-            </p:column>
-            <p:column headerText="Bild">
-                <p:graphicImage value="#{pictureService.getNameForID(item.pictureID)}" style="max-height: 70px; max-width: 100px"/>
+    <p:dataTable var="item" value="#{productService.products}" cellpadding="5px" style="padding: 0; font-size: 11pt" id="productTable">
+        <p:column headerText="Anzeige">
+            <p:selectBooleanCheckbox value="#{item.visible}"/>
+        </p:column>
+        <p:column headerText="Bild">
+            <p:graphicImage value="#{pictureService.getNameForID(item.pictureID)}" style="max-height: 70px; max-width: 100px"/>
 
-                <f:facet name="footer">
-                    <p:selectOneMenu value="#{productService.selectedPicture}" effect="fade" style="width:140px"
-                                     panelStyle="width:140px" filter="true" filterMatchMode="startsWith">
-                        <f:selectItems value="#{pictureService.pics}"/>
-                    </p:selectOneMenu>
-                </f:facet>
-            </p:column>
+            <f:facet name="footer">
+                <p:selectOneMenu value="#{productService.selectedPicture}" effect="fade" style="width:140px"
+                                 panelStyle="width:140px" filter="true" filterMatchMode="startsWith">
+                    <f:selectItems value="#{pictureService.pics}"/>
+                </p:selectOneMenu>
+            </f:facet>
+        </p:column>
 
-            <p:column headerText="Name">
-                <p:inputText value="#{item.title}" maxlength="45" size="15" style="width: 140px"/>
+        <p:column headerText="Name">
+            <p:inputText value="#{item.title}" maxlength="45" size="15" style="width: 140px"/>
 
-                <f:facet name="footer">
-                    <p:inputText value="#{productService.newName}" size="12"/>
-                </f:facet>
-            </p:column>
+            <f:facet name="footer">
+                <p:inputText value="#{productService.newName}" size="12"/>
+            </f:facet>
+        </p:column>
 
-            <p:column headerText="Beschreibung">
-                <p:inputTextarea value="#{item.description}" style="width: 150px"/>
+        <p:column headerText="Beschreibung">
+            <p:inputTextarea value="#{item.description}" style="width: 150px"/>
 
-                <f:facet name="footer">
-                    <p:inputTextarea value="#{productService.newText}" style="width: 150px"/>
-                </f:facet>
-            </p:column>
+            <f:facet name="footer">
+                <p:inputTextarea value="#{productService.newText}" style="width: 150px"/>
+            </f:facet>
+        </p:column>
 
-            <p:column headerText="Kategorie">
-                <p:outputLabel value="#{categoryService.getNameForID(item.categoryID)}"/>
+        <p:column headerText="Kategorie">
+            <p:outputLabel value="#{categoryService.getNameForID(item.categoryID)}"/>
 
-                <f:facet name="footer">
-                    <p:selectOneMenu value="#{productService.selectedCategory}">
-                        <f:selectItems value="#{categoryService.names}"/>
-                    </p:selectOneMenu>
-                </f:facet>
-            </p:column>
+            <f:facet name="footer">
+                <p:selectOneMenu value="#{productService.selectedCategory}">
+                    <f:selectItems value="#{categoryService.names}"/>
+                </p:selectOneMenu>
+            </f:facet>
+        </p:column>
 
-            <p:column headerText="Preis in € ">
-                <p:outputLabel value="#{productService.getFormatedPrice(item.price)}"/>
+        <p:column headerText="Preis in € ">
+            <p:outputLabel value="#{productService.getFormatedPrice(item.price)}"/>
 
-                <f:facet name="footer">
-                    <p:outputLabel value="Bitte mit . trennen"/>
-                    <p:inputText value="#{productService.newPrice}" size="5" style="width: 50px"/>
-                </f:facet>
-            </p:column>
-            <p:column>
-                <p:commandLink type="submit" action="#{productService.delete}" styleClass="btn btn-danger" ajax="true" update="@form">
-                    <f:param value="#{item.id}" name="id"/>
-                    <i class="fa fa-trash-o fa-2x fa-lg"/>
+            <f:facet name="footer">
+                <p:outputLabel value="Bitte mit . trennen"/>
+                <p:inputText value="#{productService.newPrice}" size="5" style="width: 50px"/>
+            </f:facet>
+        </p:column>
+        <p:column>
+            <p:commandLink type="submit" action="#{productService.delete}" styleClass="btn btn-danger" ajax="true" update="@form">
+                <f:param value="#{item.id}" name="id"/>
+                <i class="fa fa-trash-o fa-2x fa-lg"/>
+            </p:commandLink>
+            <br/>
+            <br/>
+            <p:commandLink type="submit" action="#{productService.save}" styleClass="btn btn-danger" ajax="true" update="@form">
+                <f:param value="#{item.id}" name="idS"/>
+                <i class="fa fa-save fa-2x fa-lg"/>
+            </p:commandLink>
+
+
+            <f:facet name="footer">
+                <p:commandLink type="submit" action="#{productService.addNewProduct}" styleClass="btn btn-danger" ajax="true" update="@form">
+                    <i class="fa fa-plus fa-2x fa-lg"/>
                 </p:commandLink>
-                <br/>
-                <br/>
-                <p:commandLink type="submit" action="#{productService.save}" styleClass="btn btn-danger" ajax="true" update="@form">
-                    <f:param value="#{item.id}" name="idS"/>
-                    <i class="fa fa-save fa-2x fa-lg"/>
-                </p:commandLink>
-
-
-                <f:facet name="footer">
-                    <p:commandLink type="submit" action="#{productService.addNewProduct}" styleClass="btn btn-danger" ajax="true" update="@form">
-                        <i class="fa fa-plus fa-2x fa-lg"/>
-                    </p:commandLink>
-                </f:facet>
-            </p:column>
-        </p:dataTable>
+            </f:facet>
+        </p:column>
+    </p:dataTable>
+    <p:orderList value="#{productService.orderProducts}" var="product" itemLabel="#{product}" itemValue="#{product}" controlsLocation="left"/>
+    <p:commandButton value="Reihenfolge speichern" action="#{productService.saveOrder}" ajax="false" update="@form"/>
 </ui:composition>
