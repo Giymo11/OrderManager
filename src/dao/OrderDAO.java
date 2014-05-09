@@ -181,7 +181,7 @@ public class OrderDao extends JdbcDao {
         return (date.getYear()+1900) + "-" + (1+date.getMonth()) + "-" + date.getDate();
     }
 
-    public List<Order> getOrdersByStatus(Date date, boolean status){
+    public List<Order> getOrdersByDate(Date date){
         Connection connection = null;
         Statement statement = null;
         Statement statement2 = null;
@@ -197,7 +197,7 @@ public class OrderDao extends JdbcDao {
                     "(SELECT * FROM " + DATABASE_NAME + ".order) AS oneorder " +
                     "ON address.townid = town.id AND address.id = oneorder.addressid AND oneorder.tourid = " +
                     "(SELECT id FROM " + DATABASE_NAME + ".tour WHERE date = '" + getDateSQL(date) + "') " +
-                    "AND oneorder.delivered = " + status + " AND oneorder.memoForPock <> '' ORDER BY town.name desc;");
+                    " AND oneorder.memoForPock <> '' ORDER BY town.name desc;");
 
             while(resultSet.next()){
                 orders.add(getOrderWithResultSet(resultSet));
@@ -209,7 +209,7 @@ public class OrderDao extends JdbcDao {
                     "(SELECT * FROM " + DATABASE_NAME + ".order) AS oneorder " +
                     "ON address.townid = town.id AND address.id = oneorder.addressid AND oneorder.tourid = " +
                     "(SELECT id FROM " + DATABASE_NAME + ".tour WHERE date = '" + getDateSQL(date) + "') " +
-                    "AND oneorder.delivered = " + status + " AND oneorder.memoForPock = '' ORDER BY town.name desc;");
+                    "AND oneorder.memoForPock = '' ORDER BY town.name desc;");
 
             while(resultSet2.next())
                 orders.add(getOrderWithResultSet(resultSet2));
@@ -300,32 +300,42 @@ public class OrderDao extends JdbcDao {
         int id = 0;
         Connection connection = null;
         Statement statement = null;
+        Statement statement1 = null;
         ResultSet resultSet = null;
+        ResultSet resultSet1 = null;
 
         try{
             connection = getConnection();
             statement = connection.createStatement();
             resultSet = statement.executeQuery("SELECT id from " + DATABASE_NAME + ".tour WHERE date = '" + getDateSQL(date) + "';");
+
             if (!resultSet.next()) {
+                close(resultSet, statement, connection);
                 new TourDao().addTour(new Date());
             }
-            resultSet = statement.executeQuery("SELECT id from " + DATABASE_NAME + ".tour WHERE date = '" + getDateSQL(date) + "';");
-            resultSet.next();
-            Order order = new Order(resultSet.getInt(1), addressID, "", "", true);
-            insertObject("order", order);
-            id = order.getId();
-            System.out.println("Order updating: " + order.toString());
-            String sqlstring = "UPDATE " + DATABASE_NAME + ".order SET addressID = " + order.getAddressid() + ", tourID = " + order.getTourid() + ", delivered = 1 WHERE id = " + order.getId() + ";";
-            System.out.println("Order sql: " + sqlstring);
-            statement = connection.createStatement();
-            statement.executeUpdate(sqlstring);
-            statement.executeUpdate("COMMIT;");
+            connection = getConnection();
+            statement1 = connection.createStatement();
+            resultSet1 = statement1.executeQuery("SELECT id from " + DATABASE_NAME + ".tour WHERE date = '" + getDateSQL(date) + "';");
 
+            if(resultSet1.next()) {
+                Order order = new Order(resultSet1.getInt(1), addressID, "", "", true);
+                close(resultSet1, statement1, connection);
+                insertObject("order", order);
+                id = order.getId();
+
+                String sqlstring = "UPDATE " + DATABASE_NAME + ".order SET addressID = " + order.getAddressid() + ", tourID = " + order.getTourid() + ", delivered = 1 WHERE id = " + order.getId() + ";";
+
+                connection = getConnection();
+                statement = connection.createStatement();
+                statement.executeUpdate(sqlstring);
+                statement.executeUpdate("COMMIT;");
+            }
         }catch(SQLException e){
             e.printStackTrace();
         }
         finally {
             close(resultSet,statement,connection);
+            close(resultSet1, statement1, null);
         }
         return id;
 
@@ -342,7 +352,7 @@ public class OrderDao extends JdbcDao {
             connection = getConnection();
             statement = connection.createStatement();
             String sqlstring = "SELECT id FROM " + DATABASE_NAME + ".order WHERE addressid = " + addressID + " AND tourID = (SELECT id from " + DATABASE_NAME + ".tour WHERE date = \'" + getDateSQL(date) + "\');";
-            System.out.println("MemoSelect: " + sqlstring);
+
             resultSet = statement.executeQuery(sqlstring);
             if (!resultSet.next()) {
                 orderID = addOrderWithAddressID(addressID, new Date());
