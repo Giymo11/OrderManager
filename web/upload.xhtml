@@ -21,6 +21,9 @@
                     <p:graphicImage value="#{picture}" style="max-width: 250px; max-height: 200px"/>
                 </p:column>
                 <p:column>
+                    <p:outputLabel value="#{picture}"/>
+                </p:column>
+                <p:column>
                     <p:commandLink type="submit" action="#{pictureService.delete}" styleClass="btn btn-danger" ajax="false" update="@form">
                         <f:param value="#{picture}" name="name"/>
                         <i class="fa fa-trash-o fa-2x fa-lg"/>

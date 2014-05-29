@@ -140,15 +140,15 @@ public class PictureDao extends JdbcDao {
                 s2 = con.createStatement();
 
                 res = s.executeQuery("SELECT count(*) FROM " + DATABASE_NAME + ".product " +
-                        "WHERE id = (SELECT pictureid FROM " + DATABASE_NAME + ".picture WHERE name = '" + filename + "');");
+                        "WHERE pictureid = (SELECT pictureid FROM " + DATABASE_NAME + ".picture WHERE name = '" + filename + "');");
                 res.next();
 
                 res2 = s2.executeQuery("SELECT count(*) FROM " + DATABASE_NAME + ".offer " +
-                        "WHERE id = (SELECT pictureid FROM " + DATABASE_NAME + ".picture WHERE name = '" + filename + "');");
+                        "WHERE pictureid = (SELECT pictureid FROM " + DATABASE_NAME + ".picture WHERE name = '" + filename + "');");
                 res2.next();
 
                 if(res.getInt(1)>0 || res2.getInt(1)>0)
-                    FacesContext.getCurrentInstance().addMessage("Fehler", new FacesMessage("Bitte löschen oder ändern "
+                    FacesContext.getCurrentInstance().addMessage("Fehler", new FacesMessage("Bitte löschen "
                             + "Sie zuerst die Produkte und Angebote, die dieses Bild verwenden!"));
                 else{
                     resId = s.executeQuery("SELECT pictureid FROM " + DATABASE_NAME + ".picture WHERE name = '" + filename + "';");
@@ -159,9 +159,9 @@ public class PictureDao extends JdbcDao {
                     for(int i = 0; i<pictureList.size(); i++)
                         if(pictureList.get(i).getName().equals(filename))
                             pictureList.remove(i);
+                    FacesContext.getCurrentInstance().addMessage("Success!", new FacesMessage("Bild " + filename + " erfolgreich gelöscht"));
                 }
             }
-            FacesContext.getCurrentInstance().addMessage("Success!", new FacesMessage("Bild " + filename + " erfolgreich gelöscht"));
         } catch (SQLException e) {
             e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
         }

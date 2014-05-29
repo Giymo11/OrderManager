@@ -41,6 +41,8 @@ public class LoginDao extends JdbcDao {
                     if (checkAdminRights(connection, res.getInt("id"))) {
                         req.getSession().setAttribute("adminLoggedIn", true);
                         req.getSession().setAttribute("email", this.email);
+                        close(res, stat, null);
+
                         return "/ordersForAdmin.xhtml?faces-redirect=true";
                     } else {
                         if (!verified)

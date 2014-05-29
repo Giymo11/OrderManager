@@ -2,6 +2,8 @@ package dao;
 
 import dto.User;
 
+import javax.faces.application.FacesMessage;
+import javax.faces.context.FacesContext;
 import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -15,6 +17,29 @@ import java.util.List;
 public class UserAdminDao extends JdbcDao {
     public UserAdminDao(){
         super();
+        if(checkNewCustomers())
+            FacesContext.getCurrentInstance().addMessage("Warning", new FacesMessage("Neue Kunden"));
+    }
+
+    private boolean checkNewCustomers() {
+        Connection connection = null;
+        Statement statement = null;
+        ResultSet resultSet = null;
+
+        try{
+            connection = getConnection();
+            statement = connection.createStatement();
+            resultSet = statement.executeQuery("SELECT count(*) FROM " + DATABASE_NAME + ".user WHERE verified = 0");
+            if(resultSet.next())
+                if(resultSet.getInt(1)>0)
+                    return true;
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        finally {
+            close(resultSet, statement, connection);
+        }
+        return false;
     }
 
     public List<User> getUserList() {

@@ -47,11 +47,12 @@ public class CategoryService {
     public String delete() {
         int id = Integer.parseInt(fetchParameter("id"));
         Category cat = getCategoryForId(id);
-        names.remove(cat.getName());
-        for(int i = 0; i<categories.size(); i++)
-            if(categories.get(i).getId() == cat.getId())
-                categories.remove(i);
-        categoryDao.delete(id);
+        if(categoryDao.delete(id)) {
+            names.remove(cat.getName());
+            for (int i = 0; i < categories.size(); i++)
+                if (categories.get(i).getId() == cat.getId())
+                    categories.remove(i);
+        }
         return "#";
     }
 
@@ -67,8 +68,9 @@ public class CategoryService {
     }
 
     public String addNewCategory() {
-        if(categoryDao.addCategory(new Category(newName))) {
-            categories.add(new Category(newName));
+        Category cat = categoryDao.addCategory(new Category(newName));
+        if(cat != null) {
+            categories.add(cat);
             names.add(newName);
         }
         newName = "";
@@ -102,11 +104,11 @@ public class CategoryService {
     }
 
     public String getNameForID(int id){
-        for(Category cat : getCategories())
-            if(cat.getId() == id) {
-                cat.getName();
+        for(Category cat : getCategories()){
+            if(cat.getId() == id)
                 return cat.getName();
-            }
+        }
+
         return "asdf";
     }
 }

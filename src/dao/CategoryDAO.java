@@ -54,10 +54,10 @@ public class CategoryDao extends JdbcDao {
         return new Category(res.getInt(1), res.getString(2));
     }
 
-    public boolean addCategory(Category cat){
+    public Category addCategory(Category cat){
         if(exists(cat)){
             FacesContext.getCurrentInstance().addMessage("Failure", new FacesMessage("Diese Kategorie existiert bereits!"));
-            return false;
+            return null;
         }
 
         insertObject("category", cat);
@@ -79,7 +79,7 @@ public class CategoryDao extends JdbcDao {
         finally{
             close(null, statement, connection);
         }
-        return true;
+        return cat;
     }
 
     private boolean exists(Category cat) {
@@ -106,7 +106,7 @@ public class CategoryDao extends JdbcDao {
         return false;
     }
 
-    public void delete(int id){
+    public boolean delete(int id){
         ResultSet res = null;
         Statement stat = null;
         Connection con = null;
@@ -117,7 +117,7 @@ public class CategoryDao extends JdbcDao {
             res.next();
             if (res.getInt(1) > 0) {
                 FacesContext.getCurrentInstance().addMessage("Failure!", new FacesMessage("Bitte löschen Sie zuerst alle Produkte aus dieser Kategorie!"));
-                return;
+                return false;
             }
             deleteObject("category", id);
         } catch (SQLException e) {
@@ -125,6 +125,7 @@ public class CategoryDao extends JdbcDao {
         } finally {
             close(res, stat, con);
         }
+        return true;
     }
 
     public void save(Category cat){

@@ -55,7 +55,8 @@ public class UserSettingsService {
     }
 
     public void setOldPass(String oldPass) {
-        this.oldPass = oldPass;
+        if(!oldPass.equals("") && oldPass!=null)
+            this.oldPass = oldPass;
     }
 
     public String getNewPass1() {
@@ -77,7 +78,6 @@ public class UserSettingsService {
     public void saveLoginData(){
         HttpServletRequest req = (HttpServletRequest) FacesContext.getCurrentInstance().getExternalContext().getRequest();
         String email = req.getSession().getAttribute("email").toString();
-
         if(settingsDAO.check(oldPass, email)){
             if(newPass1.equals(newPass2)){
                 int check = settingsDAO.writeEmailAndPass(email, newEmail, newPass1, oldPass);
@@ -85,6 +85,9 @@ public class UserSettingsService {
                     if(!newEmail.equals(""))
                         req.getSession().setAttribute("email", newEmail);
                     FacesContext.getCurrentInstance().addMessage("Success", new FacesMessage("Änderungen erfolgreich übernommen"));
+                    oldPass = "";
+                    newPass1 = "";
+                    newPass2 = "";
                 }
             }
             else{
