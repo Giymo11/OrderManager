@@ -7,6 +7,7 @@ package beans;
 
 import dao.LoginDao;
 
+import javax.annotation.PostConstruct;
 import javax.annotation.PreDestroy;
 import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
@@ -28,8 +29,22 @@ public class LoginBean {
 
     public LoginBean() {
         loginDao = new LoginDao();
-        status = "Anmelden";
-        currentMail = "";
+    }
+
+    @PostConstruct
+    private void postConstruct(){
+        HttpServletRequest req = (HttpServletRequest) FacesContext.getCurrentInstance().getExternalContext().getRequest();
+        Boolean loggedin = (Boolean) req.getSession().getAttribute("loggedIn");
+        if(req.getSession() == null)
+            System.out.println("Session is null");
+        else{
+        if(loggedin == null || !loggedin)
+            status = "Anmelden";
+        else {
+            status = "Abmelden";
+            currentMail = (String) req.getSession().getAttribute("email");
+        }}
+
     }
 
     public String getWrongPassword() {
@@ -89,15 +104,19 @@ public class LoginBean {
             req = (HttpServletRequest) FacesContext.getCurrentInstance().getExternalContext().getRequest();
         }
         if(status.equals("Anmelden")){
+            req.setAttribute("loggedIn", false);
+            req.setAttribute("email", null);
+            req.setAttribute("adminLoggedIn", false);
+            FacesContext.getCurrentInstance().getExternalContext().invalidateSession();
             return "/login.xhtml?faces-redirect=true";
         }
         else{
-                req.setAttribute("loggedIn", false);
-                req.setAttribute("email", null);
-                req.setAttribute("adminLoggedIn", false);
-                FacesContext.getCurrentInstance().getExternalContext().invalidateSession();
-                status="Anmelden";
-                return "/offers.xhtml?faces-redirect=true";
+            req.setAttribute("loggedIn", false);
+            req.setAttribute("email", null);
+            req.setAttribute("adminLoggedIn", false);
+            FacesContext.getCurrentInstance().getExternalContext().invalidateSession();
+            status="Anmelden";
+            return "/offers.xhtml?faces-redirect=true";
         }
     }
 
@@ -119,9 +138,7 @@ public class LoginBean {
     }
 
     public String logout() {
-        HttpServletRequest req = null;
-
-        req = (HttpServletRequest) FacesContext.getCurrentInstance().getExternalContext().getRequest();
+        HttpServletRequest req = (HttpServletRequest) FacesContext.getCurrentInstance().getExternalContext().getRequest();
 
         req.setAttribute("loggedIn", false);
         req.setAttribute("email", null);

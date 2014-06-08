@@ -24,7 +24,6 @@ public class UserSettingsDao extends JdbcDao {
         Connection connection = null;
         Statement statement = null;
         ResultSet resultSet = null;
-
         try {
             connection = getConnection();
             statement = connection.createStatement();
@@ -42,8 +41,8 @@ public class UserSettingsDao extends JdbcDao {
         return check;
     }
 
-    private boolean checkPassword(String hash, String password, String email) {
-        if(hash(password.concat(email)).equals(hash))
+    private boolean checkPassword(String dbHash, String password, String email) {
+        if(hash(password.concat(email)).equals(dbHash))
             return true;
         return false;
     }

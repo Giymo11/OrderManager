@@ -55,7 +55,6 @@ public class OrderService {
         newOrderItems = new ArrayList();
         ordersInDateRange = new ArrayList();
         allOrdered = new ArrayList();
-        newOrderItems = new ArrayList();
         orderItemsForDate = new ArrayList();
         tourList = tourDao.getTourList();
 
@@ -104,7 +103,7 @@ public class OrderService {
                 orderItemDAO.addOrderItem(item);
 
             newOrderItems = new ArrayList();
-
+            setDate(date);
             return "/ordersForCustomer.xhtml?faces-redirect=true";
         }
         else{
@@ -197,7 +196,12 @@ public class OrderService {
     }
 
     public String redirectToOrders(){
-        return "/order.xhtml?faces-redirect=true";
+        if(newOrderItems.size()==0) {
+            FacesContext.getCurrentInstance().addMessage("Failure", new FacesMessage("Bitte fügen Sie zuerst mindestens ein Produkt hinzu"));
+            return "";
+        }
+        else
+            return "/order.xhtml?faces-redirect=true";
     }
 
     public void deleteOneOrderItem(){
